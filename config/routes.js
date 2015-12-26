@@ -1,6 +1,6 @@
 const fs = require('fs');
 const mongo = require('../db/mongodb');
-const devData = require('../../dev/pages.json');
+const devData = require('../dev/pages.json');
 const markdown = require('markdown').markdown;
 
 module.exports = function (app) {
@@ -10,7 +10,7 @@ module.exports = function (app) {
     });
 
     app.get('/:page', function (req, res) {
-        fs.readFile('../data/markdown/cv.md', 'utf8', render);
+        fs.readFile('./data/markdown/cv.md', 'utf8', render);
         
 
         function render(err, data) {
