@@ -1,0 +1,30 @@
+{
+  "name": "portfoliooz",
+  "version": "1.0.0",
+  "description": "portfolio gallery",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass --include-path static static/main.scss dist/main.css",
+    "watch-css": "npm run build-css -- -w",
+    "browsersync": "browser-sync start --startPath ./ --server  --files 'dist/*'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.10.0",
+    "node-sass": "^3.4.2",
+    "nodemon": "^1.8.1",
+    "parallelshell": "^2.0.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "express-handlebars": "^2.0.1",
+    "flickrapi": "^0.3.36",
+    "markdown": "^0.5.0",
+    "mongodb": "^2.0.52",
+    "nconf": "^0.8.2"
+  }
+}
