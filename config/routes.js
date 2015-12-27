@@ -39,4 +39,9 @@ module.exports = function (app) {
             res.redirect('/admin/pages');
         });
     });
+
+    app.post('/content-update', function (req, res) {
+        console.log(req.body);
+        res.send(JSON.stringify(req.body));
+    });
 }
