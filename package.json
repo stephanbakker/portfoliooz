@@ -25,6 +25,7 @@
     "flickrapi": "^0.3.36",
     "markdown": "^0.5.0",
     "mongodb": "^2.0.52",
-    "nconf": "^0.8.2"
+    "nconf": "^0.8.2",
+    "request": "^2.67.0"
   }
 }
