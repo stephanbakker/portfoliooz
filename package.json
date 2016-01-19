@@ -4,7 +4,7 @@
   "description": "portfolio gallery",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon --debug server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "node-sass --include-path static static/main.scss dist/main.css",
     "watch-css": "npm run build-css -- -w",
@@ -25,6 +25,7 @@
     "flickrapi": "^0.3.36",
     "markdown": "^0.5.0",
     "mongodb": "^2.0.52",
+    "mongoose": "^4.3.6",
     "nconf": "^0.8.2",
     "request": "^2.67.0"
   }

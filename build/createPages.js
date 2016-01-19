@@ -6,6 +6,7 @@ const markdown = require('markdown').markdown;
 
 // config
 const CONTENTS_URL = 'https://api.github.com/repos/stephanbakker/md-content/contents';
+const CONTENT_PAGES_DIST_PATH = './dist/content-pages.json'; 
 
 // add default request headers
 function buildRequestOptions(url) {
@@ -48,7 +49,7 @@ function getPages(data) {
         return requestPromise(buildRequestOptions(page.download_url))
             .then(function (mdContent) {
                 return {
-                    name: page.name,
+                    name: stripExtension(page.name),
                     mdContent: mdContent
                 }
             });
@@ -69,7 +70,7 @@ function toHtml(pages) {
 
 function writeJson(pages) {
     return new Promise(function (resolve, reject) {
-        fs.writeFile('./build/pages.json', JSON.stringify(pages), function writeFile(err) {
+        fs.writeFile(CONTENT_PAGES_DIST_PATH, JSON.stringify(pages), function writeFile(err) {
             if (err) {
                 return reject(err);
             } else {
@@ -79,3 +80,6 @@ function writeJson(pages) {
     });
 }
 
+function stripExtension(name) {
+    return name.split('.').shift();
+}
