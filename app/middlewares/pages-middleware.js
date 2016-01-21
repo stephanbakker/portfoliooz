@@ -8,20 +8,48 @@ module.exports = {
 }
 
 function page(req, res, next) {
-    // add pages for creating navigation
-    let contentPages = Page.find();
 
-    let page = req.params.page;
+    let pageName = req.params.page;
 
-    if (page) {
-        let contentPage = contentPages.find(function (contentPage) {
-            return contentPage.name === page;   
-        });
+    let promises = [promiseAllPages()];
 
-        req.page = contentPage || undefined;
+    if (pageName) {
+        promises.push(promisePage(pageName));
     }
 
-    next();
+    Promise.all(promises)
+        .then(function (values) {
+
+            req.pages = values[0];
+            req.page = values[1];
+
+            next();
+        })
+        .catch(function (err) {
+            throw err;
+        });
 };
+
+function promiseAllPages() {
+    return new Promise(function (resolve, reject) {
+        Page.find(function (err, pages) {
+            if (err) {
+                reject(err);
+            }
+            resolve(pages);
+        });
+    });
+}
+
+function promisePage(pageName) {
+    return new Promise(function (resolve, reject) {
+        Page.findOne({name: pageName}, function (err, page) {
+            if (err) {
+                reject(err);
+            }
+            resolve(page);
+        });
+    });
+}
 
 

@@ -9,8 +9,6 @@ const pageModel = require('./app/models/page');
 
 const port = process.env.PORT || 3000;
 
-console.log('env', nconf.get('MONGOLAB_URI'));
-
 // decorate app
 require('./config/express')(app);
 require('./config/routes')(app);

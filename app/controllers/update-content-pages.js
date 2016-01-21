@@ -8,6 +8,12 @@ const markdown = require('markdown').markdown;
 const CONTENTS_URL = 'https://api.github.com/repos/stephanbakker/md-content/contents';
 const CONTENT_PAGES_DIST_PATH = './dist/content-pages.json'; 
 
+module.exports = function () {
+    return requestPromise(buildRequestOptions(CONTENTS_URL))
+        .then(getPages)
+        .then(toHtml)
+};
+
 // add default request headers
 function buildRequestOptions(url) {
     return {
@@ -31,15 +37,6 @@ function requestPromise(options) {
             });
         });
 }
-
-requestPromise(buildRequestOptions(CONTENTS_URL))
-    .then(getPages)
-    .then(toHtml)
-    .then(writeJson)
-    .catch(function (err) {
-        throw (err);
-    });
-
 
 function getPages(data) {
     // parse response body
@@ -68,6 +65,8 @@ function toHtml(pages) {
     });
 }
 
+// helper for writing json to file system
+// NOT USED
 function writeJson(pages) {
     return new Promise(function (resolve, reject) {
         fs.writeFile(CONTENT_PAGES_DIST_PATH, JSON.stringify(pages), function writeFile(err) {

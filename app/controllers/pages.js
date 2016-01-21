@@ -1,6 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 const Page = mongoose.model('Page');
+const getContentPages = require('./update-content-pages');
 
 module.exports = {
     index: index,
@@ -29,28 +30,30 @@ function content(req, res) {
 }
 
 function update(req, res, next) {
-    var pages = [{name: 'aap', html: '<h1>aap take 2</h1>'}, {name: 'noot', html: '<h1>noot</h2>'}];
-
-    let promises = pages.map(function (pageObj) {
-       
-        return new Promise(function (resolve, reject) {
-            Page.findOneAndUpdate({name: pageObj.name}, {html: pageObj.html}, {upsert:true}, function(err, doc){
-                if (err) {
-                    reject(err);
-                }
-                resolve('saved ' + doc.name);
+    getContentPages()
+        .then(function (pages) {
+            let promises = pages.map(function (pageObj) {
+        
+                return new Promise(function (resolve, reject) {
+                    Page.findOneAndUpdate({name: pageObj.name}, {html: pageObj.html}, {upsert:true}, function(err, doc){
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve('saved ' + doc.name);
+                    });
+                });
             });
-        });
 
-    });
+            return Promise.all(promises);
 
-    Promise.all(promises)
-        .then(function (data) {
-            res.send(data.join(' '));
+        })
+        .then(function (value) {
+            res.end('Pages updated: ' + value);
         })
         .catch(function (err) {
             res.sendStatus(500, err);
+            console.log('Error updating pages (500)', err);
         });
-    
+
 }
 
