@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const Page = mongoose.model('Page');
 const getContentPages = require('./update-content-pages');
+const config = require('../../config/config');
 
 module.exports = {
     index: index,
@@ -17,11 +18,13 @@ function index(req, res) {
 
 function content(req, res) {
 
+    let pageType = req.work ? 'work' : 'content';
+
     if (!req.page) {
         return res.sendStatus(404);
     }
 
-    res.render('content', {
+    res.render(pageType, {
         pages: req.pages,
         section: req.page.page,
         content: req.page.html
@@ -31,21 +34,12 @@ function content(req, res) {
 
 function update(req, res, next) {
     getContentPages()
+        .then(function addWorkPages(pages) {
+            console.log(pages.concat(config.workPages));
+            return pages.concat(config.workPages);
+        })
         .then(function (pages) {
-            let promises = pages.map(function (pageObj) {
-        
-                return new Promise(function (resolve, reject) {
-                    Page.findOneAndUpdate({name: pageObj.name}, {html: pageObj.html}, {upsert:true}, function(err, doc){
-                        if (err) {
-                            reject(err);
-                        }
-                        resolve('saved ' + doc.name);
-                    });
-                });
-            });
-
-            return Promise.all(promises);
-
+            return Promise.all(pages.map(pMongoPageUpdate));
         })
         .then(function (value) {
             res.end('Pages updated: ' + value);
@@ -55,5 +49,16 @@ function update(req, res, next) {
             console.log('Error updating pages (500)', err);
         });
 
+}
+
+function pMongoPageUpdate(pageObj) {
+    return new Promise(function (resolve, reject) {
+        Page.findOneAndUpdate({name: pageObj.name}, {html: pageObj.html || ''}, {upsert:true}, function(err, doc){
+            if (err) {
+                reject(err);
+            }
+            resolve('saved ' + doc.name);
+        });
+    });
 }
 

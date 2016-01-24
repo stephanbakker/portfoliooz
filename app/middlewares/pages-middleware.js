@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Page = mongoose.model('Page');
+const config = require('../../config/config');
 
 module.exports = {
     page: page
@@ -22,6 +23,8 @@ function page(req, res, next) {
 
             req.pages = values[0];
             req.page = values[1];
+
+            req.work = config.workPages.some(page => page.name === req.page.name);
 
             next();
         })
