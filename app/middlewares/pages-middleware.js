@@ -19,23 +19,22 @@ function page(req, res, next) {
     }
 
     Promise.all(promises)
-        .then(function (values) {
+        .then(values => {
 
             req.pages = values[0];
             req.page = values[1];
-
+            
+            // check if it is a work page
             req.work = config.workPages.some(page => page.name === req.page.name);
 
             next();
         })
-        .catch(function (err) {
-            throw err;
-        });
+        .catch(err => {throw err});
 };
 
 function promiseAllPages() {
-    return new Promise(function (resolve, reject) {
-        Page.find(function (err, pages) {
+    return new Promise((resolve, reject) => {
+        Page.find((err, pages) => {
             if (err) {
                 reject(err);
             }
@@ -45,8 +44,8 @@ function promiseAllPages() {
 }
 
 function promisePage(pageName) {
-    return new Promise(function (resolve, reject) {
-        Page.findOne({name: pageName}, function (err, page) {
+    return new Promise((resolve, reject) => {
+        Page.findOne({name: pageName}, (err, page) => {
             if (err) {
                 reject(err);
             }

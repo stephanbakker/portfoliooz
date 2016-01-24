@@ -34,17 +34,10 @@ function content(req, res) {
 
 function update(req, res, next) {
     getContentPages()
-        .then(function addWorkPages(pages) {
-            console.log(pages.concat(config.workPages));
-            return pages.concat(config.workPages);
-        })
-        .then(function (pages) {
-            return Promise.all(pages.map(pMongoPageUpdate));
-        })
-        .then(function (value) {
-            res.end('Pages updated: ' + value);
-        })
-        .catch(function (err) {
+        .then(pages => pages.concat(config.workPages))
+        .then(pages => Promise.all(pages.map(pMongoPageUpdate)))
+        .then(value => res.end('Pages updated: ' + value))
+        .catch(err => {
             res.sendStatus(500, err);
             console.log('Error updating pages (500)', err);
         });
