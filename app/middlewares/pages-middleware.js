@@ -9,18 +9,10 @@ module.exports = {
 }
 
 function page(req, res, next) {
-
-    let pageName = req.params.page;
-
-    let promises = [promiseAllPages()];
-
-    if (pageName) {
-        promises.push(promisePage(pageName));
-    }
+    let promises = [promiseAllPages(), promisePage(req.params.page)];
 
     Promise.all(promises)
         .then(values => {
-
             req.pages = values[0];
             req.page = values[1];
             
@@ -29,7 +21,10 @@ function page(req, res, next) {
 
             next();
         })
-        .catch(err => {throw err});
+        .catch(err => {
+            next();
+            throw Error(err);
+        });
 };
 
 function promiseAllPages() {
@@ -45,12 +40,16 @@ function promiseAllPages() {
 
 function promisePage(pageName) {
     return new Promise((resolve, reject) => {
-        Page.findOne({name: pageName}, (err, page) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(page);
-        });
+        if (pageName) {
+            Page.findOne({name: pageName}, (err, page) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(page);
+            });
+        } else {
+            resolve({});
+        }
     });
 }
 
