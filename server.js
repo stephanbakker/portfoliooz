@@ -9,6 +9,8 @@ const pageModel = require('./app/models/page');
 
 const port = process.env.PORT || 3000;
 
+nconf.env();
+
 // decorate app
 require('./config/express')(app);
 require('./config/routes')(app);
@@ -35,8 +37,9 @@ function connectDb() {
 
     // handle db
     var mongoDBEnv = nconf.get('MONGOLAB_URI');
+    console.log('ENV', process.ENV);
     config.db = mongoDBEnv || config.db;
-    console.log(mongoDBEnv);
+    console.log('mongoURI', mongoDBEnv);
 
     return mongoose.connect(config.db, options).connection;
 }
