@@ -33,5 +33,10 @@ function connectDb() {
         }
     };
 
+    // handle db
+    var mongoDBEnv = nconf.get('MONGOLAB_URI');
+    config.db = mongoDBEnv || config.db;
+    console.log(mongoDBEnv);
+
     return mongoose.connect(config.db, options).connection;
 }
