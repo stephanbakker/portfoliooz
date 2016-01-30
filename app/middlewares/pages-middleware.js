@@ -5,7 +5,8 @@ const Page = mongoose.model('Page');
 const config = require('../../config/config');
 
 module.exports = {
-    page: page
+    page: page,
+    error: error
 }
 
 function page(req, res, next) {
@@ -22,8 +23,7 @@ function page(req, res, next) {
             next();
         })
         .catch(err => {
-            next();
-            throw Error(err);
+            next(err);
         });
 };
 
@@ -54,3 +54,7 @@ function promisePage(pageName) {
 }
 
 
+function error(err, req, res, next) {
+    res.sendStatus(500);
+    res.render('error', {error: err});
+}
