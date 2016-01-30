@@ -22,6 +22,7 @@ connectDb()
     .once('open', listen);
 
 function listen() {
+    console.log('ready');
     app.listen(port);
 }
 
