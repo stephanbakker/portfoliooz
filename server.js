@@ -3,13 +3,14 @@ const nconf = require('nconf');
 const mongoose = require('mongoose');
 
 const app = require('express')();
-
-const config = require('./config/config');
 const pageModel = require('./app/models/page');
-
 const port = process.env.PORT || 3000;
 
-nconf.env();
+nconf
+   .env()
+   .file({file: './config/env.json'});
+
+const config = require('./config/config');
 
 // decorate app
 require('./config/express')(app);
@@ -22,7 +23,6 @@ connectDb()
     .once('open', listen);
 
 function listen() {
-    console.log('ready');
     app.listen(port);
 }
 
@@ -38,9 +38,7 @@ function connectDb() {
 
     // handle db
     var mongoDBEnv = nconf.get('MONGOLAB_URI');
-    console.log('ENV', process.ENV);
     config.db = mongoDBEnv || config.db;
     console.log('mongoURI', mongoDBEnv);
-
     return mongoose.connect(config.db, options).connection;
 }

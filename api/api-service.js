@@ -13,7 +13,7 @@ console.log(nconf.get('FLICKR_USER_ID'));
 var flickrOptions = {
     api_key: 'a26c0bc6e99fe0da91f3fd06e702e36c',
     secret: 'd3917e7a6817b4f2',
-    permissions: 'read',
+    permissions: 'write',
     force_auth: true,
 
     user_id: nconf.get('FLICKR_USER_ID'),

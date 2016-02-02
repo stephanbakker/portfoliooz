@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const Page = mongoose.model('Page');
 const config = require('../../config/config');
 
-module.exports = pages;
+module.exports = page;
 
-function pages(req, res, next) {
-    promiseAllPages()
-        .then(pages => {
-            req.pages = pages;
+function page(req, res, next) {
+    promisePage(req.params.page)
+        .then(data => {
+            req.page = data;
 
             next();
         })
@@ -17,17 +17,6 @@ function pages(req, res, next) {
             next(err);
         });
 };
-
-function promiseAllPages() {
-    return new Promise((resolve, reject) => {
-        Page.find((err, pages) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(pages);
-        });
-    });
-}
 
 function promisePage(pageName) {
     return new Promise((resolve, reject) => {

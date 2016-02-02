@@ -3,14 +3,18 @@
 const fs = require('fs');
 const markdown = require('markdown').markdown;
 
-const middlewares = require('../app/middlewares/pages-middleware');
 const pages = require('../app/controllers/pages');
 
+const pageMiddleware = require('../app/middlewares/page-middleware');
+const pagesMiddleware = require('../app/middlewares/pages-middleware');
+
+const flickrApi = require('../app/middlewares/flickr-middleware-pages');
+const flickrApiPage = require('../app/middlewares/flickr-middleware-page');
 
 module.exports = function (app) {
 
-    app.get('/', middlewares.page, pages.index);
-    app.get('/:page', middlewares.page, pages.content);
+    app.get('/', pagesMiddleware, flickrApi.pages, pages.index);
+    app.get('/:page', pagesMiddleware, pageMiddleware, flickrApi.pages, flickrApiPage, pages.content);
 
     app.post('/content-update', pages.update);
 

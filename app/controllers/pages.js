@@ -18,7 +18,7 @@ function index(req, res) {
 
 function content(req, res) {
 
-    let pageType = req.work ? 'work' : 'content';
+    let pageType = req.page.data ? 'work' : 'content';
 
     if (!req.page) {
         return res.sendStatus(404);
@@ -27,7 +27,8 @@ function content(req, res) {
     res.render(pageType, {
         pages: req.pages,
         section: req.page.page,
-        content: req.page.html
+        content: req.page.html,
+        photoData: req.page.data
     });
 
 }
