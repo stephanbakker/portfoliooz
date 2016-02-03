@@ -35,7 +35,6 @@ function content(req, res) {
 
 function update(req, res, next) {
     getContentPages()
-        .then(pages => pages.concat(config.workPages))
         .then(pages => Promise.all(pages.map(pMongoPageUpdate)))
         .then(value => res.end('Pages updated: ' + value))
         .catch(err => {

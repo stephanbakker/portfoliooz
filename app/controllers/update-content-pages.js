@@ -15,7 +15,7 @@ function buildRequestOptions(url) {
     return {
         url: url,
         headers: {
-            'User-Agent': 'portfoliooz'
+            'User-Agent': config.appName
         }
     }
 }

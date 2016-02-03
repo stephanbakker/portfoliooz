@@ -1,5 +1,6 @@
 'use strict';
 const pages = require('../app/controllers/pages');
+const photoPages = require('../app/controllers/flickr-update-pages');
 
 // middlewares
 const pageMiddleware = require('../app/middlewares/page-middleware');
@@ -14,5 +15,6 @@ module.exports = function (app) {
     app.get('/:page', pagesMiddleware, pageMiddleware, flickrApi.pages, flickrApiPage, pages.content);
 
     app.post('/content-update', pages.update);
+    app.post('/flickr-update', photoPages.update);
 
 }
