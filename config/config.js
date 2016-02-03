@@ -4,6 +4,8 @@ var nconf = require('nconf');
 
 module.exports = {
     db: 'mongodb://localhost/marit',
+    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
+    
     flickrOptions: {
         permissions: 'write',
         force_auth: true,

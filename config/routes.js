@@ -1,10 +1,7 @@
 'use strict';
-
-const fs = require('fs');
-const markdown = require('markdown').markdown;
-
 const pages = require('../app/controllers/pages');
 
+// middlewares
 const pageMiddleware = require('../app/middlewares/page-middleware');
 const pagesMiddleware = require('../app/middlewares/pages-middleware');
 

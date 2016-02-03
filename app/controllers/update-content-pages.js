@@ -1,15 +1,11 @@
 'use strict';
 
-const fs = require('fs');
 const request = require('request');
 const markdown = require('markdown').markdown;
-
-// config
-const CONTENTS_URL = 'https://api.github.com/repos/stephanbakker/md-content/contents';
-const CONTENT_PAGES_DIST_PATH = './dist/content-pages.json'; 
+const config = require('../../config/config');
 
 module.exports = function () {
-    return requestPromise(buildRequestOptions(CONTENTS_URL))
+    return requestPromise(buildRequestOptions(config.CONTENTS_URL))
         .then(getPages)
         .then(toHtml)
 };
@@ -62,20 +58,6 @@ function toHtml(pages) {
             name: page.name,
             html: markdown.toHTML(page.mdContent)
         }
-    });
-}
-
-// helper for writing json to file system
-// NOT USED
-function writeJson(pages) {
-    return new Promise(function (resolve, reject) {
-        fs.writeFile(CONTENT_PAGES_DIST_PATH, JSON.stringify(pages), function writeFile(err) {
-            if (err) {
-                return reject(err);
-            } else {
-                resolve('saved');
-            }
-        });
     });
 }
 
