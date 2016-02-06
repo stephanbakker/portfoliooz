@@ -43,5 +43,6 @@ function connectDb() {
     var mongoDBEnv = nconf.get('MONGOLAB_URI');
     config.db = mongoDBEnv || config.db;
     console.log('mongoURI', mongoDBEnv);
+
     return mongoose.connect(config.db, options).connection;
 }
