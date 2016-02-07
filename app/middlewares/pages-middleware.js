@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const Page = mongoose.model('Page');
+const flickrUpdatePages = require('../controllers/flickr-update-pages');
+const config = require('../../config/config');
 
 module.exports = pages;
 
@@ -17,7 +19,9 @@ function pages(req, res, next) {
             }
 
             next();
+            return req.page;
         })
+        .then(checkExpiresPhotos)
         .catch(err => {
             next(err);
         });
@@ -36,6 +40,14 @@ function promiseAllPages() {
 
 function findPage(pageObj) {
     return pageObj.title === this.title;
+}
+
+function checkExpiresPhotos(pageObj) {
+    const savedDate = pageObj && pageObj.photosDate;
+    if (savedDate && 
+            (Date.now() - savedDate > config.flickr_expire_time)) {
+        flickrUpdatePages()
+    }
 }
 
 
