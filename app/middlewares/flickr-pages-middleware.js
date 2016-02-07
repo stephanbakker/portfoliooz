@@ -36,11 +36,13 @@ function promiseAllPages() {
 
 function checkExpiredPhotos(photoPages) {
     const savedDate = photoPages[0] && photoPages[0].date;
-    const maxAge = 1000 * 60 * 60 * 24; // 1 day
+    //const maxAge = 1000 * 60 * 60 * 24; // 1 day
+    const maxAge = 1000 * 60; // 1 minute
 
     if (!savedDate) {
         console.warn('no saved Date for photoPages found');
     } else if (Date.now() - savedDate > maxAge) {
+        console.info('flickr data expired, update!');
         updatePhotoPages(); 
     }
 

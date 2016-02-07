@@ -7,7 +7,6 @@ const port = process.env.PORT || 3000;
 
 // install models
 require('./app/models/page');
-require('./app/models/photo-page');
 
 nconf
    .env()

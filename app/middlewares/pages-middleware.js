@@ -7,8 +7,14 @@ module.exports = pages;
 
 function pages(req, res, next) {
     promiseAllPages()
-        .then(pages => {
+        .then(pages => { 
+            const pageTitle = req.params.page;
+
             req.pages = pages;
+
+            if (pageTitle) {
+                req.page = pages.find(findPage(pageTitle)); 
+            }
 
             next();
         })
@@ -27,3 +33,12 @@ function promiseAllPages() {
         });
     });
 }
+
+function findPage(pageTitle) {
+    return function (pageObj) {
+        return pageObj.title === pageTitle;
+    }
+}
+
+
+

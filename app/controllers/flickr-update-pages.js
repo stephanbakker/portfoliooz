@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const PhotoPage = mongoose.model('PhotoPage');
+const Page = mongoose.model('Page');
 
 const config = require('../../config/config');
 const nconf = require('nconf');
@@ -21,7 +21,7 @@ function update() {
             flickrUpdateSets(sets);
             return sets;
         })
-        .then(photoPages => Promise.all(photoPages.map(pMongoPhotoPageUpdate)))
+        .then(photoSets => Promise.all(photoSets.map(pMongoPhotoPageUpdate)))
         .catch(err => {
             throw new Error(err)
         })
@@ -38,35 +38,40 @@ function pFlickrFetchCollectionTree() {
                 api_key: nconf.get('FLICKR_API_KEY'),
                 user_id: nconf.get('FLICKR_USER_ID'),
                 collection_id: config.flickr_collection_id
-            }, function (err, result) {
+            }, (err, result) => {
                 if (err) {
                     reject(err);
                 }
-                console.log('result from flickr getTree', result);
                 resolve(result);
             });
         });
     });
 }
 
-function pMongoPhotoPageUpdate(pageObj) {
-    return new Promise(function (resolve, reject) {
-        PhotoPage.findOneAndUpdate(
-            {id: pageObj.id},
-            {title: pageObj.title, date: pageObj.date},
-            {'upsert':true, 'new': true},
-            function(err, photoPage){
+function pMongoPhotoPageUpdate(photoSet) {
+    return new Promise((resolve, reject) => {
+        Page.findOneAndUpdate(
+            {photoSetId: photoSet.id},
+            {
+                title: photoSet.title,
+                photosDate: photoSet.date,
+                type: 'photo'
+            },
+            {'upsert': true, 'new': true},
+            (err, set) => {
                 if (err) {
                     reject(err);
                 }
-                console.log('updated %s to DB', photoPage.title);
-                resolve(photoPage);
+                resolve(set);
             });
     });
 }
 
 function mapPages(flickrData) {
-    return flickrData.collections.collection[0].set.map(set => {
+    const set = flickrData.collections.collection[0].set;
+    console.log('flickr set to update: ', set);
+
+    return set.map(set => {
         return {
             title : set.title,
             id: set.id,

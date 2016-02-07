@@ -22,13 +22,14 @@ function content(req, res) {
         return res.sendStatus(404);
     }
 
-    let pageType = req.page.photos ? 'work' : 'content';
+    let pageType = req.page.type;
 
     res.render(pageType, {
         pages: req.pages,
         section: req.page.title,
         content: req.page.html,
-        photos: req.page.photos
+        photos: JSON.stringify(req.page.photos),
+        date: new Date(req.page.photosDate)
     });
 
 }
@@ -41,17 +42,21 @@ function update(req, res, next) {
             res.sendStatus(500, err);
             console.log('Error updating pages (500)', err);
         });
-
 }
 
 function pMongoPageUpdate(pageObj) {
     return new Promise(function (resolve, reject) {
-        Page.findOneAndUpdate({title: pageObj.title}, {html: pageObj.html || ''}, {upsert:true}, function(err, doc){
-            if (err) {
-                reject(err);
+        Page.findOneAndUpdate(
+            {title: pageObj.title}, 
+            {html: pageObj.html || ''}, 
+            {upsert:true}, 
+            (err, doc) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve('saved content page: ' + doc.title);
             }
-            resolve('saved content page: ' + doc.title);
-        });
+        );
     });
 }
 
