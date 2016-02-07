@@ -65,7 +65,7 @@ function flickrGetSetPromise(flickr) {
 function updateInDB(set) {
     return new Promise((resolve, reject) => {
         Page.findOneAndUpdate(
-            {photoSetId: set.id}, 
+            {photoSetId: set.id},
             {
                 title: set.title,
                 photos: set.photo

@@ -7,13 +7,13 @@ module.exports = pages;
 
 function pages(req, res, next) {
     promiseAllPages()
-        .then(pages => { 
+        .then(pages => {
             const pageTitle = req.params.page;
 
             req.pages = pages;
 
             if (pageTitle) {
-                req.page = pages.find(findPage(pageTitle)); 
+                req.page = pages.find(findPage.bind({title: pageTitle}));
             }
 
             next();
@@ -34,10 +34,8 @@ function promiseAllPages() {
     });
 }
 
-function findPage(pageTitle) {
-    return function (pageObj) {
-        return pageObj.title === pageTitle;
-    }
+function findPage(pageObj) {
+    return pageObj.title === this.title;
 }
 
 

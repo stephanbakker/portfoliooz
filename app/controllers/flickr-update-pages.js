@@ -25,6 +25,7 @@ function update() {
         .catch(err => {
             throw new Error(err)
         })
+
 }
 
 function pFlickrFetchCollectionTree() {
