@@ -1,19 +1,19 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Page = mongoose.model('Page');
+const PhotoSet = mongoose.model('PhotoSet');
 const config = require('../../config/config');
 
-module.exports = page;
+module.exports = photoPage;
 
-function page(req, res, next) {
-    promisePage(req.params.page)
-        .then(contentPage => {
-                console.log('\ncontentPage: ', contentPage);
-            if (contentPage) {
+function photoPage(req, res, next) {
+    promisePhotoPage(req.params.page)
+        .then(photoPage => {
+            console.log('\nphotoPage: ', photoPage.title);
+            if (photoPage) {
                 req.page = {
-                    html: contentPage.html,
-                    title: contentPage.title
+                    title: photoPage.title,
+                    photos: photoPage.photos
                 };
             }
 
@@ -24,10 +24,10 @@ function page(req, res, next) {
         });
 };
 
-function promisePage(pageTitle) {
+function promisePhotoPage(pageTitle) {
     return new Promise((resolve, reject) => {
         if (pageTitle) {
-            Page.findOne({title: pageTitle}, (err, page) => {
+            PhotoSet.findOne({title: pageTitle}, (err, page) => {
                 if (err) {
                     reject(err);
                 }

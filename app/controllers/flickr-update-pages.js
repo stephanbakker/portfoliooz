@@ -10,9 +10,7 @@ const flickrOptions = require('../../config/config').flickrOptions;
 
 const flickrUpdateSets = require('./flickr-update-sets');
 
-module.exports = {
-    update: update
-};
+module.exports = update;
 
 function update() {
     console.log('start updating pages from flickr');
@@ -55,22 +53,24 @@ function pMongoPhotoPageUpdate(pageObj) {
     return new Promise(function (resolve, reject) {
         PhotoPage.findOneAndUpdate(
             {id: pageObj.id},
-            {name: pageObj.name},
+            {title: pageObj.title, date: pageObj.date},
             {'upsert':true, 'new': true},
-            function(err, doc){
+            function(err, photoPage){
                 if (err) {
                     reject(err);
                 }
-                console.log('updated', doc);
-                resolve(doc);
+                console.log('updated %s to DB', photoPage.title);
+                resolve(photoPage);
             });
     });
 }
 
 function mapPages(flickrData) {
-    console.log('map data', flickrData);
-
     return flickrData.collections.collection[0].set.map(set => {
-        return {name : set.title, id: set.id};
+        return {
+            title : set.title,
+            id: set.id,
+            date: Date.now()
+        };
     });
 }

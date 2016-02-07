@@ -3,15 +3,15 @@
 const mongoose = require('mongoose');
 
 const PhotoPageSchema = new mongoose.Schema({
-    name: {type: String, trim: true},
+    title: {type: String, trim: true},
     id: {type: String, trim: true},
-    date: {type: Number},
+    date: {type: Number}
 });
 
 const PhotoSetSchema = new mongoose.Schema({
-    "id": {type: String},
-	"title": {type: String},
-    "photos": {type: Array, default: []}
+    id: {type: String},
+	title: {type: String},
+    photos: {type: Array, default: []}
 });
 
 mongoose.model('PhotoPage', PhotoPageSchema);

@@ -23,8 +23,8 @@ function buildRequestOptions(url) {
 // promise-ify request
 function requestPromise(options) {
     return new Promise(
-        function (resolve, reject) {
-            request.get(options, function requestHandler(error, response, body) {
+        (resolve, reject) => {
+            request.get(options, (error, response, body) => {
                 if (error) {
                     return reject(err);
                 } else {
@@ -38,11 +38,11 @@ function getPages(data) {
     // parse response body
     let jsonData = JSON.parse(data);
 
-    let promises = jsonData.map(function (page) {
+    let promises = jsonData.map(page => {
         return requestPromise(buildRequestOptions(page.download_url))
-            .then(function (mdContent) {
+            .then(mdContent => {
                 return {
-                    name: stripExtension(page.name),
+                    title: stripExtension(page.name),
                     mdContent: mdContent
                 }
             });
@@ -55,7 +55,7 @@ function getPages(data) {
 function toHtml(pages) {
     return pages.map(function (page) {
         return {
-            name: page.name,
+            title: page.title,
             html: markdown.toHTML(page.mdContent)
         }
     });

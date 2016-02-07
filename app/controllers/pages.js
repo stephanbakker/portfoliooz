@@ -18,17 +18,17 @@ function index(req, res) {
 
 function content(req, res) {
 
-    let pageType = req.page.data ? 'work' : 'content';
-
     if (!req.page) {
         return res.sendStatus(404);
     }
 
+    let pageType = req.page.photos ? 'work' : 'content';
+
     res.render(pageType, {
         pages: req.pages,
-        section: req.page.page,
+        section: req.page.title,
         content: req.page.html,
-        photoData: req.page.data
+        photos: req.page.photos
     });
 
 }
@@ -46,11 +46,11 @@ function update(req, res, next) {
 
 function pMongoPageUpdate(pageObj) {
     return new Promise(function (resolve, reject) {
-        Page.findOneAndUpdate({name: pageObj.name}, {html: pageObj.html || ''}, {upsert:true}, function(err, doc){
+        Page.findOneAndUpdate({title: pageObj.title}, {html: pageObj.html || ''}, {upsert:true}, function(err, doc){
             if (err) {
                 reject(err);
             }
-            resolve('saved ' + doc.name);
+            resolve('saved content page: ' + doc.title);
         });
     });
 }

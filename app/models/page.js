@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const PageSchema = new mongoose.Schema({
-    name: {type: String, trim: true},
+    title: {type: String, trim: true},
     html: {type: String, trim: true}
 });
 
