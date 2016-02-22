@@ -38,12 +38,12 @@ function pFlickrAuthenticate() {
             }
 
             resolve(flickr);
-        })
+        });
     });
 }
 
 function flickrGetSetPromise(flickr) {
-    return(set) => {
+    return (set) => {
         return new Promise((resolve, reject) => {
             flickr.photosets.getPhotos({
                 photoset_id: set.id,
@@ -59,7 +59,7 @@ function flickrGetSetPromise(flickr) {
                 resolve(result.photoset);
             });
         });
-    }
+    };
 }
 
 function updateInDB(set) {
@@ -78,7 +78,7 @@ function updateInDB(set) {
                 resolve(doc);
             }
         );
-    })
+    });
 }
 
 function mapPhotoSets(sets) {

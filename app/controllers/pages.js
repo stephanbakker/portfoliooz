@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const Page = mongoose.model('Page');
 const getContentPages = require('./update-content-pages');
 const config = require('../../config/config');
+const React = require('react');
+
+const reactPhotos = require('../dist/photos/photos.js');
+const photos = React.createFactory(reactPhotos);
 
 module.exports = {
     index: index,
@@ -28,6 +32,7 @@ function content(req, res) {
         pages: req.pages,
         section: req.page.title,
         content: req.page.html,
+        photosHtml: React.renderToString(photos({photos: req.page.photos})),
         photos: JSON.stringify(req.page.photos),
         date: new Date(req.page.photosDate)
     });

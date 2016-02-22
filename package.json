@@ -4,21 +4,26 @@
   "description": "portfolio gallery",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon --debug server.js",
+    "dev": "nodemon --debug server.js && npm run watch:jsx",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "node-sass --include-path static static/main.scss dist/main.css",
+    "watch:jsx": "babel --presets react --watch src/views  --out-dir app/dist/",
     "watch-css": "npm run build-css -- -w",
     "browsersync": "browser-sync start --startPath ./ --server  --files 'dist/*'"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.5.1",
     "browser-sync": "^2.10.0",
     "node-sass": "^3.4.2",
     "nodemon": "^1.8.1",
     "parallelshell": "^2.0.0"
   },
   "dependencies": {
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
@@ -27,6 +32,7 @@
     "mongodb": "^2.0.52",
     "mongoose": "^4.3.6",
     "nconf": "^0.8.2",
+    "react": "^0.14.7",
     "request": "^2.67.0"
   }
 }
