@@ -1,16 +1,6 @@
-'use strict';
-const pages = require('../app/controllers/pages');
-const updatePhotoPages = require('../app/controllers/flickr-update-pages');
+import router from '../src/modules/router';
+import pages from '../app/middlewares/pages-middleware';
 
-const pagesMiddleware = require('../app/middlewares/pages-middleware');
-
-module.exports = function (app) {
-
-    app.get('/', pagesMiddleware, pages.index);
-
-    app.post('/content-update', pages.update);
-    app.post('/flickr-update', updatePhotoPages);
-
-    app.get('/:page', pagesMiddleware, pages.content);
-
+export default  function (app) {
+    app.get('/*', pages, router);
 }

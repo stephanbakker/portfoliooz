@@ -1,11 +1,11 @@
 'use strict';
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Page = mongoose.model('Page');
-const flickrUpdatePages = require('../controllers/flickr-update-pages');
-const config = require('../../config/config');
+import flickrUpdatePages from '../controllers/flickr-update-pages';
+import config from '../../config/config';
 
-module.exports = pages;
+export default pages;
 
 function pages(req, res, next) {
     promiseAllPages()
@@ -25,7 +25,7 @@ function pages(req, res, next) {
         .catch(err => {
             next(err);
         });
-};
+}
 
 function promiseAllPages() {
     return new Promise((resolve, reject) => {
@@ -46,7 +46,7 @@ function checkExpiresPhotos(pageObj) {
     const savedDate = pageObj && pageObj.photosDate;
     if (savedDate && 
             (Date.now() - savedDate > config.flickr_expire_time)) {
-        flickrUpdatePages()
+        flickrUpdatePages();
     }
 }
 

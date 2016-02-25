@@ -1,22 +1,27 @@
 // module dependencies
-const nconf = require('nconf');
-const mongoose = require('mongoose');
+import nconf from 'nconf';
+import mongoose from 'mongoose';
 
-const app = require('express')();
+import express from 'express';
+
+const app = express();
 const port = process.env.PORT || 3000;
 
 // install models
-require('./app/models/page');
+import './app/models/page';
 
 nconf
    .env()
    .file({file: './config/env.json'});
 
-const config = require('./config/config');
+import config from './config/config';
 
 // decorate app
-require('./config/express')(app);
-require('./config/routes')(app);
+import appExpress from './config/express';
+import appRoutes from './config/routes';
+// and call them
+appExpress(app);
+appRoutes(app);
 
 // start server
 connectDb()
