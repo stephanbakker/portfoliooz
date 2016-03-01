@@ -189,7 +189,7 @@
 	var path = __webpack_require__(7);
 
 	module.exports = function (app) {
-	    app.use(express.static(path.join(__dirname, 'public')));
+	    app.use(express.static(path.join(__dirname, '../public')));
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, "config"))
 
@@ -210,7 +210,7 @@
 	});
 
 	exports.default = function (app) {
-	    app.get('/*', _pagesMiddleware2.default, _router2.default);
+	    app.get('*', _pagesMiddleware2.default, _router2.default);
 	};
 
 	var _router = __webpack_require__(9);
@@ -275,7 +275,7 @@
 
 	            // if we got props then we matched a route and can render
 	            var appHtml = (0, _server.renderToString)(_react2.default.createElement(_reactRouter.RouterContext, props));
-	            res.send(renderPage(appHtml));
+	            res.send(renderPage(appHtml, props));
 	        } else {
 	            // no errors, no redirect, we just didn't match anything
 	            res.status(404).send('Not Found');
@@ -289,8 +289,9 @@
 	    return page ? !!content : true;
 	}
 
-	function renderPage(appHtml) {
-	    return '\n        <!doctype html public="storage">\n        <html>\n        <meta charset="utf-8"/>\n        <title>My First React Router App</title>\n        <link rel="stylesheet" href="/index.css"/>\n        <div id="app">' + appHtml + '</div>\n        <script src="/bundle.js"></script>\n    ';
+	function renderPage(appHtml, props) {
+	    var scriptProps = JSON.stringify(props);
+	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <link rel="stylesheet" href="/index.css"/>\n            <body>\n                <div id="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
 
 /***/ },
@@ -404,11 +405,12 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'NavBar',
 	    render: function render() {
+	        var pages = this.props.pages || window && window.__initialProps__.params.pages;
+
 	        return _react2.default.createElement(
 	            'ul',
 	            null,
-	            ' ',
-	            this.props.pages.map(function (page) {
+	            pages.map(function (page) {
 	                return _react2.default.createElement(
 	                    'li',
 	                    { key: page.title },
@@ -418,8 +420,7 @@
 	                        page.title
 	                    )
 	                );
-	            }),
-	            ' '
+	            })
 	        );
 	    }
 	});
@@ -501,21 +502,29 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'Page',
 	    render: function render() {
+	        var pageTitle = this.props.params.page;
+
+	        var pagesData = this.props.params.pages || window.__initialProps__.params.pages;
+
+	        var pageContent = pagesData.find(function (page) {
+	            return page.title === pageTitle;
+	        });
+
 	        return _react2.default.createElement(
 	            'div',
 	            null,
 	            _react2.default.createElement(
 	                'h1',
 	                null,
-	                this.props.page
+	                pageContent.title
 	            ),
-	            _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.params.pageContent.html } }),
+	            _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: pageContent.html } }),
 	            _react2.default.createElement(
 	                'div',
 	                null,
-	                this.props.params.pageContent.photos.length
+	                pageContent.photos.length
 	            ),
-	            _react2.default.createElement(_Photos2.default, { photos: this.props.params.pageContent.photos })
+	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos })
 	        );
 	    }
 	});
@@ -533,10 +542,10 @@
 
 
 	    render: function render() {
-	        var results = this.props.photos.map(function (photo) {
+	        var results = this.props.photos.map(function (photo, index) {
 	            return React.createElement(
 	                'div',
-	                { className: 'photos__item' },
+	                { key: 'p' + index, className: 'photos__item' },
 	                React.createElement('img', { src: photo.url_s })
 	            );
 	        });

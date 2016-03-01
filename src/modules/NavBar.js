@@ -3,16 +3,20 @@ import NavLink from './NavLink';
 
 export default React.createClass({
     render() {
+        let pages = this.props.pages || (window && window.__initialProps__.params.pages);
+
         return (
-            <ul> {
-                this.props.pages.map((page) => {
-                    return (
-                        <li key={page.title}>
-                            <NavLink to={page.title}>{page.title}</NavLink>
-                        </li>
-                    );
-                })
-            } </ul>
+            <ul> 
+                {
+                    pages.map((page) => {
+                        return (
+                            <li key={page.title}>
+                                <NavLink to={page.title}>{page.title}</NavLink>
+                            </li>
+                        );
+                    })
+                } 
+            </ul>
         );
     }
 });

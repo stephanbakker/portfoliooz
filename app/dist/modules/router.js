@@ -43,12 +43,15 @@ function isPageOrHome(page, content) {
 
 function renderPage(appHtml) {
     return `
-        <!doctype html public="storage">
+        <!doctype html>
         <html>
-        <meta charset="utf-8"/>
-        <title>My First React Router App</title>
-        <link rel="stylesheet" href="/index.css"/>
-        <div id="app">${ appHtml }</div>
-        <script src="/bundle.js"></script>
+            <meta charset="utf-8"/>
+            <title>My First React Router App</title>
+            <link rel="stylesheet" href="/index.css"/>
+            <body>
+                <div id="app">${ appHtml }</div>
+                <script src="/bundle.js"></script>
+            </body>
+        </html>
     `;
 }

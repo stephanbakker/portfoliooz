@@ -32,7 +32,7 @@ export default  (req, res, next) => {
 
             // if we got props then we matched a route and can render
             const appHtml = renderToString(<RouterContext {...props}/>);
-            res.send(renderPage(appHtml))
+            res.send(renderPage(appHtml, props))
 
         } else {
             // no errors, no redirect, we just didn't match anything
@@ -47,14 +47,21 @@ function isPageOrHome(page, content) {
     return page ? !!content : true;
 }
 
-function renderPage(appHtml) {
+function renderPage(appHtml, props) {
+    const scriptProps = JSON.stringify(props);
     return `
-        <!doctype html public="storage">
+        <!doctype html>
         <html>
-        <meta charset="utf-8"/>
-        <title>My First React Router App</title>
-        <link rel="stylesheet" href="/index.css"/>
-        <div id="app">${appHtml}</div>
-        <script src="/bundle.js"></script>
+            <meta charset="utf-8"/>
+            <title>My First React Router App</title>
+            <link rel="stylesheet" href="/index.css"/>
+            <body>
+                <div id="app">${appHtml}</div>
+                <script>
+                    window.__initialProps__ = ${scriptProps};
+                </script>
+                <script src="/bundle.js"></script>
+            </body>
+        </html>
     `
 }
