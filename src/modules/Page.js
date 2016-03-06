@@ -16,7 +16,7 @@ export default React.createClass({
             <h1>{pageContent.title}</h1>
             <div dangerouslySetInnerHTML={{__html: pageContent.html}} />
             <div>{pageContent.photos.length}</div>
-            <Photos photos={pageContent.photos}/>
+            <Photos photos={pageContent.photos} currentPage={this.props.params.page} currentPhoto={this.props.params.photo}/>
         </div>
       )
   }

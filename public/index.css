@@ -1,3 +1,7 @@
 .active {
     color: orange;
 }
+
+.is-zoomed {
+    transform: scale(2);
+}

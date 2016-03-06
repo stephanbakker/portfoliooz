@@ -10,7 +10,7 @@ export default  (req, res, next) => {
 
     // match the routes to the url
     match({ routes: routes, location: req.url }, (err, redirect, props) => {
-        
+
         // add pages from middleware
         props.params.pages = req.pages;
 
@@ -55,6 +55,7 @@ function renderPage(appHtml, props) {
             <meta charset="utf-8"/>
             <title>My First React Router App</title>
             <link rel="stylesheet" href="/index.css"/>
+            <link rel="stylesheet" href="/main.css"/>
             <body>
                 <div id="app">${appHtml}</div>
                 <script>

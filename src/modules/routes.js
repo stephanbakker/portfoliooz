@@ -8,7 +8,9 @@ import Page from './Page';
 module.exports = (
   <Route path="/" component={App}>
     <IndexRoute component={Home}/>
-    <Route path="/:page" component={Page}/>
+    <Route path="/:page" component={Page}>
+        <Route path="/:page/:photo" component={Page}/>
+    </Route>
   </Route>
 );
 

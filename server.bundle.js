@@ -217,7 +217,7 @@
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(20);
+	var _pagesMiddleware = __webpack_require__(21);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
@@ -291,7 +291,7 @@
 
 	function renderPage(appHtml, props) {
 	    var scriptProps = JSON.stringify(props);
-	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <link rel="stylesheet" href="/index.css"/>\n            <body>\n                <div id="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
+	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <link rel="stylesheet" href="/index.css"/>\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
 
 /***/ },
@@ -342,7 +342,11 @@
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/:page', component: _Page2.default })
+	  _react2.default.createElement(
+	    _reactRouter.Route,
+	    { path: '/:page', component: _Page2.default },
+	    _react2.default.createElement(_reactRouter.Route, { path: '/:page/:photo', component: _Page2.default })
+	  )
 	); // modules/routes.js
 
 /***/ },
@@ -524,7 +528,7 @@
 	                null,
 	                pageContent.photos.length
 	            ),
-	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos })
+	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos, currentPage: this.props.params.page, currentPhoto: this.props.params.photo })
 	        );
 	    }
 	});
@@ -535,31 +539,187 @@
 
 	'use strict';
 
-	var React = __webpack_require__(10);
+	var _react = __webpack_require__(10);
 
-	module.exports = React.createClass({
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(12);
+
+	var _gallery = __webpack_require__(20);
+
+	var _gallery2 = _interopRequireDefault(_gallery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _react2.default.createClass({
 	    displayName: 'exports',
-
-
+	    getInitialState: function getInitialState() {
+	        return {
+	            activeIndex: -1,
+	            activeEl: null
+	        };
+	    },
+	    componenDidUpdate: function componenDidUpdate() {
+	        console.log('componentDidUpdate', this.activeEl);
+	    },
 	    render: function render() {
+	        var _this = this;
+
 	        var results = this.props.photos.map(function (photo, index) {
-	            return React.createElement(
-	                'div',
-	                { key: 'p' + index, className: 'photos__item' },
-	                React.createElement('img', { src: photo.url_s })
+	            var key = 'p' + index;
+	            var imgSrc = _this.state.activeIndex === index ? photo.url_m : photo.url_s;
+
+	            return _react2.default.createElement(
+	                'li',
+	                { key: key, className: 'overview__item' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { onClick: _this.toggle(index),
+	                        className: 'item__wrapper' },
+	                    _react2.default.createElement('img', { src: imgSrc })
+	                )
 	            );
 	        });
-	        return React.createElement(
-	            'div',
-	            { className: 'photos' },
+
+	        return _react2.default.createElement(
+	            'ul',
+	            { className: 'overview' },
 	            results
 	        );
-	    }
+	    },
+	    toggle: function toggle(index) {
+	        var _this2 = this;
 
+	        return function (evt) {
+	            if (_this2.state.activeIndex === index) {
+	                _this2.close(evt.currentTarget, index);
+	            } else {
+	                _this2.show(evt.currentTarget, index);
+	            }
+	        };
+	    },
+	    show: function show(item, index) {
+
+	        // get rects first
+	        if (this.state.activeEl) {
+	            close(this.state.activeEl);
+	        }
+
+	        // add className via state rerender
+	        this.setState({
+	            activeIndex: index,
+	            activeEl: item
+	        });
+
+	        item.rects = item.getBoundingClientRect();
+
+	        item.classList.add('is-extended');
+	        // rerender to fullscreen
+
+	        var expandedRects = item.getBoundingClientRect();
+
+	        item.style.clip = 'rect(' + item.rects.top + 'px, ' + item.rects.right + 'px, ' + item.rects.bottom + 'px, ' + item.rects.left + 'px)';
+
+	        // Read again to force the style change to take hold.
+	        var triggerValue = item.offsetTop;
+
+	        item.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
+	    },
+	    close: function close(item) {
+	        item.style.clip = 'rect(' + item.rects.top + 'px, ' + item.rects.right + 'px, ' + item.rects.bottom + 'px, ' + item.rects.left + 'px)';
+
+	        item.addEventListener('transitionend', this.transitionCollapseEnd);
+
+	        this.setState({
+	            activeIndex: -1,
+	            activeEl: null
+	        });
+	    },
+	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
+	        var item = evt.target;
+
+	        item.classList.remove('is-extended');
+	        item.removeEventListener('transitionend', this.transitionCollapseEnd);
+	    }
 	});
 
 /***/ },
 /* 20 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (item) {
+
+	    var currentlet = undefined;
+	    var props = ['top', 'right', 'left', 'bottom'];
+
+	    // TODO, make this a bit more like a pro ;-)
+	    // for now, just call the thing
+	    toggleItem(item);
+
+	    function toggleItem(item) {
+
+	        console.log('toggleItem', item);
+	        if (current) {
+	            close(current);
+	        }
+
+	        if (item) {
+	            show(item);
+	        }
+	    }
+
+	    function show(item) {
+
+	        var expandedRects;
+
+	        if (current) {
+	            close(current);
+	        }
+
+	        current = item;
+
+	        current.rects = item.getBoundingClientRect();
+
+	        // fixed starting position
+	        item.classList.add('is-extended');
+
+	        expandedRects = item.getBoundingClientRect();
+
+	        item.style.clip = 'rect(' + current.rects.top + 'px, ' + current.rects.right + 'px, ' + current.rects.bottom + 'px, ' + current.rects.left + 'px)';
+
+	        // Read again to force the style change to take hold.
+	        var triggerValue = item.offsetTop;
+
+	        item.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
+	    }
+
+	    function close(item) {
+
+	        item.style.clip = 'rect(' + current.rects.top + 'px, ' + current.rects.right + 'px, ' + current.rects.bottom + 'px, ' + current.rects.left + 'px)';
+
+	        item.addEventListener('transitionend', transitionCollapseEnd);
+
+	        current = null;
+	    }
+
+	    function transitionCollapseEnd(event) {
+	        var item = event.target;
+
+	        item.classList.remove('is-extended');
+	        item.removeEventListener('transitionend', transitionCollapseEnd);
+	    }
+	};
+
+	;
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -572,7 +732,7 @@
 
 	var _mongoose2 = _interopRequireDefault(_mongoose);
 
-	var _flickrUpdatePages = __webpack_require__(21);
+	var _flickrUpdatePages = __webpack_require__(22);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
@@ -626,7 +786,7 @@
 	}
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -636,10 +796,10 @@
 
 	var config = __webpack_require__(5);
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(22);
+	var Flickr = __webpack_require__(23);
 	var flickrOptions = __webpack_require__(5).flickrOptions;
 
-	var flickrUpdateSets = __webpack_require__(23);
+	var flickrUpdateSets = __webpack_require__(24);
 
 	module.exports = update;
 
@@ -706,19 +866,19 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = require("flickrapi");
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(22);
+	var Flickr = __webpack_require__(23);
 	var flickrOptions = __webpack_require__(5).flickrOptions;
 
 	// db

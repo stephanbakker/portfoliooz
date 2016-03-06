@@ -20,12 +20,15 @@ body {
         margin: 10px;
         width: calc(33% - 20px);
         color: brown;
-        background-color: pink;
+        background-color: #fff;
     }
 }
 
 .item__wrapper {
     min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 
     transition: top 1s, left 1s, right 1s, bottom 1s, height 1s;
 
@@ -45,22 +48,7 @@ body {
         height: 100%;
     }
 
-    .overview__item:nth-child(1) & {
-        background-color: $grey
-    }
-    .overview__item:nth-child(2) & {
-        background-color: yellow;
-    }
-    .overview__item:nth-child(3) & {
-        background-color: red;
-    }
-    .overview__item:nth-child(4) & {
-        background-color: pink;
-    }
-    .overview__item:nth-child(5) & {
-        background-color: green;
-    }
-    .overview__item:nth-child(6) & {
-        background-color: lightblue;
+    .overview__item & {
+        background-color: #fff;
     }
 }

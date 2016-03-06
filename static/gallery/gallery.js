@@ -10,7 +10,7 @@ var current;
 var props = ['top', 'right', 'left', 'bottom'];
 
 function toggleItem(event) {
-   
+
     var item = event.target;
 
     if (item === current) {
@@ -42,7 +42,7 @@ function show(item) {
 
     expandedRects = item.getBoundingClientRect();
 
-    item.style.clip = 'rect(' + 
+    item.style.clip = 'rect(' +
         current.rects.top + 'px, ' +
         current.rects.right + 'px, ' +
         current.rects.bottom + 'px, ' +
@@ -51,18 +51,17 @@ function show(item) {
     // Read again to force the style change to take hold.
     var triggerValue = item.offsetTop;
 
-    item.style.clip = 'rect(' + 
+    item.style.clip = 'rect(' +
         expandedRects.top + 'px, ' +
         expandedRects.right + 'px, ' +
         expandedRects.bottom + 'px, ' +
         expandedRects.left + 'px)';
 
-
 }
 
 function close(item) {
 
-    item.style.clip = 'rect(' + 
+    item.style.clip = 'rect(' +
         current.rects.top + 'px, ' +
         current.rects.right + 'px, ' +
         current.rects.bottom + 'px, ' +

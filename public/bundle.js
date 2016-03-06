@@ -24718,7 +24718,11 @@
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/:page', component: _Page2.default })
+	  _react2.default.createElement(
+	    _reactRouter.Route,
+	    { path: '/:page', component: _Page2.default },
+	    _react2.default.createElement(_reactRouter.Route, { path: '/:page/:photo', component: _Page2.default })
+	  )
 	); // modules/routes.js
 
 /***/ },
@@ -24900,7 +24904,7 @@
 	                null,
 	                pageContent.photos.length
 	            ),
-	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos })
+	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos, currentPage: this.props.params.page, currentPhoto: this.props.params.photo })
 	        );
 	    }
 	});
@@ -24911,28 +24915,184 @@
 
 	'use strict';
 
-	var React = __webpack_require__(1);
+	var _react = __webpack_require__(1);
 
-	module.exports = React.createClass({
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(159);
+
+	var _gallery = __webpack_require__(223);
+
+	var _gallery2 = _interopRequireDefault(_gallery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _react2.default.createClass({
 	    displayName: 'exports',
-
-
+	    getInitialState: function getInitialState() {
+	        return {
+	            activeIndex: -1,
+	            activeEl: null
+	        };
+	    },
+	    componenDidUpdate: function componenDidUpdate() {
+	        console.log('componentDidUpdate', this.activeEl);
+	    },
 	    render: function render() {
+	        var _this = this;
+
 	        var results = this.props.photos.map(function (photo, index) {
-	            return React.createElement(
-	                'div',
-	                { key: 'p' + index, className: 'photos__item' },
-	                React.createElement('img', { src: photo.url_s })
+	            var key = 'p' + index;
+	            var imgSrc = _this.state.activeIndex === index ? photo.url_m : photo.url_s;
+
+	            return _react2.default.createElement(
+	                'li',
+	                { key: key, className: 'overview__item' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { onClick: _this.toggle(index),
+	                        className: 'item__wrapper' },
+	                    _react2.default.createElement('img', { src: imgSrc })
+	                )
 	            );
 	        });
-	        return React.createElement(
-	            'div',
-	            { className: 'photos' },
+
+	        return _react2.default.createElement(
+	            'ul',
+	            { className: 'overview' },
 	            results
 	        );
+	    },
+	    toggle: function toggle(index) {
+	        var _this2 = this;
+
+	        return function (evt) {
+	            if (_this2.state.activeIndex === index) {
+	                _this2.close(evt.currentTarget, index);
+	            } else {
+	                _this2.show(evt.currentTarget, index);
+	            }
+	        };
+	    },
+	    show: function show(item, index) {
+
+	        // get rects first
+	        if (this.state.activeEl) {
+	            close(this.state.activeEl);
+	        }
+
+	        // add className via state rerender
+	        this.setState({
+	            activeIndex: index,
+	            activeEl: item
+	        });
+
+	        item.rects = item.getBoundingClientRect();
+
+	        item.classList.add('is-extended');
+	        // rerender to fullscreen
+
+	        var expandedRects = item.getBoundingClientRect();
+
+	        item.style.clip = 'rect(' + item.rects.top + 'px, ' + item.rects.right + 'px, ' + item.rects.bottom + 'px, ' + item.rects.left + 'px)';
+
+	        // Read again to force the style change to take hold.
+	        var triggerValue = item.offsetTop;
+
+	        item.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
+	    },
+	    close: function close(item) {
+	        item.style.clip = 'rect(' + item.rects.top + 'px, ' + item.rects.right + 'px, ' + item.rects.bottom + 'px, ' + item.rects.left + 'px)';
+
+	        item.addEventListener('transitionend', this.transitionCollapseEnd);
+
+	        this.setState({
+	            activeIndex: -1,
+	            activeEl: null
+	        });
+	    },
+	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
+	        var item = evt.target;
+
+	        item.classList.remove('is-extended');
+	        item.removeEventListener('transitionend', this.transitionCollapseEnd);
+	    }
+	});
+
+/***/ },
+/* 223 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (item) {
+
+	    var currentlet = undefined;
+	    var props = ['top', 'right', 'left', 'bottom'];
+
+	    // TODO, make this a bit more like a pro ;-)
+	    // for now, just call the thing
+	    toggleItem(item);
+
+	    function toggleItem(item) {
+
+	        console.log('toggleItem', item);
+	        if (current) {
+	            close(current);
+	        }
+
+	        if (item) {
+	            show(item);
+	        }
 	    }
 
-	});
+	    function show(item) {
+
+	        var expandedRects;
+
+	        if (current) {
+	            close(current);
+	        }
+
+	        current = item;
+
+	        current.rects = item.getBoundingClientRect();
+
+	        // fixed starting position
+	        item.classList.add('is-extended');
+
+	        expandedRects = item.getBoundingClientRect();
+
+	        item.style.clip = 'rect(' + current.rects.top + 'px, ' + current.rects.right + 'px, ' + current.rects.bottom + 'px, ' + current.rects.left + 'px)';
+
+	        // Read again to force the style change to take hold.
+	        var triggerValue = item.offsetTop;
+
+	        item.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
+	    }
+
+	    function close(item) {
+
+	        item.style.clip = 'rect(' + current.rects.top + 'px, ' + current.rects.right + 'px, ' + current.rects.bottom + 'px, ' + current.rects.left + 'px)';
+
+	        item.addEventListener('transitionend', transitionCollapseEnd);
+
+	        current = null;
+	    }
+
+	    function transitionCollapseEnd(event) {
+	        var item = event.target;
+
+	        item.classList.remove('is-extended');
+	        item.removeEventListener('transitionend', transitionCollapseEnd);
+	    }
+	};
+
+	;
 
 /***/ }
 /******/ ]);
