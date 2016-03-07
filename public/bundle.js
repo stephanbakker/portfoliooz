@@ -24935,15 +24935,25 @@
 	            activeEl: null
 	        };
 	    },
-	    componenDidUpdate: function componenDidUpdate() {
-	        console.log('componentDidUpdate', this.activeEl);
+	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	        // after render
+	        console.log('2. componentDidUpdate', this.state.activeEl);
+	        if (this.state.activeIndex > -1) {
+	            this.expand();
+	        }
+	    },
+	    componentWillUpdate: function componentWillUpdate() {
+	        // before render
+	        console.log('componentWillUpdate');
 	    },
 	    render: function render() {
 	        var _this = this;
 
 	        var results = this.props.photos.map(function (photo, index) {
 	            var key = 'p' + index;
-	            var imgSrc = _this.state.activeIndex === index ? photo.url_m : photo.url_s;
+	            var isActive = _this.state.activeIndex === index;
+	            var imgSrc = isActive ? photo.url_m : photo.url_s;
+	            var className = (isActive ? 'is-expanded' : '') + ' item__wrapper';
 
 	            return _react2.default.createElement(
 	                'li',
@@ -24951,7 +24961,7 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { onClick: _this.toggle(index),
-	                        className: 'item__wrapper' },
+	                        className: className },
 	                    _react2.default.createElement('img', { src: imgSrc })
 	                )
 	            );
@@ -24968,29 +24978,26 @@
 
 	        return function (evt) {
 	            if (_this2.state.activeIndex === index) {
-	                _this2.close(evt.currentTarget, index);
+	                _this2.shrink(evt.currentTarget, index);
 	            } else {
-	                _this2.show(evt.currentTarget, index);
+	                _this2.setupExpand(evt.currentTarget, index);
 	            }
 	        };
 	    },
-	    show: function show(item, index) {
-
-	        // get rects first
-	        if (this.state.activeEl) {
-	            close(this.state.activeEl);
-	        }
+	    setupExpand: function setupExpand(item, index) {
+	        item.rects = item.getBoundingClientRect();
 
 	        // add className via state rerender
+	        // it will call expand after render
 	        this.setState({
 	            activeIndex: index,
 	            activeEl: item
 	        });
-
-	        item.rects = item.getBoundingClientRect();
-
-	        item.classList.add('is-extended');
-	        // rerender to fullscreen
+	    },
+	    expand: function expand() {
+	        console.log('3. expand');
+	        // allways handled via state
+	        var item = this.state.activeEl;
 
 	        var expandedRects = item.getBoundingClientRect();
 
@@ -25001,20 +25008,21 @@
 
 	        item.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
 	    },
-	    close: function close(item) {
+	    shrink: function shrink(item) {
 	        item.style.clip = 'rect(' + item.rects.top + 'px, ' + item.rects.right + 'px, ' + item.rects.bottom + 'px, ' + item.rects.left + 'px)';
 
 	        item.addEventListener('transitionend', this.transitionCollapseEnd);
+	    },
+	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
+	        var item = evt.target;
 
 	        this.setState({
 	            activeIndex: -1,
 	            activeEl: null
 	        });
-	    },
-	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
-	        var item = evt.target;
 
-	        item.classList.remove('is-extended');
+	        item.rects = null;
+
 	        item.removeEventListener('transitionend', this.transitionCollapseEnd);
 	    }
 	});

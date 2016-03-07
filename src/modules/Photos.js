@@ -10,18 +10,28 @@ module.exports = React.createClass({
             activeEl: null
         }
     },
-    componenDidUpdate() {
-        console.log('componentDidUpdate', this.activeEl);
+    componentDidUpdate(prevProps, prevState) {
+        // after render
+        console.log('2. componentDidUpdate', this.state.activeEl);
+        if (this.state.activeIndex > -1) {
+            this.expand();
+        }
+    },
+    componentWillUpdate() {
+        // before render
+        console.log('componentWillUpdate');
     },
     render() {
         let results = this.props.photos.map((photo, index) => {
             const key = 'p' + index;
-            const imgSrc = this.state.activeIndex === index ? photo.url_m : photo.url_s;
+            const isActive = this.state.activeIndex === index;
+            const imgSrc = isActive ? photo.url_m : photo.url_s;
+            const className = (isActive ? 'is-expanded' : '') + ' item__wrapper';
 
             return(
                     <li key={key} className='overview__item'>
                         <div onClick={this.toggle(index)} 
-                                className="item__wrapper">
+                                className={className}>
                             <img src={imgSrc}/>
                         </div>
                     </li>
@@ -39,30 +49,28 @@ module.exports = React.createClass({
     toggle(index) {
         return (evt) => {
             if (this.state.activeIndex === index) {
-                this.close(evt.currentTarget, index);
+                this.shrink(evt.currentTarget, index);
             } else {
-                this.show(evt.currentTarget, index);
+                this.setupExpand(evt.currentTarget, index);
             }
         }
     },
 
-    show(item, index) {
-
-        // get rects first
-        if (this.state.activeEl) {
-            close(this.state.activeEl);
-        }
+    setupExpand(item, index) {
+        item.rects = item.getBoundingClientRect();
 
         // add className via state rerender
+        // it will call expand after render
         this.setState({
             activeIndex: index,
             activeEl: item
         });
+    },
 
-        item.rects = item.getBoundingClientRect();
-
-        item.classList.add('is-extended');
-        // rerender to fullscreen
+    expand() {
+        console.log('3. expand');
+        // allways handled via state
+        const item = this.state.activeEl;
 
         let expandedRects = item.getBoundingClientRect();
 
@@ -82,7 +90,7 @@ module.exports = React.createClass({
             expandedRects.left + 'px)';
     },
 
-    close(item) {
+    shrink(item) {
         item.style.clip = 'rect(' +
             item.rects.top + 'px, ' +
             item.rects.right + 'px, ' +
@@ -91,16 +99,18 @@ module.exports = React.createClass({
 
         item.addEventListener('transitionend', this.transitionCollapseEnd);
 
-        this.setState({
-            activeIndex: -1,
-            activeEl: null
-        });
     },
 
     transitionCollapseEnd(evt) {
         var item = evt.target;
 
-        item.classList.remove('is-extended');
+        this.setState({
+            activeIndex: -1,
+            activeEl: null
+        });
+
+        item.rects = null;
+
         item.removeEventListener('transitionend', this.transitionCollapseEnd);
     }
 
