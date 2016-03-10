@@ -16,6 +16,7 @@ module.exports = {
             loader: 'babel-loader?presets[]=es2015&presets[]=react'
         }]
     },
+    devtool: "#inline-source-map",
 
     plugins: process.env.NODE_ENV === 'production' ? [
         new webpack.optimize.DedupePlugin(),

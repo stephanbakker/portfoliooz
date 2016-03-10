@@ -217,7 +217,7 @@
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(21);
+	var _pagesMiddleware = __webpack_require__(20);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
@@ -291,7 +291,7 @@
 
 	function renderPage(appHtml, props) {
 	    var scriptProps = JSON.stringify(props);
-	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <link rel="stylesheet" href="/index.css"/>\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
+	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
 
 /***/ },
@@ -412,19 +412,23 @@
 	        var pages = this.props.pages || window && window.__initialProps__.params.pages;
 
 	        return _react2.default.createElement(
-	            'ul',
+	            'nav',
 	            null,
-	            pages.map(function (page) {
-	                return _react2.default.createElement(
-	                    'li',
-	                    { key: page.title },
-	                    _react2.default.createElement(
-	                        _NavLink2.default,
-	                        { to: page.title },
-	                        page.title
-	                    )
-	                );
-	            })
+	            _react2.default.createElement(
+	                'ul',
+	                { className: 'nav' },
+	                pages.map(function (page) {
+	                    return _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav__item', key: page.title },
+	                        _react2.default.createElement(
+	                            _NavLink2.default,
+	                            { to: page.title },
+	                            page.title
+	                        )
+	                    );
+	                })
+	            )
 	        );
 	    }
 	});
@@ -517,17 +521,7 @@
 	        return _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement(
-	                'h1',
-	                null,
-	                pageContent.title
-	            ),
 	            _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: pageContent.html } }),
-	            _react2.default.createElement(
-	                'div',
-	                null,
-	                pageContent.photos.length
-	            ),
 	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos, currentPage: this.props.params.page, currentPhoto: this.props.params.photo })
 	        );
 	    }
@@ -545,10 +539,6 @@
 
 	var _reactRouter = __webpack_require__(12);
 
-	var _gallery = __webpack_require__(20);
-
-	var _gallery2 = _interopRequireDefault(_gallery);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
@@ -559,24 +549,33 @@
 	            activeEl: null
 	        };
 	    },
+	    componentWillMount: function componentWillMount() {},
 	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	        console.log('2. componentDidUpdate', this.state.activeEl);
+	        // after render
 	        if (this.state.activeIndex > -1) {
 	            this.expand();
 	        }
 	    },
-	    componentWillUpdate: function componentWillUpdate() {
-	        console.log('componentWillUpdate');
+	    componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
+	        // before state change and render
+	        if (nextState.activeIndex > -1) {
+	            this.setupExpand(nextState.activeEl);
+	        }
 	    },
 	    render: function render() {
 	        var _this = this;
 
-	        console.log('render');
 	        var results = this.props.photos.map(function (photo, index) {
 	            var key = 'p' + index;
 	            var isActive = _this.state.activeIndex === index;
-	            var imgSrc = isActive ? photo.url_m : photo.url_s;
+	            var imgSrc = isActive ? photo.url_o : photo.url_t;
 	            var className = (isActive ? 'is-expanded' : '') + ' item__wrapper';
+
+	            var description = isActive ? _react2.default.createElement(
+	                'p',
+	                null,
+	                photo.title
+	            ) : '';
 
 	            return _react2.default.createElement(
 	                'li',
@@ -585,7 +584,10 @@
 	                    'div',
 	                    { onClick: _this.toggle(index),
 	                        className: className },
-	                    _react2.default.createElement('img', { src: imgSrc })
+	                    _react2.default.createElement('img', { src: imgSrc, refs: function refs(ref) {
+	                            return _this['image_' + index];
+	                        } }),
+	                    description
 	                )
 	            );
 	        });
@@ -603,25 +605,20 @@
 	            if (_this2.state.activeIndex === index) {
 	                _this2.shrink(evt.currentTarget, index);
 	            } else {
-	                _this2.setupExpand(evt.currentTarget, index);
+	                _this2.setState({
+	                    activeIndex: index,
+	                    activeEl: evt.currentTarget
+	                });
 	            }
 	        };
 	    },
-	    setupExpand: function setupExpand(item, index) {
+	    setupExpand: function setupExpand(item) {
 	        item.rects = item.getBoundingClientRect();
-
-	        console.log('1. setup expand');
-	        // add className via state rerender
-	        // it will call expand after render
-	        this.setState({
-	            activeIndex: index,
-	            activeEl: item
-	        });
 	    },
 	    expand: function expand() {
-	        console.log('3. expand');
-	        // allways handled via state
 	        var item = this.state.activeEl;
+	        var index = this.state.activeIndex;
+	        console.log(this['image_' + index]);
 
 	        var expandedRects = item.getBoundingClientRect();
 
@@ -647,87 +644,13 @@
 
 	        item.rects = null;
 
+	        //browserHistory.push('/' + this.props.currentPage);
 	        item.removeEventListener('transitionend', this.transitionCollapseEnd);
 	    }
 	});
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (item) {
-
-	    var currentlet = undefined;
-	    var props = ['top', 'right', 'left', 'bottom'];
-
-	    // TODO, make this a bit more like a pro ;-)
-	    // for now, just call the thing
-	    toggleItem(item);
-
-	    function toggleItem(item) {
-
-	        console.log('toggleItem', item);
-	        if (current) {
-	            close(current);
-	        }
-
-	        if (item) {
-	            show(item);
-	        }
-	    }
-
-	    function show(item) {
-
-	        var expandedRects;
-
-	        if (current) {
-	            close(current);
-	        }
-
-	        current = item;
-
-	        current.rects = item.getBoundingClientRect();
-
-	        // fixed starting position
-	        item.classList.add('is-extended');
-
-	        expandedRects = item.getBoundingClientRect();
-
-	        item.style.clip = 'rect(' + current.rects.top + 'px, ' + current.rects.right + 'px, ' + current.rects.bottom + 'px, ' + current.rects.left + 'px)';
-
-	        // Read again to force the style change to take hold.
-	        var triggerValue = item.offsetTop;
-
-	        item.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
-	    }
-
-	    function close(item) {
-
-	        item.style.clip = 'rect(' + current.rects.top + 'px, ' + current.rects.right + 'px, ' + current.rects.bottom + 'px, ' + current.rects.left + 'px)';
-
-	        item.addEventListener('transitionend', transitionCollapseEnd);
-
-	        current = null;
-	    }
-
-	    function transitionCollapseEnd(event) {
-	        var item = event.target;
-
-	        item.classList.remove('is-extended');
-	        item.removeEventListener('transitionend', transitionCollapseEnd);
-	    }
-	};
-
-	;
-
-/***/ },
-/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -740,7 +663,7 @@
 
 	var _mongoose2 = _interopRequireDefault(_mongoose);
 
-	var _flickrUpdatePages = __webpack_require__(22);
+	var _flickrUpdatePages = __webpack_require__(21);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
@@ -794,7 +717,7 @@
 	}
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -804,10 +727,10 @@
 
 	var config = __webpack_require__(5);
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(23);
+	var Flickr = __webpack_require__(22);
 	var flickrOptions = __webpack_require__(5).flickrOptions;
 
-	var flickrUpdateSets = __webpack_require__(24);
+	var flickrUpdateSets = __webpack_require__(23);
 
 	module.exports = update;
 
@@ -874,19 +797,19 @@
 	}
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = require("flickrapi");
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(23);
+	var Flickr = __webpack_require__(22);
 	var flickrOptions = __webpack_require__(5).flickrOptions;
 
 	// db

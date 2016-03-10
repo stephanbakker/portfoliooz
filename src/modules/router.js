@@ -54,10 +54,10 @@ function renderPage(appHtml, props) {
         <html>
             <meta charset="utf-8"/>
             <title>My First React Router App</title>
-            <link rel="stylesheet" href="/index.css"/>
+            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
             <link rel="stylesheet" href="/main.css"/>
             <body>
-                <div id="app">${appHtml}</div>
+                <div id="app" class="app">${appHtml}</div>
                 <script>
                     window.__initialProps__ = ${scriptProps};
                 </script>

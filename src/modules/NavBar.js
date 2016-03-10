@@ -6,17 +6,19 @@ export default React.createClass({
         let pages = this.props.pages || (window && window.__initialProps__.params.pages);
 
         return (
-            <ul> 
-                {
-                    pages.map((page) => {
-                        return (
-                            <li key={page.title}>
-                                <NavLink to={page.title}>{page.title}</NavLink>
-                            </li>
-                        );
-                    })
-                } 
-            </ul>
+            <nav>
+                <ul className="nav"> 
+                    {
+                        pages.map((page) => {
+                            return (
+                                <li className="nav__item" key={page.title}>
+                                    <NavLink to={page.title}>{page.title}</NavLink>
+                                </li>
+                            );
+                        })
+                    } 
+                </ul>
+            </nav>
         );
     }
 });
