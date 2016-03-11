@@ -78,7 +78,7 @@ module.exports = React.createClass({
         const index = this.state.activeIndex;
         console.log(this['image_' + index]);
         console.log('rects item', item.rects);
-        const image = this['image_' _ index];
+        const image = this['image_' + index];
 
        // use image props to set scale, translate to former position
        // and translate back to full scale/middle position
