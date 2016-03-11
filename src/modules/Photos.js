@@ -1,6 +1,7 @@
 'use strict'; 
 import React from 'react';
 import { browserHistory } from 'react-router';
+import Photo from './Photo';
 
 module.exports = React.createClass({
 
@@ -15,35 +16,18 @@ module.exports = React.createClass({
     },
 
     componentDidUpdate(prevProps, prevState) {
-        // after render
-        if (this.state.activeIndex > -1) {
-            this.expand();
-        }
     },
 
     componentWillUpdate(nextProps, nextState) {
-        // before state change and render
-        if (nextState.activeIndex > -1) {
-            this.setupExpand(nextState.activeEl); 
-        } 
     },
 
     render() {
         let results = this.props.photos.map((photo, index) => {
             const key = 'p' + index;
-            const isActive = this.state.activeIndex === index;
-            const imgSrc = isActive ? photo.url_o : photo.url_t;
-            const className = (isActive ? 'is-expanded' : '') + ' item__wrapper';
-
-            let description = isActive ? <p>{photo.title}</p> : '';
 
             return(
                     <li key={key} className='overview__item'>
-                        <div onClick={this.toggle(index)} 
-                                className={className}>
-                            <img src={imgSrc} ref={(ref) => this['image_' + index] = ref}/>
-                            {description}
-                        </div>
+                        <Photo onClick={this.toggle(index)} data={photo} ref={'photo' + index}/>
                     </li>
                 )
             }
@@ -58,12 +42,16 @@ module.exports = React.createClass({
 
     toggle(index) {
         return (evt) => {
+            const photo = this.refs['photo' + index];
             if (this.state.activeIndex === index) {
-                this.shrink(evt.currentTarget, index);
-            } else {
+                photo.setState({isActive: false});
                 this.setState({
-                    activeIndex: index,
-                    activeEl: evt.currentTarget
+                    activeIndex: -1
+                });
+            } else {
+                photo.setState({isActive: true});
+                this.setState({
+                    activeIndex: index
                 });
             }
         }
@@ -78,7 +66,7 @@ module.exports = React.createClass({
         const index = this.state.activeIndex;
         console.log(this['image_' + index]);
         console.log('rects item', item.rects);
-        const image = this['image_' _ index];
+        const image = this['image_' + index];
 
        // use image props to set scale, translate to former position
        // and translate back to full scale/middle position

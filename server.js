@@ -16,10 +16,10 @@ nconf
 
 import config from './config/config';
 
-// decorate app
+// app parts
 import appExpress from './config/express';
 import appRoutes from './config/routes';
-// and call them
+// decorate app
 appExpress(app);
 appRoutes(app);
 
@@ -30,6 +30,7 @@ connectDb()
     .once('open', listen);
 
 function listen() {
+    console.log('listening on port %', port);
     app.listen(port);
 }
 

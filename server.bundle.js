@@ -83,10 +83,10 @@
 
 	_nconf2.default.env().file({ file: './config/env.json' });
 
+	// app parts
+
+
 	// decorate app
-
-
-	// and call them
 	(0, _express4.default)(app);
 	(0, _routes2.default)(app);
 
@@ -94,6 +94,7 @@
 	connectDb().on('error', console.log).on('disconnected', connectDb).once('open', listen);
 
 	function listen() {
+	    console.log('listening on port %', port);
 	    app.listen(port);
 	}
 
@@ -217,7 +218,7 @@
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(20);
+	var _pagesMiddleware = __webpack_require__(21);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
@@ -539,6 +540,10 @@
 
 	var _reactRouter = __webpack_require__(12);
 
+	var _Photo = __webpack_require__(20);
+
+	var _Photo2 = _interopRequireDefault(_Photo);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
@@ -550,45 +555,18 @@
 	        };
 	    },
 	    componentWillMount: function componentWillMount() {},
-	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	        // after render
-	        if (this.state.activeIndex > -1) {
-	            this.expand();
-	        }
-	    },
-	    componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-	        // before state change and render
-	        if (nextState.activeIndex > -1) {
-	            this.setupExpand(nextState.activeEl);
-	        }
-	    },
+	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {},
+	    componentWillUpdate: function componentWillUpdate(nextProps, nextState) {},
 	    render: function render() {
 	        var _this = this;
 
 	        var results = this.props.photos.map(function (photo, index) {
 	            var key = 'p' + index;
-	            var isActive = _this.state.activeIndex === index;
-	            var imgSrc = isActive ? photo.url_o : photo.url_t;
-	            var className = (isActive ? 'is-expanded' : '') + ' item__wrapper';
-
-	            var description = isActive ? _react2.default.createElement(
-	                'p',
-	                null,
-	                photo.title
-	            ) : '';
 
 	            return _react2.default.createElement(
 	                'li',
 	                { key: key, className: 'overview__item' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { onClick: _this.toggle(index),
-	                        className: className },
-	                    _react2.default.createElement('img', { src: imgSrc, refs: function refs(ref) {
-	                            return _this['image_' + index];
-	                        } }),
-	                    description
-	                )
+	                _react2.default.createElement(_Photo2.default, { onClick: _this.toggle(index), data: photo, ref: 'photo' + index })
 	            );
 	        });
 
@@ -602,12 +580,16 @@
 	        var _this2 = this;
 
 	        return function (evt) {
+	            var photo = _this2.refs['photo' + index];
 	            if (_this2.state.activeIndex === index) {
-	                _this2.shrink(evt.currentTarget, index);
-	            } else {
+	                photo.setState({ isActive: false });
 	                _this2.setState({
-	                    activeIndex: index,
-	                    activeEl: evt.currentTarget
+	                    activeIndex: -1
+	                });
+	            } else {
+	                photo.setState({ isActive: true });
+	                _this2.setState({
+	                    activeIndex: index
 	                });
 	            }
 	        };
@@ -619,6 +601,12 @@
 	        var item = this.state.activeEl;
 	        var index = this.state.activeIndex;
 	        console.log(this['image_' + index]);
+	        console.log('rects item', item.rects);
+	        var image = this['image_' + index];
+
+	        // use image props to set scale, translate to former position
+	        // and translate back to full scale/middle position
+	        // image.style.transform = 'scale
 
 	        var expandedRects = item.getBoundingClientRect();
 
@@ -655,6 +643,59 @@
 
 	'use strict';
 
+	var _react = __webpack_require__(10);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _react2.default.createClass({
+	    displayName: 'exports',
+	    getInitialState: function getInitialState() {
+	        return {
+	            isActive: false
+	        };
+	    },
+
+
+	    static: {
+	        expand: function expand() {
+	            console.log('expand hallo');
+	        },
+	        collapse: function collapse() {
+	            console.log('collapse hallo');
+	        }
+	    },
+
+	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	        // after render
+	        console.log('clicked and now: ', this.state.isActive);
+	        console.log('isActive was %s, and is now %s', prevState.isActive, this.state.isActive);
+	    },
+	    render: function render() {
+	        var description = this.state.isActive ? _react2.default.createElement(
+	            'p',
+	            null,
+	            this.props.data.title
+	        ) : '';
+	        var imgSrc = this.state.isActive ? this.props.data.url_o : this.props.data.url_t;
+
+	        return _react2.default.createElement(
+	            'div',
+	            { onClick: this.props.onClick,
+	                className: 'item__wrapper' },
+	            _react2.default.createElement('img', { src: imgSrc }),
+	            description
+	        );
+	    }
+	});
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
@@ -663,7 +704,7 @@
 
 	var _mongoose2 = _interopRequireDefault(_mongoose);
 
-	var _flickrUpdatePages = __webpack_require__(21);
+	var _flickrUpdatePages = __webpack_require__(22);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
@@ -717,7 +758,7 @@
 	}
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -727,10 +768,10 @@
 
 	var config = __webpack_require__(5);
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(22);
+	var Flickr = __webpack_require__(23);
 	var flickrOptions = __webpack_require__(5).flickrOptions;
 
-	var flickrUpdateSets = __webpack_require__(23);
+	var flickrUpdateSets = __webpack_require__(24);
 
 	module.exports = update;
 
@@ -797,19 +838,19 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = require("flickrapi");
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(22);
+	var Flickr = __webpack_require__(23);
 	var flickrOptions = __webpack_require__(5).flickrOptions;
 
 	// db
