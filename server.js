@@ -30,7 +30,7 @@ connectDb()
     .once('open', listen);
 
 function listen() {
-    console.log('listening on port %', port);
+    console.log('listening on port:', port);
     app.listen(port);
 }
 

@@ -1,20 +1,21 @@
 {
   "name": "portfoliooz",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "portfolio gallery",
-  "main": "server.js",
+  "main": "server.bundle.js",
   "scripts": {
+    "start": "node server.bundle",
+        "start:dev": "npm run build:server && nodemon server.bundle.js",
+        "start:prod": "npm run build && node server.bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-
     "dev": "webpack-dev-server --inline --content-base public/ --history-api-fallback",
-    "dev:client": "webpack -w",
-    "start:dev": "npm run build:server && nodemon server.bundle.js",
-    "start:prod": "npm run build && node server.bundle.js",
+        "dev:client": "webpack -w",
     "build": "npm run build:client && npm run build:server",
         "build:server": "webpack --config webpack.server.config.js --progress --colors",
-        "build:client": "webpack",
+        "build:client": "webpack && npm run build:css",
         "build:css": "node-sass --include-path static src/main.scss public/main.css",
-    "watch:css": "npm run build:css -- -w"
+    "watch:css": "npm run build:css -- -w",
+    "postinstall": "npm run build"
   },
   "author": "",
   "license": "ISC",
