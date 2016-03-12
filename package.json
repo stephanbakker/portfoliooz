@@ -30,10 +30,10 @@
     "node-sass": "^3.4.2",
     "nodemon": "^1.8.1",
     "parallelshell": "^2.0.0",
+    "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "webpack": "^1.12.14",
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",

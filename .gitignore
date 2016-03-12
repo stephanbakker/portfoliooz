@@ -3,7 +3,5 @@
 node_modules
 .npm
 npm-debug.log
-public/*
-server.bundle.js
 
 .env
