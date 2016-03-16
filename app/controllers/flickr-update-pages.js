@@ -16,11 +16,9 @@ function update() {
     return pFlickrFetchCollectionTree()
         .then(mapPages)
         .then(function (sets){
-            console.log('mapped flickr sets: ', sets);
             return flickrGetSets(sets);
         })
         .then(photoSets => {
-            console.log('ready to store, number of sets:', photoSets.length);
             return datastore.updatePages(photoSets, 'photo');
         })
         .catch(err => {
