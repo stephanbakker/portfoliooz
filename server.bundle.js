@@ -46,74 +46,33 @@
 
 	'use strict';
 
-	var _nconf = __webpack_require__(1);
+	// module dependencies
+	var nconf = __webpack_require__(1);
+	var express = __webpack_require__(2);
 
-	var _nconf2 = _interopRequireDefault(_nconf);
-
-	var _mongoose = __webpack_require__(2);
-
-	var _mongoose2 = _interopRequireDefault(_mongoose);
-
-	var _express = __webpack_require__(3);
-
-	var _express2 = _interopRequireDefault(_express);
-
-	__webpack_require__(4);
-
-	var _config = __webpack_require__(5);
-
-	var _config2 = _interopRequireDefault(_config);
-
-	var _express3 = __webpack_require__(6);
-
-	var _express4 = _interopRequireDefault(_express3);
-
-	var _routes = __webpack_require__(8);
-
-	var _routes2 = _interopRequireDefault(_routes);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var app = (0, _express2.default)(); // module dependencies
-
+	var app = express();
 	var port = process.env.PORT || 3000;
+	var datastore = __webpack_require__(3);
 
-	// install models
-
-
-	_nconf2.default.env().file({ file: './config/env.json' });
+	nconf.env().file({ file: './config/env.json' });
 
 	// app parts
+	__webpack_require__(4)(app);
+	__webpack_require__(6)(app);
 
+	// after conf stuff
+	var startupContent = __webpack_require__(28);
 
-	// decorate app
-	(0, _express4.default)(app);
-	(0, _routes2.default)(app);
-
-	// start server
-	connectDb().on('error', console.log).on('disconnected', connectDb).once('open', listen);
+	// pull in pages
+	startupContent().then(listen).catch(function (err) {
+	    throw new Error('Error starting up server', err);
+	});
 
 	function listen() {
-	    console.log('listening on port:', port);
-	    app.listen(port);
-	}
-
-	function connectDb() {
-	    // TODO find out about those
-	    var options = {
-	        server: {
-	            sockeOptions: {
-	                keepAlive: 1
-	            }
-	        }
-	    };
-
-	    // handle db
-	    var mongoDBEnv = _nconf2.default.get('MONGOLAB_URI');
-	    _config2.default.db = mongoDBEnv || _config2.default.db;
-	    console.log('mongoURI', mongoDBEnv);
-
-	    return _mongoose2.default.connect(_config2.default.db, options).connection;
+	    console.log('listen');
+	    app.listen(port, function () {
+	        console.log('express server started on port: ', port);
+	    });
 	}
 
 /***/ },
@@ -126,68 +85,56 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = require("mongoose");
+	module.exports = require("express");
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports = require("express");
+	'use strict';
+
+	module.exports = function () {
+
+	    var pages = {
+	        content: [],
+	        photo: [],
+	        saveDate: {
+	            content: null,
+	            photo: null
+	        }
+	    };
+
+	    function updatePages(newPages, type) {
+	        pages[type] = newPages;
+	        pages.saveDate[type] = Date.now();
+
+	        console.log('data updates:----------------\n', getPages());
+	        return pages;
+	    }
+
+	    function getPages() {
+	        return pages.content.concat(pages.photo);
+	    }
+
+	    function getSaveDate(type) {
+	        return pages.saveDate[type];
+	    }
+
+	    return {
+	        updatePages: updatePages,
+	        getPages: getPages,
+	        getSaveDate: getSaveDate
+	    };
+	}();
 
 /***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var mongoose = __webpack_require__(2);
-
-	var PageSchema = new mongoose.Schema({
-	    title: { type: String, trim: true },
-	    html: { type: String, trim: true },
-	    type: { type: String, default: 'content' },
-	    photoSetId: { type: String },
-	    photosDate: { type: Number },
-	    photos: { type: Array }
-	});
-
-	mongoose.model('Page', PageSchema);
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var nconf = __webpack_require__(1);
-
-	module.exports = {
-	    appName: 'portfoliooz',
-	    db: 'mongodb://localhost/marit',
-	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
-	    flickr_collection_id: '138616365-72157663941826382',
-	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
-
-	    flickrOptions: {
-	        permissions: 'write',
-	        force_auth: true,
-
-	        api_key: nconf.get('FLICKR_API_KEY'),
-	        secret: nconf.get('FLICKR_API_SECRET'),
-	        user_id: nconf.get('FLICKR_USER_ID'),
-	        access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
-	        access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
-	    }
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
 
-	var express = __webpack_require__(3);
-	var path = __webpack_require__(7);
+	var express = __webpack_require__(2);
+	var path = __webpack_require__(5);
 
 	module.exports = function (app) {
 	    app.use(express.static(path.join(__dirname, '../public')));
@@ -195,37 +142,39 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "config"))
 
 /***/ },
-/* 7 */
+/* 5 */
 /***/ function(module, exports) {
 
 	module.exports = require("path");
 
 /***/ },
-/* 8 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (app) {
-	    app.get('*', _pagesMiddleware2.default, _router2.default);
-	};
-
-	var _router = __webpack_require__(9);
+	var _router = __webpack_require__(7);
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(21);
+	var _pagesMiddleware = __webpack_require__(19);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
+	var _updateContentPages = __webpack_require__(25);
+
+	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	module.exports = function (app) {
+	    app.get('*', _pagesMiddleware2.default, _router2.default);
+
+	    app.post('/update-pages', _updateContentPages2.default);
+	};
+
 /***/ },
-/* 9 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -234,15 +183,15 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _server = __webpack_require__(11);
+	var _server = __webpack_require__(9);
 
-	var _reactRouter = __webpack_require__(12);
+	var _reactRouter = __webpack_require__(10);
 
-	var _routes = __webpack_require__(13);
+	var _routes = __webpack_require__(11);
 
 	var _routes2 = _interopRequireDefault(_routes);
 
@@ -296,44 +245,44 @@
 	}
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = require("react");
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = require("react-dom/server");
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = require("react-router");
 
 /***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(12);
+	var _reactRouter = __webpack_require__(10);
 
-	var _App = __webpack_require__(14);
+	var _App = __webpack_require__(12);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Home = __webpack_require__(17);
+	var _Home = __webpack_require__(15);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Page = __webpack_require__(18);
+	var _Page = __webpack_require__(16);
 
 	var _Page2 = _interopRequireDefault(_Page);
 
@@ -351,7 +300,7 @@
 	); // modules/routes.js
 
 /***/ },
-/* 14 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -360,11 +309,11 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NavBar = __webpack_require__(15);
+	var _NavBar = __webpack_require__(13);
 
 	var _NavBar2 = _interopRequireDefault(_NavBar);
 
@@ -388,7 +337,7 @@
 	});
 
 /***/ },
-/* 15 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -397,11 +346,11 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NavLink = __webpack_require__(16);
+	var _NavLink = __webpack_require__(14);
 
 	var _NavLink2 = _interopRequireDefault(_NavLink);
 
@@ -435,7 +384,7 @@
 	});
 
 /***/ },
-/* 16 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -446,11 +395,11 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(12);
+	var _reactRouter = __webpack_require__(10);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -462,7 +411,7 @@
 	});
 
 /***/ },
-/* 17 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -471,7 +420,7 @@
 	  value: true
 	});
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
@@ -489,7 +438,7 @@
 	});
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -498,11 +447,11 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Photos = __webpack_require__(19);
+	var _Photos = __webpack_require__(17);
 
 	var _Photos2 = _interopRequireDefault(_Photos);
 
@@ -519,28 +468,30 @@
 	            return page.title === pageTitle;
 	        });
 
+	        var photos = pageContent.photos && _react2.default.createElement(_Photos2.default, { photos: pageContent.photos, currentPage: this.props.params.page, currentPhoto: this.props.params.photo });
+
 	        return _react2.default.createElement(
 	            'div',
 	            null,
 	            _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: pageContent.html } }),
-	            _react2.default.createElement(_Photos2.default, { photos: pageContent.photos, currentPage: this.props.params.page, currentPhoto: this.props.params.photo })
+	            photos
 	        );
 	    }
 	});
 
 /***/ },
-/* 19 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(12);
+	var _reactRouter = __webpack_require__(10);
 
-	var _Photo = __webpack_require__(20);
+	var _Photo = __webpack_require__(18);
 
 	var _Photo2 = _interopRequireDefault(_Photo);
 
@@ -593,12 +544,12 @@
 	});
 
 /***/ },
-/* 20 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _react = __webpack_require__(10);
+	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
 
@@ -703,7 +654,7 @@
 	});
 
 /***/ },
-/* 21 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -712,21 +663,24 @@
 	    value: true
 	});
 
-	var _mongoose = __webpack_require__(2);
+	var _mongoose = __webpack_require__(20);
 
 	var _mongoose2 = _interopRequireDefault(_mongoose);
 
-	var _flickrUpdatePages = __webpack_require__(22);
+	var _flickrUpdatePages = __webpack_require__(21);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
-	var _config = __webpack_require__(5);
+	var _config = __webpack_require__(22);
 
 	var _config2 = _interopRequireDefault(_config);
 
+	var _datastore = __webpack_require__(3);
+
+	var _datastore2 = _interopRequireDefault(_datastore);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Page = _mongoose2.default.model('Page');
 	exports.default = pages;
 
 
@@ -749,12 +703,13 @@
 
 	function promiseAllPages() {
 	    return new Promise(function (resolve, reject) {
-	        Page.find(function (err, pages) {
-	            if (err) {
-	                reject(err);
-	            }
-	            resolve(pages);
-	        });
+	        var pages = _datastore2.default.getPages();
+
+	        if (pages) {
+	            return resolve(pages);
+	        } else {
+	            reject('no pages found');
+	        }
 	    });
 	}
 
@@ -762,39 +717,44 @@
 	    return pageObj.title === this.title;
 	}
 
-	function checkExpiresPhotos(pageObj) {
-	    var savedDate = pageObj && pageObj.photosDate;
+	function checkExpiresPhotos() {
+	    var savedDate = _datastore2.default.getSaveDate('photo');
 	    if (savedDate && Date.now() - savedDate > _config2.default.flickr_expire_time) {
 	        (0, _flickrUpdatePages2.default)();
 	    }
 	}
 
 /***/ },
-/* 22 */
+/* 20 */
+/***/ function(module, exports) {
+
+	module.exports = require("mongoose");
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var mongoose = __webpack_require__(2);
-	var Page = mongoose.model('Page');
-
-	var config = __webpack_require__(5);
 	var nconf = __webpack_require__(1);
+	var config = __webpack_require__(22);
+	var datastore = __webpack_require__(3);
 	var Flickr = __webpack_require__(23);
-	var flickrOptions = __webpack_require__(5).flickrOptions;
+	var flickrOptions = config.getFlickrOptions();
 
-	var flickrUpdateSets = __webpack_require__(24);
+	var flickrGetSets = __webpack_require__(24);
 
 	module.exports = update;
 
 	function update() {
 	    console.log('start updating pages from flickr');
 
-	    pFlickrFetchCollectionTree().then(mapPages).then(function (sets) {
-	        flickrUpdateSets(sets);
-	        return sets;
+	    return pFlickrFetchCollectionTree().then(mapPages).then(function (sets) {
+	        console.log('mapped flickr sets: ', sets);
+	        return flickrGetSets(sets);
 	    }).then(function (photoSets) {
-	        return Promise.all(photoSets.map(pMongoPhotoPageUpdate));
+	        console.log('ready to store, number of sets:', photoSets.length);
+	        return datastore.updatePages(photoSets, 'photo');
 	    }).catch(function (err) {
 	        throw new Error(err);
 	    });
@@ -813,7 +773,7 @@
 	                collection_id: config.flickr_collection_id
 	            }, function (err, result) {
 	                if (err) {
-	                    reject(err);
+	                    reject('Error fetching collection tree', err);
 	                }
 	                resolve(result);
 	            });
@@ -821,24 +781,8 @@
 	    });
 	}
 
-	function pMongoPhotoPageUpdate(photoSet) {
-	    return new Promise(function (resolve, reject) {
-	        Page.findOneAndUpdate({ photoSetId: photoSet.id }, {
-	            title: photoSet.title,
-	            photosDate: photoSet.date,
-	            type: 'photo'
-	        }, { 'upsert': true, 'new': true }, function (err, set) {
-	            if (err) {
-	                reject(err);
-	            }
-	            resolve(set);
-	        });
-	    });
-	}
-
 	function mapPages(flickrData) {
 	    var set = flickrData.collections.collection[0].set;
-	    console.log('flickr set to update: ', set);
 
 	    return set.map(function (set) {
 	        return {
@@ -848,6 +792,34 @@
 	        };
 	    });
 	}
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var nconf = __webpack_require__(1);
+
+	module.exports = {
+	    appName: 'portfoliooz',
+	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
+	    flickr_collection_id: '138616365-72157663941826382',
+	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
+
+	    getFlickrOptions: function getFlickrOptions() {
+	        console.log('3. config get options');
+	        return {
+	            permissions: 'write',
+	            force_auth: true,
+	            api_key: nconf.get('FLICKR_API_KEY'),
+	            secret: nconf.get('FLICKR_API_SECRET'),
+	            user_id: nconf.get('FLICKR_USER_ID'),
+	            access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
+	            access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
+	        };
+	    }
+	};
 
 /***/ },
 /* 23 */
@@ -863,29 +835,22 @@
 
 	var nconf = __webpack_require__(1);
 	var Flickr = __webpack_require__(23);
-	var flickrOptions = __webpack_require__(5).flickrOptions;
-
-	// db
-	var mongoose = __webpack_require__(2);
-	var Page = mongoose.model('Page');
+	var flickrOptions = __webpack_require__(22).getFlickrOptions();
 
 	module.exports = updateSets;
 
 	function updateSets(sets) {
 	    console.log('start updating sets to DB');
 
-	    pFlickrAuthenticate().then(function (flickr) {
+	    return pFlickrAuthenticate().then(function (flickr) {
+	        console.log('flickr authenticated => get sets:', sets);
 	        var pFlickrGetSet = flickrGetSetPromise(flickr);
 	        return Promise.all(sets.map(pFlickrGetSet));
-	    }).then(function (promisedSets) {
-	        console.log('found sets to update: ', promisedSets.map(function (set) {
+	    }).then(function (sets) {
+	        console.log('found sets to update: ', sets.map(function (set) {
 	            return set.title;
 	        }).join(', '));
-	        return Promise.all(promisedSets.map(updateInDB));
-	    }).then(function (updatedSets) {
-	        console.log('updated in DB: ', updatedSets.map(function (set) {
-	            return set.title;
-	        }).join(', '));
+	        return mapPhotoSets(sets);
 	    }).catch(function (err) {
 	        throw new Error(err);
 	    });
@@ -895,7 +860,7 @@
 	    return new Promise(function (resolve, reject) {
 	        Flickr.authenticate(flickrOptions, function (err, flickr) {
 	            if (err) {
-	                reject(err);
+	                reject('Error authenticating for Flickr', err);
 	            }
 
 	            resolve(flickr);
@@ -915,36 +880,142 @@
 	                // TODO more fine grained err handling
 	                // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
 	                if (err) {
-	                    reject(err);
+	                    reject('Error fetching photoSet', err);
 	                }
+	                console.log('set fetched', result.photoset.id);
 	                resolve(result.photoset);
 	            });
 	        });
 	    };
 	}
 
-	function updateInDB(set) {
+	function mapPhotoSets(sets) {
+	    return sets.map(function (photoset) {
+	        return {
+	            id: photoset.id,
+	            title: photoset.title,
+	            photos: photoset.photo
+	        };
+	    });
+	}
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var request = __webpack_require__(26);
+	var markdown = __webpack_require__(27).markdown;
+	var config = __webpack_require__(22);
+
+	module.exports = function () {
+	    return requestPromise(buildRequestOptions(config.CONTENTS_URL)).then(getPages).then(toHtml);
+	};
+
+	// add default request headers
+	function buildRequestOptions(url) {
+	    return {
+	        url: url,
+	        headers: {
+	            'User-Agent': config.appName
+	        }
+	    };
+	}
+
+	// promise-ify request
+	function requestPromise(options) {
+	    console.info('starting content update');
 	    return new Promise(function (resolve, reject) {
-	        Page.findOneAndUpdate({ photoSetId: set.id }, {
-	            title: set.title,
-	            photos: set.photo
-	        }, { 'new': true }, function (err, doc) {
-	            if (err) {
-	                reject(err);
+	        request.get(options, function (error, response, body) {
+	            if (error) {
+	                return reject(error);
+	            } else {
+	                resolve(body);
 	            }
-	            resolve(doc);
 	        });
 	    });
 	}
 
-	function mapPhotoSets(sets) {
-	    return sets.map(function (set) {
-	        var photoset = set.photoset;
+	function getPages(data) {
+	    // parse response body
+	    var jsonData = JSON.parse(data);
+
+	    var promises = jsonData.map(function (page) {
+	        return requestPromise(buildRequestOptions(page.download_url)).then(function (mdContent) {
+	            return {
+	                title: stripExtension(page.name),
+	                mdContent: mdContent
+	            };
+	        });
+	    });
+
+	    return Promise.all(promises);
+	}
+
+	function toHtml(pages) {
+	    console.info('content fetched');
+	    return pages.map(function (page) {
 	        return {
-	            id: photoset.id,
-	            name: photoset.title,
-	            photos: photoset.photo
+	            title: page.title,
+	            html: markdown.toHTML(page.mdContent)
 	        };
+	    });
+	}
+
+	function stripExtension(name) {
+	    return name.split('.').shift();
+	}
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	module.exports = require("request");
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	module.exports = require("markdown");
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var updatePages = __webpack_require__(29);
+	var flickrUpdate = __webpack_require__(21);
+
+	console.log('2. startup content');
+	module.exports = function () {
+	    return Promise.all([updatePages(), flickrUpdate()]);
+	};
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var datastore = __webpack_require__(3);
+	var getContentPages = __webpack_require__(25);
+
+	module.exports = update;
+
+	function update(req, res, next) {
+	    return getContentPages().then(function (pages) {
+	        return datastore.updatePages(pages, 'content');
+	    }).then(function (value) {
+	        if (res) {
+	            res.end('Pages updated: ' + value);
+	        } else {
+	            console.log('Pages updated: ' + value);
+	        }
+	    }).catch(function (err) {
+	        res && res.sendStatus(500, err);
+	        console.log('Error updating pages (500)', err);
 	    });
 	}
 

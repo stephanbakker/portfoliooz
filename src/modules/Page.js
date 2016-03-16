@@ -11,10 +11,13 @@ export default React.createClass({
           return page.title === pageTitle;
       });
 
+      let photos = pageContent.photos && 
+          <Photos photos={pageContent.photos} currentPage={this.props.params.page} currentPhoto={this.props.params.photo}/>;
+
       return(
         <div>
             <div dangerouslySetInnerHTML={{__html: pageContent.html}} />
-            <Photos photos={pageContent.photos} currentPage={this.props.params.page} currentPhoto={this.props.params.photo}/>
+            {photos}
         </div>
       )
   }

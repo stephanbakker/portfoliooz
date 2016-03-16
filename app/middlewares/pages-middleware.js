@@ -1,9 +1,9 @@
 'use strict';
 
 import mongoose from 'mongoose';
-const Page = mongoose.model('Page');
 import flickrUpdatePages from '../controllers/flickr-update-pages';
 import config from '../../config/config';
+import datastore from '../../db/datastore';
 
 export default pages;
 
@@ -29,12 +29,13 @@ function pages(req, res, next) {
 
 function promiseAllPages() {
     return new Promise((resolve, reject) => {
-        Page.find((err, pages) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(pages);
-        });
+        const pages = datastore.getPages();
+
+        if (pages) {
+            return resolve(pages);
+        } else {
+            reject('no pages found');
+        }
     });
 }
 
@@ -42,8 +43,8 @@ function findPage(pageObj) {
     return pageObj.title === this.title;
 }
 
-function checkExpiresPhotos(pageObj) {
-    const savedDate = pageObj && pageObj.photosDate;
+function checkExpiresPhotos() {
+    const savedDate = datastore.getSaveDate('photo');
     if (savedDate && 
             (Date.now() - savedDate > config.flickr_expire_time)) {
         flickrUpdatePages();

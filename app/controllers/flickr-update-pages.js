@@ -1,30 +1,29 @@
 'use strict';
 
-const mongoose = require('mongoose');
-const Page = mongoose.model('Page');
-
-const config = require('../../config/config');
 const nconf = require('nconf');
+const config = require('../../config/config');
+const datastore = require('../../db/datastore');
 const Flickr = require('flickrapi');
-const flickrOptions = require('../../config/config').flickrOptions;
+const flickrOptions = config.getFlickrOptions();
 
-const flickrUpdateSets = require('./flickr-update-sets');
+const flickrGetSets = require('./flickr-update-sets');
 
 module.exports = update;
 
 function update() {
     console.log('start updating pages from flickr');
 
-    pFlickrFetchCollectionTree()
+    return pFlickrFetchCollectionTree()
         .then(mapPages)
         .then(function (sets){
-            flickrUpdateSets(sets);
-            return sets;
+            return flickrGetSets(sets);
         })
-        .then(photoSets => Promise.all(photoSets.map(pMongoPhotoPageUpdate)))
+        .then(photoSets => {
+            return datastore.updatePages(photoSets, 'photo');
+        })
         .catch(err => {
-            throw new Error(err)
-        })
+            throw new Error(err);
+        });
 
 }
 
@@ -41,7 +40,7 @@ function pFlickrFetchCollectionTree() {
                 collection_id: config.flickr_collection_id
             }, (err, result) => {
                 if (err) {
-                    reject(err);
+                    reject('Error fetching collection tree', err);
                 }
                 resolve(result);
             });
@@ -49,28 +48,8 @@ function pFlickrFetchCollectionTree() {
     });
 }
 
-function pMongoPhotoPageUpdate(photoSet) {
-    return new Promise((resolve, reject) => {
-        Page.findOneAndUpdate(
-            {photoSetId: photoSet.id},
-            {
-                title: photoSet.title,
-                photosDate: photoSet.date,
-                type: 'photo'
-            },
-            {'upsert': true, 'new': true},
-            (err, set) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(set);
-            });
-    });
-}
-
 function mapPages(flickrData) {
     const set = flickrData.collections.collection[0].set;
-    console.log('flickr set to update: ', set);
 
     return set.map(set => {
         return {
@@ -80,3 +59,5 @@ function mapPages(flickrData) {
         };
     });
 }
+
+
