@@ -2,28 +2,22 @@
 
 var nconf = require('nconf');
 var Flickr = require('flickrapi');
-var flickrOptions = require('../../config/config').flickrOptions;
-
-// db
-const mongoose = require('mongoose');
-const Page = mongoose.model('Page');
+var flickrOptions = require('../../config/config').getFlickrOptions();
 
 module.exports = updateSets;
 
 function updateSets(sets) {
     console.log('start updating sets to DB');
 
-    pFlickrAuthenticate()
+    return pFlickrAuthenticate()
         .then(flickr => {
+            console.log('flickr authenticated => get sets:', sets);
             const pFlickrGetSet = flickrGetSetPromise(flickr);
             return Promise.all(sets.map(pFlickrGetSet));
         })
-        .then(promisedSets => {
-            console.log('found sets to update: ', promisedSets.map(set => set.title).join(', '));
-            return Promise.all(promisedSets.map(updateInDB));
-        })
-        .then(updatedSets => {
-            console.log('updated in DB: ', updatedSets.map(set => set.title).join(', '));
+        .then(sets => {
+            console.log('found sets to update: ', sets.map(set => set.title).join(', '));
+            return mapPhotoSets(sets);
         })
         .catch(err => {
             throw new Error(err);
@@ -34,7 +28,7 @@ function pFlickrAuthenticate() {
     return new Promise((resolve, reject) => {
         Flickr.authenticate(flickrOptions, function(err, flickr) {
             if (err) {
-                reject(err);
+                reject('Error authenticating for Flickr', err);
             }
 
             resolve(flickr);
@@ -54,39 +48,20 @@ function flickrGetSetPromise(flickr) {
                 // TODO more fine grained err handling
                 // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
                 if (err) {
-                    reject(err);
+                    reject('Error fetching photoSet', err);
                 }
+                console.log('set fetched', result.photoset.id);
                 resolve(result.photoset);
             });
         });
     };
 }
 
-function updateInDB(set) {
-    return new Promise((resolve, reject) => {
-        Page.findOneAndUpdate(
-            {photoSetId: set.id},
-            {
-                title: set.title,
-                photos: set.photo
-            },
-            {'new': true},
-            (err, doc) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(doc);
-            }
-        );
-    });
-}
-
 function mapPhotoSets(sets) {
-    return sets.map(set => {
-        let photoset = set.photoset;
+    return sets.map(photoset => {
         return {
             id: photoset.id,
-            name: photoset.title,
+            title: photoset.title,
             photos: photoset.photo
         };
     });

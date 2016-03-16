@@ -1,53 +1,33 @@
 // module dependencies
-import nconf from 'nconf';
-import mongoose from 'mongoose';
-
-import express from 'express';
+const nconf = require('nconf');
+const express = require('express');
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-// install models
-import './app/models/page';
+const datastore = require('./db/datastore');
 
 nconf
    .env()
    .file({file: './config/env.json'});
 
-import config from './config/config';
-
 // app parts
-import appExpress from './config/express';
-import appRoutes from './config/routes';
-// decorate app
-appExpress(app);
-appRoutes(app);
+require('./config/express')(app);
+require('./config/routes')(app);
 
-// start server
-connectDb()
-    .on('error', console.log)
-    .on('disconnected', connectDb)
-    .once('open', listen);
+
+// after conf stuff
+const startupContent = require('./app/controllers/startup-content');
+
+// pull in pages
+startupContent()
+    .then(listen)
+    .catch(err => {
+        throw new Error('Error starting up server', err);
+    });
 
 function listen() {
-    console.log('listening on port:', port);
-    app.listen(port);
-}
-
-function connectDb() {
-    // TODO find out about those
-    var options = {
-        server: {
-           sockeOptions: {
-               keepAlive: 1
-            }
-        }
-    };
-
-    // handle db
-    var mongoDBEnv = nconf.get('MONGOLAB_URI');
-    config.db = mongoDBEnv || config.db;
-    console.log('mongoURI', mongoDBEnv);
-
-    return mongoose.connect(config.db, options).connection;
+    console.log('listen');
+    app.listen(port, () => {
+        console.log('express server started on port: ', port);
+    });
 }

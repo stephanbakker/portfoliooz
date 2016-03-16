@@ -7,7 +7,7 @@ const config = require('../../config/config');
 module.exports = function () {
     return requestPromise(buildRequestOptions(config.CONTENTS_URL))
         .then(getPages)
-        .then(toHtml)
+        .then(toHtml);
 };
 
 // add default request headers
@@ -17,16 +17,17 @@ function buildRequestOptions(url) {
         headers: {
             'User-Agent': config.appName
         }
-    }
+    };
 }
 
 // promise-ify request
 function requestPromise(options) {
+    console.info('starting content update');
     return new Promise(
         (resolve, reject) => {
             request.get(options, (error, response, body) => {
                 if (error) {
-                    return reject(err);
+                    return reject(error);
                 } else {
                     resolve(body);
                 }
@@ -44,7 +45,7 @@ function getPages(data) {
                 return {
                     title: stripExtension(page.name),
                     mdContent: mdContent
-                }
+                };
             });
     });
 
@@ -53,11 +54,12 @@ function getPages(data) {
 }
 
 function toHtml(pages) {
+    console.info('content fetched');
     return pages.map(function (page) {
         return {
             title: page.title,
             html: markdown.toHTML(page.mdContent)
-        }
+        };
     });
 }
 
