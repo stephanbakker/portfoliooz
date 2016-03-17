@@ -2,8 +2,8 @@
 
 import mongoose from 'mongoose';
 import flickrUpdatePages from '../controllers/flickr-update-pages';
-import config from '../../config/config';
-import datastore from '../../db/datastore';
+import config from '../config/config';
+import datastore from '../db/datastore';
 
 export default pages;
 

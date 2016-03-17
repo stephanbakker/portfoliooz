@@ -1,8 +1,8 @@
 'use strict';
 
 const nconf = require('nconf');
-const config = require('../../config/config');
-const datastore = require('../../db/datastore');
+const config = require('../config/config');
+const datastore = require('../db/datastore');
 const Flickr = require('flickrapi');
 const flickrOptions = config.getFlickrOptions();
 

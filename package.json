@@ -13,7 +13,7 @@
     "build": "npm run build:client && npm run build:server",
     "build:server": "webpack --config webpack.server.config.js --progress --colors",
     "build:client": "webpack && npm run build:css",
-    "build:css": "node-sass --include-path static src/main.scss public/main.css",
+    "build:css": "node-sass --include-path static client/main.scss public/main.css",
     "watch:css": "npm run build:css -- -w"
   },
   "author": "",

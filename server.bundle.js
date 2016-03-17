@@ -54,14 +54,14 @@
 	var port = process.env.PORT || 3000;
 	var datastore = __webpack_require__(3);
 
-	nconf.env().file({ file: './config/env.json' });
+	nconf.env().file({ file: './server/config/env.json' });
 
 	// app parts
 	__webpack_require__(4)(app);
-	__webpack_require__(6)(app);
+	__webpack_require__(7)(app);
 
 	// after conf stuff
-	var startupContent = __webpack_require__(28);
+	var startupContent = __webpack_require__(29);
 
 	// pull in pages
 	startupContent().then(listen).catch(function (err) {
@@ -69,7 +69,6 @@
 	});
 
 	function listen() {
-	    console.log('listen');
 	    app.listen(port, function () {
 	        console.log('express server started on port: ', port);
 	    });
@@ -108,7 +107,6 @@
 	        pages[type] = newPages;
 	        pages.saveDate[type] = Date.now();
 
-	        console.log('data updates:----------------\n', getPages());
 	        return pages;
 	    }
 
@@ -133,35 +131,54 @@
 
 	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
 
+	var _errorMiddleware = __webpack_require__(5);
+
+	var _errorMiddleware2 = _interopRequireDefault(_errorMiddleware);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var express = __webpack_require__(2);
-	var path = __webpack_require__(5);
+	var path = __webpack_require__(6);
+
 
 	module.exports = function (app) {
-	    app.use(express.static(path.join(__dirname, '../public')));
+	    app.use(express.static(path.join(__dirname, '../../public')));
+	    app.use(_errorMiddleware2.default);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, "config"))
+	/* WEBPACK VAR INJECTION */}.call(exports, "server/config"))
 
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
+	'use strict';
+
+	module.exports = function (err, req, res, next) {
+	    res.sendStatus(500);
+	    res.render('error', { error: err });
+	};
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _router = __webpack_require__(7);
+	var _router = __webpack_require__(8);
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(19);
+	var _pagesMiddleware = __webpack_require__(20);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
-	var _updateContentPages = __webpack_require__(25);
+	var _updateContentPages = __webpack_require__(26);
 
 	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
 
@@ -174,7 +191,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -183,15 +200,15 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _server = __webpack_require__(9);
+	var _server = __webpack_require__(10);
 
-	var _reactRouter = __webpack_require__(10);
+	var _reactRouter = __webpack_require__(11);
 
-	var _routes = __webpack_require__(11);
+	var _routes = __webpack_require__(12);
 
 	var _routes2 = _interopRequireDefault(_routes);
 
@@ -241,48 +258,48 @@
 
 	function renderPage(appHtml, props) {
 	    var scriptProps = JSON.stringify(props);
-	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
+	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <meta name="viewport" content="width=device-width, initial-scale=1"/>\n            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	module.exports = require("react");
 
 /***/ },
 /* 9 */
 /***/ function(module, exports) {
 
-	module.exports = require("react-dom/server");
+	module.exports = require("react");
 
 /***/ },
 /* 10 */
 /***/ function(module, exports) {
 
-	module.exports = require("react-router");
+	module.exports = require("react-dom/server");
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+	module.exports = require("react-router");
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(10);
+	var _reactRouter = __webpack_require__(11);
 
-	var _App = __webpack_require__(12);
+	var _App = __webpack_require__(13);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Home = __webpack_require__(15);
+	var _Home = __webpack_require__(16);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Page = __webpack_require__(16);
+	var _Page = __webpack_require__(17);
 
 	var _Page2 = _interopRequireDefault(_Page);
 
@@ -300,7 +317,7 @@
 	); // modules/routes.js
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -309,11 +326,11 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NavBar = __webpack_require__(13);
+	var _NavBar = __webpack_require__(14);
 
 	var _NavBar2 = _interopRequireDefault(_NavBar);
 
@@ -337,7 +354,7 @@
 	});
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -346,11 +363,11 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NavLink = __webpack_require__(14);
+	var _NavLink = __webpack_require__(15);
 
 	var _NavLink2 = _interopRequireDefault(_NavLink);
 
@@ -384,7 +401,7 @@
 	});
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -395,11 +412,11 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(10);
+	var _reactRouter = __webpack_require__(11);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -411,7 +428,7 @@
 	});
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -420,7 +437,7 @@
 	  value: true
 	});
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
@@ -438,7 +455,7 @@
 	});
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -447,11 +464,11 @@
 	    value: true
 	});
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Photos = __webpack_require__(17);
+	var _Photos = __webpack_require__(18);
 
 	var _Photos2 = _interopRequireDefault(_Photos);
 
@@ -480,18 +497,18 @@
 	});
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(10);
+	var _reactRouter = __webpack_require__(11);
 
-	var _Photo = __webpack_require__(18);
+	var _Photo = __webpack_require__(19);
 
 	var _Photo2 = _interopRequireDefault(_Photo);
 
@@ -544,12 +561,12 @@
 	});
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _react = __webpack_require__(8);
+	var _react = __webpack_require__(9);
 
 	var _react2 = _interopRequireDefault(_react);
 
@@ -654,7 +671,7 @@
 	});
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -663,15 +680,15 @@
 	    value: true
 	});
 
-	var _mongoose = __webpack_require__(20);
+	var _mongoose = __webpack_require__(21);
 
 	var _mongoose2 = _interopRequireDefault(_mongoose);
 
-	var _flickrUpdatePages = __webpack_require__(21);
+	var _flickrUpdatePages = __webpack_require__(22);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
-	var _config = __webpack_require__(22);
+	var _config = __webpack_require__(23);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -725,24 +742,24 @@
 	}
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	module.exports = require("mongoose");
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var nconf = __webpack_require__(1);
-	var config = __webpack_require__(22);
+	var config = __webpack_require__(23);
 	var datastore = __webpack_require__(3);
-	var Flickr = __webpack_require__(23);
+	var Flickr = __webpack_require__(24);
 	var flickrOptions = config.getFlickrOptions();
 
-	var flickrGetSets = __webpack_require__(24);
+	var flickrGetSets = __webpack_require__(25);
 
 	module.exports = update;
 
@@ -750,10 +767,8 @@
 	    console.log('start updating pages from flickr');
 
 	    return pFlickrFetchCollectionTree().then(mapPages).then(function (sets) {
-	        console.log('mapped flickr sets: ', sets);
 	        return flickrGetSets(sets);
 	    }).then(function (photoSets) {
-	        console.log('ready to store, number of sets:', photoSets.length);
 	        return datastore.updatePages(photoSets, 'photo');
 	    }).catch(function (err) {
 	        throw new Error(err);
@@ -794,7 +809,7 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -808,7 +823,6 @@
 	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
 
 	    getFlickrOptions: function getFlickrOptions() {
-	        console.log('3. config get options');
 	        return {
 	            permissions: 'write',
 	            force_auth: true,
@@ -822,20 +836,20 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = require("flickrapi");
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var nconf = __webpack_require__(1);
-	var Flickr = __webpack_require__(23);
-	var flickrOptions = __webpack_require__(22).getFlickrOptions();
+	var Flickr = __webpack_require__(24);
+	var flickrOptions = __webpack_require__(23).getFlickrOptions();
 
 	module.exports = updateSets;
 
@@ -900,14 +914,14 @@
 	}
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var request = __webpack_require__(26);
-	var markdown = __webpack_require__(27).markdown;
-	var config = __webpack_require__(22);
+	var request = __webpack_require__(27);
+	var markdown = __webpack_require__(28).markdown;
+	var config = __webpack_require__(23);
 
 	module.exports = function () {
 	    return requestPromise(buildRequestOptions(config.CONTENTS_URL)).then(getPages).then(toHtml);
@@ -968,30 +982,16 @@
 	}
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	module.exports = require("markdown");
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var updatePages = __webpack_require__(29);
-	var flickrUpdate = __webpack_require__(21);
-
-	console.log('2. startup content');
-	module.exports = function () {
-	    return Promise.all([updatePages(), flickrUpdate()]);
-	};
 
 /***/ },
 /* 29 */
@@ -999,8 +999,21 @@
 
 	'use strict';
 
+	var updatePages = __webpack_require__(30);
+	var flickrUpdate = __webpack_require__(22);
+
+	module.exports = function () {
+	    return Promise.all([updatePages(), flickrUpdate()]);
+	};
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var datastore = __webpack_require__(3);
-	var getContentPages = __webpack_require__(25);
+	var getContentPages = __webpack_require__(26);
 
 	module.exports = update;
 
@@ -1009,9 +1022,9 @@
 	        return datastore.updatePages(pages, 'content');
 	    }).then(function (value) {
 	        if (res) {
-	            res.end('Pages updated: ' + value);
+	            res.end('Pages updated: ' + value.length);
 	        } else {
-	            console.log('Pages updated: ' + value);
+	            console.log('Pages updated: ' + value.length);
 	        }
 	    }).catch(function (err) {
 	        res && res.sendStatus(500, err);

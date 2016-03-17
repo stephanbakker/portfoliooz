@@ -2,7 +2,7 @@
 
 const request = require('request');
 const markdown = require('markdown').markdown;
-const config = require('../../config/config');
+const config = require('../config/config');
 
 module.exports = function () {
     return requestPromise(buildRequestOptions(config.CONTENTS_URL))

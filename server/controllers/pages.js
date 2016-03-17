@@ -1,5 +1,5 @@
 'use strict';
-const datastore = require('../../db/datastore');
+const datastore = require('../db/datastore');
 const getContentPages = require('./update-content-pages');
 
 module.exports = update;

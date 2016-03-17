@@ -2,7 +2,7 @@
 
 var nconf = require('nconf');
 var Flickr = require('flickrapi');
-var flickrOptions = require('../../config/config').getFlickrOptions();
+var flickrOptions = require('../config/config').getFlickrOptions();
 
 module.exports = updateSets;
 
