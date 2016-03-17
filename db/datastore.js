@@ -15,7 +15,6 @@ module.exports = (() => {
        pages[type] = newPages;
        pages.saveDate[type] = Date.now();
 
-       console.log('data updates:----------------\n', getPages());
        return pages;
     }
 

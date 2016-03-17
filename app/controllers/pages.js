@@ -9,9 +9,9 @@ function update(req, res, next) {
         .then(pages => {return datastore.updatePages(pages, 'content');})
         .then(value => {
             if (res) {
-                res.end('Pages updated: ' + value);
+                res.end('Pages updated: ' + value.length);
             } else {
-                console.log('Pages updated: ' + value);
+                console.log('Pages updated: ' + value.length);
             }
         })
         .catch(err => {

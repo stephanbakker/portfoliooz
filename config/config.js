@@ -9,7 +9,6 @@ module.exports = {
     flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
 
     getFlickrOptions() {
-        console.log('3. config get options');
         return {
             permissions: 'write',
             force_auth: true,
