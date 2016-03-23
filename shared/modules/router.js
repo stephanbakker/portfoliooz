@@ -49,11 +49,12 @@ function isPageOrHome(page, content) {
 
 function renderPage(appHtml, props) {
     const scriptProps = JSON.stringify(props);
+    const pageTitle = (props.params.page || 'Home') + ' - Marit Dik';
     return `
         <!doctype html>
         <html>
             <meta charset="utf-8"/>
-            <title>My First React Router App</title>
+            <title>${pageTitle}</title>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
             <link rel="stylesheet" href="/main.css"/>

@@ -258,7 +258,8 @@
 
 	function renderPage(appHtml, props) {
 	    var scriptProps = JSON.stringify(props);
-	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <meta name="viewport" content="width=device-width, initial-scale=1"/>\n            <link href=\'https://fonts.googleapis.com/css?family=Roboto+Slab\' rel=\'stylesheet\' type=\'text/css\'>\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
+	    var pageTitle = (props.params.page || 'Home') + ' - Marit Dik';
+	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>' + pageTitle + '</title>\n            <meta name="viewport" content="width=device-width, initial-scale=1"/>\n            <link href=\'https://fonts.googleapis.com/css?family=Roboto+Slab\' rel=\'stylesheet\' type=\'text/css\'>\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
 
 /***/ },
@@ -580,7 +581,6 @@
 	        };
 	    },
 	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	        console.log('2. did update');
 	        if (this.state.isActive) {
 	            this.expand();
 	        } else if (prevState.isActive) {
@@ -635,6 +635,11 @@
 	        toggleContainer.classList.add('is-expanded');
 
 	        var expandedRects = toggleContainer.getBoundingClientRect();
+
+	        // make sure the zoomed image is not taking too much space
+	        // leaving some padding, and space for description
+	        this._zoomed.style.maxHeight = expandedRects.height - 100 + 'px';
+	        this._zoomed.style.maxWidth = expandedRects.width - 100 + 'px';
 
 	        toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
 

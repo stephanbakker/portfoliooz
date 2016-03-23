@@ -6,7 +6,7 @@ https://github.com/madhums/node-express-mongoose-demo
 # TODO:
 
     more sensible folder structure/cleanup
-Marit afspraak
+    Marit afspraak
 remove flickr credentials from git, into environment stuff
 split flickr authenticate into service, now different in page and pages
 write tests
