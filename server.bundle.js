@@ -258,7 +258,7 @@
 
 	function renderPage(appHtml, props) {
 	    var scriptProps = JSON.stringify(props);
-	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <meta name="viewport" content="width=device-width, initial-scale=1"/>\n            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
+	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>My First React Router App</title>\n            <meta name="viewport" content="width=device-width, initial-scale=1"/>\n            <link href=\'https://fonts.googleapis.com/css?family=Roboto+Slab\' rel=\'stylesheet\' type=\'text/css\'>\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
 
 /***/ },
@@ -423,7 +423,7 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'NavLink',
 	    render: function render() {
-	        return _react2.default.createElement(_reactRouter.Link, _extends({}, this.props, { activeClassName: 'active' }));
+	        return _react2.default.createElement(_reactRouter.Link, _extends({}, this.props, { className: 'nav__item__link', activeClassName: 'is-active' }));
 	    }
 	});
 

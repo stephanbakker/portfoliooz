@@ -1,0 +1,26 @@
+.nav {
+    margin: 0 (-$gutter);
+    padding: 0;
+    list-style: none;
+
+    &__item {
+        display: inline-block;
+
+        &__link {
+            display: inline-block;
+            color: $copy_color;
+            padding: $gutter_small $gutter;
+            text-decoration: none;
+            transition: color 0.3s ease;
+
+            &:visited {
+                color: $copy_color;
+            }
+
+            &.is-active,
+            &:hover {
+                color: $link_active_color;
+            }
+        }
+    }
+}

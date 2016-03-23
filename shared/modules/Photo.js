@@ -10,7 +10,6 @@ module.exports = React.createClass({
     },
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('2. did update');
         if (this.state.isActive) {
             this.expand();
         } else if (prevState.isActive) {
@@ -47,6 +46,11 @@ module.exports = React.createClass({
         toggleContainer.classList.add('is-expanded');
 
         const expandedRects = toggleContainer.getBoundingClientRect();
+
+        // make sure the zoomed image is not taking too much space
+        // leaving some padding, and space for description
+        this._zoomed.style.maxHeight = expandedRects.height - 100 + 'px';
+        this._zoomed.style.maxWidth = expandedRects.width - 100 + 'px';
 
         toggleContainer.style.clip = 'rect(' +
             startRects.top + 'px, ' +

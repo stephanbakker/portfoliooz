@@ -1,0 +1,27 @@
+
+
+$tablet-width: 900px;
+$phone-width: 450px;
+
+@mixin tablet {
+    @media (max-width: #{$tablet-width}) {
+        @content;
+    }
+}
+
+@mixin phone {
+    @media (max-width: #{$phone-width}) {
+        @content;
+    }
+}
+
+
+.app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 100px;
+
+    @include phone {
+        padding: 0 10px;
+    }
+}

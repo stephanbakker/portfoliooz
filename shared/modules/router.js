@@ -55,7 +55,7 @@ function renderPage(appHtml, props) {
             <meta charset="utf-8"/>
             <title>My First React Router App</title>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+            <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
             <link rel="stylesheet" href="/main.css"/>
             <body>
                 <div id="app" class="app">${appHtml}</div>
