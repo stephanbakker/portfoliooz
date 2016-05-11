@@ -5,6 +5,12 @@ import Photo from './Photo';
 
 module.exports = React.createClass({
 
+    componentDidMount() {
+        console.log(document.title);
+        console.log(document.title.replace(/^[^-]*/, this.props.params.page));
+        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+    },
+
     getInitialState() {
         return {
             activeIndex: -1

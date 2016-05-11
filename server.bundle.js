@@ -435,7 +435,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _react = __webpack_require__(9);
@@ -445,14 +445,17 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
-	  displayName: 'Home',
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'h2',
-	      null,
-	      'Home'
-	    );
-	  }
+	    displayName: 'Home',
+	    componentDidMount: function componentDidMount() {
+	        document.title = document.title.replace(/^[^-]*/, 'Home');
+	    },
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Home'
+	        );
+	    }
 	});
 
 /***/ },
@@ -477,6 +480,9 @@
 
 	exports.default = _react2.default.createClass({
 	    displayName: 'Page',
+	    componentDidMount: function componentDidMount() {
+	        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+	    },
 	    render: function render() {
 	        var pageTitle = this.props.params.page;
 
@@ -517,6 +523,11 @@
 
 	module.exports = _react2.default.createClass({
 	    displayName: 'exports',
+	    componentDidMount: function componentDidMount() {
+	        console.log(document.title);
+	        console.log(document.title.replace(/^[^-]*/, this.props.params.page));
+	        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+	    },
 	    getInitialState: function getInitialState() {
 	        return {
 	            activeIndex: -1

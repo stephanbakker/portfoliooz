@@ -5,10 +5,7 @@
   "main": "server.bundle.js",
   "scripts": {
     "start": "node server.bundle",
-    "start:dev": "npm run build:server && nodemon server.bundle.js",
-    "start:prod": "npm run build && node server.bundle.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --inline --content-base public/ --history-api-fallback",
+    "start:dev": "nodemon server.bundle.js",
     "dev:client": "webpack -w",
     "build": "npm run build:client && npm run build:server",
     "build:server": "webpack --config webpack.server.config.js --progress --colors",
