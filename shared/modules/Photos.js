@@ -20,7 +20,7 @@ module.exports = React.createClass({
 
     render() {
         let tags = getTags(this.props.photos).map((tag, index) => {
-            return (<Tag onClick={this.setFilter(tag)} key={'tag' + index} tag={tag}/>);
+            return (<Tag onClick={this.setFilter(tag)} key={'tag' + index} tag={tag} active={this.state.currentTag}/>);
         });
 
         let results = this.props.photos

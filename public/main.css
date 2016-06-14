@@ -85,3 +85,6 @@ h3 {
     .item__wrapper .toggleContainer img {
       max-height: 100%;
       max-width: 100%; }
+
+.tag-filter.active {
+  background: #dc6c6c; }

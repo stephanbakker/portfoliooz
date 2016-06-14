@@ -7,6 +7,10 @@ https://github.com/madhums/node-express-mongoose-demo
 
     more sensible folder structure/cleanup
     Marit afspraak
+    introduce filterings
+    make current filter active
+improve filtering 
+unfiltering => show all
 remove flickr credentials from git, into environment stuff
 split flickr authenticate into service, now different in page and pages
 write tests
