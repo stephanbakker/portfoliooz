@@ -2,37 +2,47 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import Photo from './Photo';
+import Tag from './Tag';
 
 module.exports = React.createClass({
 
     componentDidMount() {
-        console.log(document.title);
-        console.log(document.title.replace(/^[^-]*/, this.props.params.page));
-        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+        document.title = document.title.replace(/^[^-]*/, this.props.currentPage);
     },
 
     getInitialState() {
         return {
-            activeIndex: -1
+            activeIndex: -1,
+            tagIndex: 0,
+            currentTag: getTags(this.props.photos).shift()
         }
     },
 
     render() {
-        let results = this.props.photos.map((photo, index) => {
-            const key = 'p' + index;
+        let tags = getTags(this.props.photos).map((tag, index) => {
+            return (<Tag onClick={this.setFilter(tag)} key={'tag' + index} tag={tag}/>);
+        });
 
-            return(
-                    <li key={key} className='overview__item'>
-                        <Photo onClick={this.toggle(index)} data={photo} ref={'photo' + index}/>
-                    </li>
-                )
-            }
-        );
+        let results = this.props.photos
+            .filter(photo => getTagsFromPhoto(photo.tags).indexOf(this.state.currentTag) > -1)
+            .map((photo, index) => {
+                const key = 'p' + index;
+
+                return(
+                        <li key={key} className='overview__item'>
+                            <Photo onClick={this.toggle(index)} data={photo} ref={'photo' + index}/>
+                        </li>
+                    )
+                }
+            );
 
         return (
-            <ul className="overview">
-                {results}
-            </ul>
+            <div>
+                {tags}
+                <ul className="overview">
+                    {results}
+                </ul>
+            </div>
         )
     },
 
@@ -51,7 +61,38 @@ module.exports = React.createClass({
                 });
             }
         }
+    },
+
+    setFilter(tag) {
+        return evt => {
+            console.log(tag)
+            this.setState({
+                currentTag: tag
+            });
+        }
     }
 
 });
+
+function getTags(photos) {
+    return getUniqueTags(photos);
+}
+
+function getUniqueTags(photos) {
+    return photos.reduce(reduceTags, []).filter(uniq);
+}
+
+function reduceTags(acumulator, photo) {
+    return acumulator.concat(getTagsFromPhoto(photo.tags));
+}
+
+function getTagsFromPhoto(tags) {
+    return tags
+            .split(' ')
+            .filter(tag => tag !== '');
+}
+
+function uniq(item, index, array) {
+    return array.indexOf(item) === index;
+}
 

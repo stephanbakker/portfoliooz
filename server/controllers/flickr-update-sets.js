@@ -50,6 +50,7 @@ function mapPhotoSets(sets) {
         return {
             id: photoset.id,
             title: photoset.title,
+            tags: photoset.tags,
             photos: photoset.photo
         };
     });
