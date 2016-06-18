@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+
 import errorMiddleware from '../middlewares/error-middleware';
 
 module.exports = function (app) {

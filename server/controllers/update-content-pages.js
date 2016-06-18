@@ -4,11 +4,11 @@ const request = require('request');
 const markdown = require('markdown').markdown;
 const config = require('../config/config');
 
-module.exports = function () {
+export default function getContentPages() {
     return requestPromise(buildRequestOptions(config.CONTENTS_URL))
         .then(getPages)
         .then(toHtml);
-};
+}
 
 // add default request headers
 function buildRequestOptions(url) {

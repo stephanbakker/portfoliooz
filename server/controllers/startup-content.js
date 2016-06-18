@@ -1,8 +1,6 @@
 'use strict';
 
-const updatePages = require('./pages');
-const flickrUpdate = require('./flickr-update-pages');
+import updatePages from './pages';
+import flickrUpdate from'./flickr-update-pages';
 
-module.exports = () => {
-    return Promise.all([updatePages(), flickrUpdate()]);
-}
+module.exports = () => Promise.all([updatePages(), flickrUpdate()]);

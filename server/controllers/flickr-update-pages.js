@@ -2,24 +2,25 @@
 
 const nconf = require('nconf');
 const config = require('../config/config');
-const datastore = require('../db/datastore');
-const flickrAuthenticate = require('./flickr-authenticate');
 
-const flickrGetSets = require('./flickr-update-sets');
+import datastore from '../db/datastore';
 
-module.exports = update;
+import flickrAuthenticate from './flickr-authenticate';
 
-function update() {
+import flickrGetSets from './flickr-update-sets';
+
+export default flickrUpdate;
+
+function flickrUpdate() {
     console.log('start updating pages from flickr');
 
     return flickrAuthenticate()
         .then(pFlickrFetchCollectionTree)
         .then(mapPages)
         .then(flickrGetSets)
-        .then(photoSets => {
-            return datastore.updatePages(photoSets, 'photo');
-        })
+        .then(photoSets => datastore.updatePages(photoSets, 'photo'))
         .catch(err => {
+            console.log('something wrong with flickrUpdate', err);
             throw new Error(err);
         });
 
@@ -51,5 +52,4 @@ function mapPages(flickrData) {
         };
     });
 }
-
 

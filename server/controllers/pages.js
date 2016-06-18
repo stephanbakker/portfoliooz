@@ -1,17 +1,19 @@
 'use strict';
-const datastore = require('../db/datastore');
-const getContentPages = require('./update-content-pages');
 
-module.exports = update;
+import datastore from '../db/datastore';
+import getContentPages from './update-content-pages';
 
-function update(req, res, next) {
+export default updatePages; 
+
+function updatePages(req, res, next) {
     return getContentPages()
-        .then(pages => {return datastore.updatePages(pages, 'content');})
-        .then(value => {
+        .then(pages => datastore.updatePages(pages, 'content'))
+        .then(data => {
+            const updated = data.content.map(page => page.title).join(',');
             if (res) {
-                res.end('Pages updated: ' + value.length);
+                res.end('Pages updated on request: %s', updated);
             } else {
-                console.log('Pages updated: ' + value.length);
+                console.log('Pages updated: %s', updated);
             }
         })
         .catch(err => {

@@ -1,9 +1,9 @@
 const Flickr = require('flickrapi');
 const flickrOptions = require('../config/config').getFlickrOptions();
 
-module.exports = pFlickrAuthenticate;
+export default flickrAuthenticate;
 
-function pFlickrAuthenticate() {
+function flickrAuthenticate() {
     return new Promise((resolve, reject) => {
         Flickr.authenticate(flickrOptions, function(err, flickr) {
             if (err) {

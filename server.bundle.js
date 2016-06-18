@@ -46,22 +46,27 @@
 
 	'use strict';
 
+	var _datastore = __webpack_require__(1);
+
+	var _datastore2 = _interopRequireDefault(_datastore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	// module dependencies
-	var nconf = __webpack_require__(1);
-	var express = __webpack_require__(2);
+	var nconf = __webpack_require__(2);
+	var express = __webpack_require__(3);
 
-	var app = express();
-	var port = process.env.PORT || 3000;
-	var datastore = __webpack_require__(3);
-
+	// this is run from root, so needs './server'
 	nconf.env().file({ file: './server/config/env.json' });
 
 	// app parts
+	var app = express();
+	var port = process.env.PORT || 3000;
 	__webpack_require__(4)(app);
 	__webpack_require__(7)(app);
 
 	// after conf stuff
-	var startupContent = __webpack_require__(30);
+	var startupContent = __webpack_require__(32);
 
 	// pull in pages
 	startupContent().then(listen).catch(function (err) {
@@ -78,22 +83,17 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = require("nconf");
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	module.exports = require("express");
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
 	'use strict';
 
-	module.exports = function () {
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var datastore = datastoreFactory();
 
+	exports.default = datastore;
+
+
+	function datastoreFactory() {
 	    var pages = {
 	        content: [],
 	        photo: [],
@@ -123,7 +123,19 @@
 	        getPages: getPages,
 	        getSaveDate: getSaveDate
 	    };
-	}();
+	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = require("nconf");
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	module.exports = require("express");
 
 /***/ },
 /* 4 */
@@ -137,9 +149,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var express = __webpack_require__(2);
+	var express = __webpack_require__(3);
 	var path = __webpack_require__(6);
-
 
 	module.exports = function (app) {
 	    app.use(express.static(path.join(__dirname, '../../public')));
@@ -174,11 +185,11 @@
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(20);
+	var _pagesMiddleware = __webpack_require__(21);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
-	var _updateContentPages = __webpack_require__(27);
+	var _updateContentPages = __webpack_require__(29);
 
 	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
 
@@ -519,24 +530,34 @@
 
 	var _Photo2 = _interopRequireDefault(_Photo);
 
+	var _Tag = __webpack_require__(20);
+
+	var _Tag2 = _interopRequireDefault(_Tag);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
 	    displayName: 'exports',
 	    componentDidMount: function componentDidMount() {
-	        console.log(document.title);
-	        console.log(document.title.replace(/^[^-]*/, this.props.params.page));
-	        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+	        document.title = document.title.replace(/^[^-]*/, this.props.currentPage);
 	    },
 	    getInitialState: function getInitialState() {
 	        return {
-	            activeIndex: -1
+	            activeIndex: -1,
+	            tagIndex: 0,
+	            currentTag: getTags(this.props.photos).shift()
 	        };
 	    },
 	    render: function render() {
 	        var _this = this;
 
-	        var results = this.props.photos.map(function (photo, index) {
+	        var tags = getTags(this.props.photos).map(function (tag, index) {
+	            return _react2.default.createElement(_Tag2.default, { onClick: _this.setFilter(tag), key: 'tag' + index, tag: tag, active: _this.state.currentTag });
+	        });
+
+	        var results = this.props.photos.filter(function (photo) {
+	            return getTagsFromPhoto(photo.tags).indexOf(_this.state.currentTag) > -1;
+	        }).map(function (photo, index) {
 	            var key = 'p' + index;
 
 	            return _react2.default.createElement(
@@ -547,9 +568,14 @@
 	        });
 
 	        return _react2.default.createElement(
-	            'ul',
-	            { className: 'overview' },
-	            results
+	            'div',
+	            null,
+	            tags,
+	            _react2.default.createElement(
+	                'ul',
+	                { className: 'overview' },
+	                results
+	            )
 	        );
 	    },
 	    toggle: function toggle(index) {
@@ -569,8 +595,40 @@
 	                });
 	            }
 	        };
+	    },
+	    setFilter: function setFilter(tag) {
+	        var _this3 = this;
+
+	        return function (evt) {
+	            console.log(tag);
+	            _this3.setState({
+	                currentTag: tag
+	            });
+	        };
 	    }
 	});
+
+	function getTags(photos) {
+	    return getUniqueTags(photos);
+	}
+
+	function getUniqueTags(photos) {
+	    return photos.reduce(reduceTags, []).filter(uniq);
+	}
+
+	function reduceTags(acumulator, photo) {
+	    return acumulator.concat(getTagsFromPhoto(photo.tags));
+	}
+
+	function getTagsFromPhoto(tags) {
+	    return tags.split(' ').filter(function (tag) {
+	        return tag !== '';
+	    });
+	}
+
+	function uniq(item, index, array) {
+	    return array.indexOf(item) === index;
+	}
 
 /***/ },
 /* 19 */
@@ -696,21 +754,47 @@
 	    value: true
 	});
 
-	var _mongoose = __webpack_require__(21);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _mongoose2 = _interopRequireDefault(_mongoose);
+	var _react = __webpack_require__(9);
 
-	var _flickrUpdatePages = __webpack_require__(22);
+	var _react2 = _interopRequireDefault(_react);
 
-	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var _config = __webpack_require__(23);
+	exports.default = _react2.default.createClass({
+	    displayName: 'Tag',
+	    render: function render() {
+	        console.log(this.props, ' for tag');
+	        console.log(this.props.active === this.props.tag, ' is Current');
+	        var clName = (this.props.tag === this.props.active ? 'active' : '') + ' tag-filter';
+	        return _react2.default.createElement(
+	            'button',
+	            _extends({}, this.props, { className: clName }),
+	            this.props.tag
+	        );
+	    }
+	});
 
-	var _config2 = _interopRequireDefault(_config);
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
 
-	var _datastore = __webpack_require__(3);
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _datastore = __webpack_require__(1);
 
 	var _datastore2 = _interopRequireDefault(_datastore);
+
+	var _datastoreUtils = __webpack_require__(22);
+
+	var _augmentPagedata = __webpack_require__(28);
+
+	var _augmentPagedata2 = _interopRequireDefault(_augmentPagedata);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -718,25 +802,37 @@
 
 
 	function pages(req, res, next) {
-	    promiseAllPages().then(function (pages) {
-	        var pageTitle = req.params.page;
-
-	        req.pages = pages;
-
-	        if (pageTitle) {
-	            req.page = pages.find(findPage.bind({ title: pageTitle }));
-	        }
-
-	        next();
-	        return req.page;
-	    }).then(checkExpiresPhotos).catch(function (err) {
-	        next(err);
-	    });
+	    (0, _datastoreUtils.promiseAllPages)(_datastore2.default).then(function (pages) {
+	        return (0, _augmentPagedata2.default)(pages, req, res, next);
+	    }).then(function () {
+	        return (0, _datastoreUtils.checkExpiresPhotos)(_datastore2.default);
+	    }).catch(next);
 	}
 
-	function promiseAllPages() {
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.checkExpiresPhotos = exports.promiseAllPages = undefined;
+
+	var _flickrUpdatePages = __webpack_require__(23);
+
+	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.promiseAllPages = promiseAllPages;
+	exports.checkExpiresPhotos = checkExpiresPhotos;
+
+
+	function promiseAllPages(datastore) {
 	    return new Promise(function (resolve, reject) {
-	        var pages = _datastore2.default.getPages();
+	        var pages = datastore.getPages();
 
 	        if (pages) {
 	            return resolve(pages);
@@ -746,44 +842,50 @@
 	    });
 	}
 
-	function findPage(pageObj) {
-	    return pageObj.title === this.title;
-	}
-
-	function checkExpiresPhotos() {
-	    var savedDate = _datastore2.default.getSaveDate('photo');
-	    if (savedDate && Date.now() - savedDate > _config2.default.flickr_expire_time) {
+	function checkExpiresPhotos(datastore) {
+	    var savedDate = datastore.getSaveDate('photo');
+	    if (savedDate && Date.now() - savedDate > config.flickr_expire_time) {
 	        (0, _flickrUpdatePages2.default)();
 	    }
 	}
 
 /***/ },
-/* 21 */
-/***/ function(module, exports) {
-
-	module.exports = require("mongoose");
-
-/***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var nconf = __webpack_require__(1);
-	var config = __webpack_require__(23);
-	var datastore = __webpack_require__(3);
-	var flickrAuthenticate = __webpack_require__(24);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	var flickrGetSets = __webpack_require__(26);
+	var _datastore = __webpack_require__(1);
 
-	module.exports = update;
+	var _datastore2 = _interopRequireDefault(_datastore);
 
-	function update() {
+	var _flickrAuthenticate = __webpack_require__(24);
+
+	var _flickrAuthenticate2 = _interopRequireDefault(_flickrAuthenticate);
+
+	var _flickrUpdateSets = __webpack_require__(27);
+
+	var _flickrUpdateSets2 = _interopRequireDefault(_flickrUpdateSets);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var nconf = __webpack_require__(2);
+	var config = __webpack_require__(26);
+
+	exports.default = flickrUpdate;
+
+
+	function flickrUpdate() {
 	    console.log('start updating pages from flickr');
 
-	    return flickrAuthenticate().then(pFlickrFetchCollectionTree).then(mapPages).then(flickrGetSets).then(function (photoSets) {
-	        return datastore.updatePages(photoSets, 'photo');
+	    return (0, _flickrAuthenticate2.default)().then(pFlickrFetchCollectionTree).then(mapPages).then(_flickrUpdateSets2.default).then(function (photoSets) {
+	        return _datastore2.default.updatePages(photoSets, 'photo');
 	    }).catch(function (err) {
+	        console.log('something wrong with flickrUpdate', err);
 	        throw new Error(err);
 	    });
 	}
@@ -807,7 +909,6 @@
 	    var set = flickrData.collections.collection[0].set;
 
 	    return set.map(function (set) {
-	        console.log('-------------\n', set);
 	        return {
 	            title: set.title,
 	            id: set.id,
@@ -817,44 +918,21 @@
 	}
 
 /***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var nconf = __webpack_require__(1);
-
-	module.exports = {
-	    appName: 'portfoliooz',
-	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
-	    flickr_collection_id: '138616365-72157663941826382',
-	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
-
-	    getFlickrOptions: function getFlickrOptions() {
-	        return {
-	            permissions: 'write',
-	            force_auth: true,
-	            api_key: nconf.get('FLICKR_API_KEY'),
-	            secret: nconf.get('FLICKR_API_SECRET'),
-	            user_id: nconf.get('FLICKR_USER_ID'),
-	            access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
-	            access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
-	        };
-	    }
-	};
-
-/***/ },
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var Flickr = __webpack_require__(25);
-	var flickrOptions = __webpack_require__(23).getFlickrOptions();
+	var flickrOptions = __webpack_require__(26).getFlickrOptions();
 
-	module.exports = pFlickrAuthenticate;
+	exports.default = flickrAuthenticate;
 
-	function pFlickrAuthenticate() {
+
+	function flickrAuthenticate() {
 	    return new Promise(function (resolve, reject) {
 	        Flickr.authenticate(flickrOptions, function (err, flickr) {
 	            if (err) {
@@ -878,18 +956,56 @@
 
 	'use strict';
 
-	var nconf = __webpack_require__(1);
-	var flickrAuthenticate = __webpack_require__(24);
+	var nconf = __webpack_require__(2);
 
-	module.exports = updateSets;
+	module.exports = {
+	    appName: 'portfoliooz',
+	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
+	    flickr_collection_id: '138616365-72157663941826382',
+	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
+
+	    getFlickrOptions: function getFlickrOptions() {
+	        return {
+	            permissions: 'write',
+	            force_auth: true,
+	            api_key: nconf.get('FLICKR_API_KEY'),
+	            secret: nconf.get('FLICKR_API_SECRET'),
+	            user_id: nconf.get('FLICKR_USER_ID'),
+	            access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
+	            access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
+	        };
+	    }
+	};
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _flickrAuthenticate = __webpack_require__(24);
+
+	var _flickrAuthenticate2 = _interopRequireDefault(_flickrAuthenticate);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var nconf = __webpack_require__(2);
+
+	exports.default = updateSets;
+
 
 	function updateSets(sets) {
 	    console.log('start updating sets to DB');
 
-	    return flickrAuthenticate().then(function (flickr) {
-	        console.log('flickr authenticated => get sets:', sets);
-	        var pFlickrGetSet = flickrGetSetPromise(flickr);
-	        return Promise.all(sets.map(pFlickrGetSet));
+	    return (0, _flickrAuthenticate2.default)().then(function (flickr) {
+	        console.log('flickr authenticated => get sets:');
+	        return Promise.all(sets.map(function (set) {
+	            return flickrGetSetPromise(flickr, set);
+	        }));
 	    }).then(function (sets) {
 	        console.log('found sets to update: ', sets.map(function (set) {
 	            return set.title;
@@ -900,52 +1016,78 @@
 	    });
 	}
 
-	function flickrGetSetPromise(flickr) {
-	    return function (set) {
-	        return new Promise(function (resolve, reject) {
-	            flickr.photosets.getPhotos({
-	                photoset_id: set.id,
-	                api_key: nconf.get('FLICKR_API_KEY'),
-	                user_id: nconf.get('FLICKR_USER_ID'),
-	                privacy_filter: 2, // friends, private is ignored somehow
-	                extras: 'url_sq, url_t, url_s, url_m, url_o, tags'
-	            }, function (err, result) {
-	                // TODO more fine grained err handling
-	                // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
-	                if (err) {
-	                    reject('Error fetching photoSet', err);
-	                }
-	                console.log('set fetched', result.photoset.id);
-	                resolve(result.photoset);
-	            });
+	function flickrGetSetPromise(flickr, set) {
+	    return new Promise(function (resolve, reject) {
+	        flickr.photosets.getPhotos({
+	            photoset_id: set.id,
+	            api_key: nconf.get('FLICKR_API_KEY'),
+	            user_id: nconf.get('FLICKR_USER_ID'),
+	            privacy_filter: 2, // friends, private is ignored somehow
+	            extras: 'url_sq, url_t, url_s, url_m, url_o, tags'
+	        }, function (err, result) {
+	            // TODO more fine grained err handling
+	            // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
+	            if (err) {
+	                reject('Error fetching photoSet', err);
+	            }
+	            console.log('set fetched', result.photoset.id);
+	            resolve(result.photoset);
 	        });
-	    };
+	    });
 	}
 
 	function mapPhotoSets(sets) {
 	    return sets.map(function (photoset) {
-	        console.log('---------------\n', photoset);
 	        return {
 	            id: photoset.id,
 	            title: photoset.title,
+	            tags: photoset.tags,
 	            photos: photoset.photo
 	        };
 	    });
 	}
 
 /***/ },
-/* 27 */
+/* 28 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (pages, req, res, next) {
+	    var pageTitle = req.params.page;
+
+	    req.pages = pages;
+
+	    if (pageTitle) {
+	        req.page = pages.find(function (page) {
+	            return page.title = pageTitle;
+	        });
+	    }
+
+	    next();
+	};
+
+/***/ },
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var request = __webpack_require__(28);
-	var markdown = __webpack_require__(29).markdown;
-	var config = __webpack_require__(23);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = getContentPages;
+	var request = __webpack_require__(30);
+	var markdown = __webpack_require__(31).markdown;
+	var config = __webpack_require__(26);
 
-	module.exports = function () {
+	function getContentPages() {
 	    return requestPromise(buildRequestOptions(config.CONTENTS_URL)).then(getPages).then(toHtml);
-	};
+	}
 
 	// add default request headers
 	function buildRequestOptions(url) {
@@ -1002,49 +1144,71 @@
 	}
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports) {
 
 	module.exports = require("markdown");
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var updatePages = __webpack_require__(31);
-	var flickrUpdate = __webpack_require__(22);
+	var _pages = __webpack_require__(33);
+
+	var _pages2 = _interopRequireDefault(_pages);
+
+	var _flickrUpdatePages = __webpack_require__(23);
+
+	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = function () {
-	    return Promise.all([updatePages(), flickrUpdate()]);
+	  return Promise.all([(0, _pages2.default)(), (0, _flickrUpdatePages2.default)()]);
 	};
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var datastore = __webpack_require__(3);
-	var getContentPages = __webpack_require__(27);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	module.exports = update;
+	var _datastore = __webpack_require__(1);
 
-	function update(req, res, next) {
-	    return getContentPages().then(function (pages) {
-	        return datastore.updatePages(pages, 'content');
-	    }).then(function (value) {
+	var _datastore2 = _interopRequireDefault(_datastore);
+
+	var _updateContentPages = __webpack_require__(29);
+
+	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = updatePages;
+
+
+	function updatePages(req, res, next) {
+	    return (0, _updateContentPages2.default)().then(function (pages) {
+	        return _datastore2.default.updatePages(pages, 'content');
+	    }).then(function (data) {
+	        var updated = data.content.map(function (page) {
+	            return page.title;
+	        }).join(',');
 	        if (res) {
-	            res.end('Pages updated: ' + value.length);
+	            res.end('Pages updated on request: %s', updated);
 	        } else {
-	            console.log('Pages updated: ' + value.length);
+	            console.log('Pages updated: %s', updated);
 	        }
 	    }).catch(function (err) {
 	        res && res.sendStatus(500, err);

@@ -2,15 +2,16 @@
 const nconf = require('nconf');
 const express = require('express');
 
-const app = express();
-const port = process.env.PORT || 3000;
-const datastore = require('./db/datastore');
+import datastore from './db/datastore';
 
+// this is run from root, so needs './server'
 nconf
-   .env()
-   .file({file: './config/env.json'});
+    .env()
+    .file({file: './server/config/env.json'});
 
 // app parts
+const app = express();
+const port = process.env.PORT || 3000;
 require('./config/express')(app);
 require('./config/routes')(app);
 

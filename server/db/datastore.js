@@ -1,7 +1,10 @@
 'use strict';
 
-module.exports = (() => {
+const datastore = datastoreFactory();
 
+export {datastore as default};
+
+function datastoreFactory() {
     const pages = {
         content: [],
         photo: [],
@@ -31,4 +34,4 @@ module.exports = (() => {
         getPages,
         getSaveDate
     };
-})();
+}

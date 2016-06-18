@@ -1,7 +1,6 @@
-module.exports = {
-    promiseAllPages,
-    checkExpiresPhotos
-};
+import flickrUpdatePages from '../controllers/flickr-update-pages';
+
+export {promiseAllPages, checkExpiresPhotos};
 
 function promiseAllPages(datastore) {
     return new Promise((resolve, reject) => {
