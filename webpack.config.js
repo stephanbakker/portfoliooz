@@ -1,7 +1,7 @@
 webpack = require('webpack');
 
 module.exports = {
-    entry: './client.js',
+    entry: './client/client.js',
 
     output: {
         path: 'public',
@@ -23,5 +23,5 @@ module.exports = {
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin()
     ] : [],
-}
+};
 

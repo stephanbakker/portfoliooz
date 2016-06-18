@@ -4,19 +4,19 @@ const express = require('express');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const datastore = require('./server/db/datastore');
+const datastore = require('./db/datastore');
 
 nconf
    .env()
-   .file({file: './server/config/env.json'});
+   .file({file: './config/env.json'});
 
 // app parts
-require('./server/config/express')(app);
-require('./server/config/routes')(app);
+require('./config/express')(app);
+require('./config/routes')(app);
 
 
 // after conf stuff
-const startupContent = require('./server/controllers/startup-content');
+const startupContent = require('./controllers/startup-content');
 
 // pull in pages
 startupContent()
