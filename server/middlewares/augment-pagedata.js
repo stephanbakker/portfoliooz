@@ -8,4 +8,4 @@ export default (pages, req, res, next) => {
     }
 
     next();
-}
+};
