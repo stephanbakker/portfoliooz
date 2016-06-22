@@ -3,6 +3,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import Photo from './Photo';
 import Tag from './Tag';
+import Tags from './Tags';
 
 module.exports = React.createClass({
 
@@ -14,17 +15,13 @@ module.exports = React.createClass({
         return {
             activeIndex: -1,
             tagIndex: 0,
-            currentTag: getTags(this.props.photos).shift()
+            currentTag: Tags.getTags(this.props.photos).shift()
         }
     },
 
     render() {
-        let tags = getTags(this.props.photos).map((tag, index) => {
-            return (<Tag onClick={this.setFilter(tag)} key={'tag' + index} tag={tag} active={this.state.currentTag}/>);
-        });
-
         let results = this.props.photos
-            .filter(photo => getTagsFromPhoto(photo.tags).indexOf(this.state.currentTag) > -1)
+            .filter(photo => Tags.getTagsFromPhoto(photo.tags).indexOf(this.state.currentTag) > -1)
             .map((photo, index) => {
                 const key = 'p' + index;
 
@@ -38,7 +35,7 @@ module.exports = React.createClass({
 
         return (
             <div>
-                {tags}
+                <Tags photos={this.props.photos} update={this.updateTag} current={this.state.currentTag}/>
                 <ul className="overview">
                     {results}
                 </ul>
@@ -63,36 +60,11 @@ module.exports = React.createClass({
         }
     },
 
-    setFilter(tag) {
-        return evt => {
-            console.log(tag)
-            this.setState({
-                currentTag: tag
-            });
-        }
+    updateTag(tag) {
+        this.setState({
+            currentTag: tag
+        });
     }
 
 });
-
-function getTags(photos) {
-    return getUniqueTags(photos);
-}
-
-function getUniqueTags(photos) {
-    return photos.reduce(reduceTags, []).filter(uniq);
-}
-
-function reduceTags(acumulator, photo) {
-    return acumulator.concat(getTagsFromPhoto(photo.tags));
-}
-
-function getTagsFromPhoto(tags) {
-    return tags
-            .split(' ')
-            .filter(tag => tag !== '');
-}
-
-function uniq(item, index, array) {
-    return array.indexOf(item) === index;
-}
 

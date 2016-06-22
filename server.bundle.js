@@ -534,6 +534,10 @@
 
 	var _Tag2 = _interopRequireDefault(_Tag);
 
+	var _Tags = __webpack_require__(34);
+
+	var _Tags2 = _interopRequireDefault(_Tags);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
@@ -545,18 +549,14 @@
 	        return {
 	            activeIndex: -1,
 	            tagIndex: 0,
-	            currentTag: getTags(this.props.photos).shift()
+	            currentTag: _Tags2.default.getTags(this.props.photos).shift()
 	        };
 	    },
 	    render: function render() {
 	        var _this = this;
 
-	        var tags = getTags(this.props.photos).map(function (tag, index) {
-	            return _react2.default.createElement(_Tag2.default, { onClick: _this.setFilter(tag), key: 'tag' + index, tag: tag, active: _this.state.currentTag });
-	        });
-
 	        var results = this.props.photos.filter(function (photo) {
-	            return getTagsFromPhoto(photo.tags).indexOf(_this.state.currentTag) > -1;
+	            return _Tags2.default.getTagsFromPhoto(photo.tags).indexOf(_this.state.currentTag) > -1;
 	        }).map(function (photo, index) {
 	            var key = 'p' + index;
 
@@ -570,7 +570,7 @@
 	        return _react2.default.createElement(
 	            'div',
 	            null,
-	            tags,
+	            _react2.default.createElement(_Tags2.default, { photos: this.props.photos, update: this.updateTag, current: this.state.currentTag }),
 	            _react2.default.createElement(
 	                'ul',
 	                { className: 'overview' },
@@ -596,39 +596,12 @@
 	            }
 	        };
 	    },
-	    setFilter: function setFilter(tag) {
-	        var _this3 = this;
-
-	        return function (evt) {
-	            console.log(tag);
-	            _this3.setState({
-	                currentTag: tag
-	            });
-	        };
+	    updateTag: function updateTag(tag) {
+	        this.setState({
+	            currentTag: tag
+	        });
 	    }
 	});
-
-	function getTags(photos) {
-	    return getUniqueTags(photos);
-	}
-
-	function getUniqueTags(photos) {
-	    return photos.reduce(reduceTags, []).filter(uniq);
-	}
-
-	function reduceTags(acumulator, photo) {
-	    return acumulator.concat(getTagsFromPhoto(photo.tags));
-	}
-
-	function getTagsFromPhoto(tags) {
-	    return tags.split(' ').filter(function (tag) {
-	        return tag !== '';
-	    });
-	}
-
-	function uniq(item, index, array) {
-	    return array.indexOf(item) === index;
-	}
 
 /***/ },
 /* 19 */
@@ -765,9 +738,7 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'Tag',
 	    render: function render() {
-	        console.log(this.props, ' for tag');
-	        console.log(this.props.active === this.props.tag, ' is Current');
-	        var clName = (this.props.tag === this.props.active ? 'active' : '') + ' tag-filter';
+	        var clName = (this.props.active ? 'active' : '') + ' tag-filter';
 	        return _react2.default.createElement(
 	            'button',
 	            _extends({}, this.props, { className: clName }),
@@ -1214,6 +1185,83 @@
 	        res && res.sendStatus(500, err);
 	        console.log('Error updating pages (500)', err);
 	    });
+	}
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _react = __webpack_require__(9);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Tag = __webpack_require__(20);
+
+	var _Tag2 = _interopRequireDefault(_Tag);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _react2.default.createClass({
+	    displayName: 'exports',
+
+
+	    statics: {
+	        getTags: getTags,
+	        getTagsFromPhoto: getTagsFromPhoto
+	    },
+
+	    render: function render() {
+	        var _this = this;
+
+	        var tags = getTags(this.props.photos).map(function (tag, index) {
+	            var isCurrent = tag === _this.props.current;
+	            return _react2.default.createElement(
+	                'li',
+	                { key: 'tag' + index },
+	                _react2.default.createElement(_Tag2.default, {
+	                    onClick: _this.setFilter(tag),
+	                    tag: tag,
+	                    active: isCurrent })
+	            );
+	        });
+
+	        return _react2.default.createElement(
+	            'ul',
+	            { className: 'tags' },
+	            tags
+	        );
+	    },
+	    setFilter: function setFilter(tag) {
+	        var _this2 = this;
+
+	        return function (evt) {
+	            return _this2.props.update(tag);
+	        };
+	    }
+	});
+
+	function getTags(photos) {
+	    return getUniqueTags(photos);
+	}
+
+	function getUniqueTags(photos) {
+	    return photos.reduce(reduceTags, []).filter(uniq);
+	}
+
+	function reduceTags(acumulator, photo) {
+	    return acumulator.concat(getTagsFromPhoto(photo.tags));
+	}
+
+	function getTagsFromPhoto(tags) {
+	    return tags.split(' ').filter(function (tag) {
+	        return tag !== '';
+	    });
+	}
+
+	function uniq(item, index, array) {
+	    return array.indexOf(item) === index;
 	}
 
 /***/ }
