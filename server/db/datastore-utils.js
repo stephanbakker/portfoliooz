@@ -1,3 +1,4 @@
+const config = require('../config/config');
 import flickrUpdatePages from '../controllers/flickr-update-pages';
 
 export {promiseAllPages, checkExpiresPhotos};

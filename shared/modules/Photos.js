@@ -71,7 +71,6 @@ module.exports = React.createClass({
 
 });
 
-
 function filterTaggedPhotos(photo, tag) {
     return Tags
             .getTagsFromPhoto(photo.tags)
