@@ -1,5 +1,27 @@
-.tag-filter {
-    &.active {
-        background: $link-active-color;
+.tags {
+    list-style: none;
+    margin: 14px 0;
+    padding: 0;
+
+    &__item {
+        display: inline-block;
+        margin-right: 10px;
+
+        &__filter {
+
+            font-family: inherit;
+            font-size: 0.75rem;
+            border: 0;
+            display:inline-block;
+            cursor:pointer;
+            padding:6px 24px;
+            background-color: $button-filter-bg;
+
+            &.active {
+                color: #fff;
+                background: $link-active-color;
+            }
+
+        }
     }
 }

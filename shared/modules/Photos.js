@@ -20,9 +20,12 @@ module.exports = React.createClass({
     },
 
     render() {
-        let results = this.props.photos
-            .filter(photo => Tags.getTagsFromPhoto(photo.tags).indexOf(this.state.currentTag) > -1)
-            .map((photo, index) => {
+        let photos = this.state.currentTag ? 
+                                this.props.photos
+                                    .filter(photo => filterTaggedPhotos(photo, this.state.currentTag)) :
+                                this.props.photos;
+
+        let results = photos.map((photo, index) => {
                 const key = 'p' + index;
 
                 return(
@@ -62,9 +65,15 @@ module.exports = React.createClass({
 
     updateTag(tag) {
         this.setState({
-            currentTag: tag
+            currentTag: this.state.currentTag !== tag ? tag : null
         });
     }
 
 });
 
+
+function filterTaggedPhotos(photo, tag) {
+    return Tags
+            .getTagsFromPhoto(photo.tags)
+            .indexOf(tag) > -1;
+}

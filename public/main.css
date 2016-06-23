@@ -86,5 +86,21 @@ h3 {
       max-height: 100%;
       max-width: 100%; }
 
-.tag-filter.active {
-  background: #dc6c6c; }
+.tags {
+  list-style: none;
+  margin: 14px 0;
+  padding: 0; }
+  .tags__item {
+    display: inline-block;
+    margin-right: 10px; }
+    .tags__item__filter {
+      font-family: inherit;
+      font-size: 0.75rem;
+      border: 0;
+      display: inline-block;
+      cursor: pointer;
+      padding: 6px 24px;
+      background-color: #eee; }
+      .tags__item__filter.active {
+        color: #fff;
+        background: #dc6c6c; }

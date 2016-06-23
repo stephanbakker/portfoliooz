@@ -555,9 +555,11 @@
 	    render: function render() {
 	        var _this = this;
 
-	        var results = this.props.photos.filter(function (photo) {
-	            return _Tags2.default.getTagsFromPhoto(photo.tags).indexOf(_this.state.currentTag) > -1;
-	        }).map(function (photo, index) {
+	        var photos = this.state.currentTag ? this.props.photos.filter(function (photo) {
+	            return filterTaggedPhotos(photo, _this.state.currentTag);
+	        }) : this.props.photos;
+
+	        var results = photos.map(function (photo, index) {
 	            var key = 'p' + index;
 
 	            return _react2.default.createElement(
@@ -598,10 +600,14 @@
 	    },
 	    updateTag: function updateTag(tag) {
 	        this.setState({
-	            currentTag: tag
+	            currentTag: this.state.currentTag !== tag ? tag : null
 	        });
 	    }
 	});
+
+	function filterTaggedPhotos(photo, tag) {
+	    return _Tags2.default.getTagsFromPhoto(photo.tags).indexOf(tag) > -1;
+	}
 
 /***/ },
 /* 19 */
@@ -738,7 +744,7 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'Tag',
 	    render: function render() {
-	        var clName = (this.props.active ? 'active' : '') + ' tag-filter';
+	        var clName = (this.props.active ? 'active' : '') + ' tags__item__filter';
 	        return _react2.default.createElement(
 	            'button',
 	            _extends({}, this.props, { className: clName }),
@@ -1219,7 +1225,7 @@
 	            var isCurrent = tag === _this.props.current;
 	            return _react2.default.createElement(
 	                'li',
-	                { key: 'tag' + index },
+	                { className: 'tags__item', key: 'tag' + index },
 	                _react2.default.createElement(_Tag2.default, {
 	                    onClick: _this.setFilter(tag),
 	                    tag: tag,

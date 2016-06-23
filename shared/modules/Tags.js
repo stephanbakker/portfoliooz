@@ -14,7 +14,7 @@ module.exports = React.createClass({
         let tags = getTags(this.props.photos).map((tag, index) => {
                         let isCurrent = tag === this.props.current;
                         return (
-                            <li key={'tag' + index}>
+                            <li className="tags__item" key={'tag' + index}>
                                 <Tag
                                     onClick={this.setFilter(tag)}
                                     tag={tag}
