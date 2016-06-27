@@ -28,10 +28,9 @@ function flickrUpdate() {
 
 function pFlickrFetchCollectionTree(flickr) {
     return new Promise((resolve, reject) => {
-        flickr.collections.getTree({
+        flickr.photosets.getList({
             api_key: nconf.get('FLICKR_API_KEY'),
             user_id: nconf.get('FLICKR_USER_ID'),
-            collection_id: config.flickr_collection_id
         }, (err, result) => {
             if (err) {
                 reject('Error fetching collection tree', err);
@@ -42,7 +41,7 @@ function pFlickrFetchCollectionTree(flickr) {
 }
 
 function mapPages(flickrData) {
-    const set = flickrData.collections.collection[0].set;
+    const set = flickrData.photosets.photoset;
 
     return set.map(set => {
         return {

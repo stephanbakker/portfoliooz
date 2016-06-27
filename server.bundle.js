@@ -652,7 +652,7 @@
 	                    return _this._container = container;
 	                },
 	                className: 'item__wrapper' },
-	            _react2.default.createElement('img', { src: imgData.url_t, ref: function ref(thumb) {
+	            _react2.default.createElement('img', { src: imgData.url_sq, ref: function ref(thumb) {
 	                    return _this.thumb = thumb;
 	                } }),
 	            _react2.default.createElement(
@@ -663,7 +663,7 @@
 	                _react2.default.createElement(
 	                    'span',
 	                    null,
-	                    _react2.default.createElement('img', { src: imgData.url_o, ref: function ref(zoomed) {
+	                    _react2.default.createElement('img', { src: imgData.url_l, ref: function ref(zoomed) {
 	                            return _this._zoomed = zoomed;
 	                        } })
 	                ),
@@ -890,7 +890,7 @@
 	        var pages = datastore.getPages();
 
 	        if (pages) {
-	            return resolve(pages);
+	            resolve(pages);
 	        } else {
 	            reject('no pages found');
 	        }
@@ -947,10 +947,9 @@
 
 	function pFlickrFetchCollectionTree(flickr) {
 	    return new Promise(function (resolve, reject) {
-	        flickr.collections.getTree({
+	        flickr.photosets.getList({
 	            api_key: nconf.get('FLICKR_API_KEY'),
-	            user_id: nconf.get('FLICKR_USER_ID'),
-	            collection_id: config.flickr_collection_id
+	            user_id: nconf.get('FLICKR_USER_ID')
 	        }, function (err, result) {
 	            if (err) {
 	                reject('Error fetching collection tree', err);
@@ -961,7 +960,7 @@
 	}
 
 	function mapPages(flickrData) {
-	    var set = flickrData.collections.collection[0].set;
+	    var set = flickrData.photosets.photoset;
 
 	    return set.map(function (set) {
 	        return {
@@ -1016,7 +1015,6 @@
 	module.exports = {
 	    appName: 'portfoliooz',
 	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
-	    flickr_collection_id: '138616365-72157663941826382',
 	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
 
 	    getFlickrOptions: function getFlickrOptions() {
@@ -1078,7 +1076,7 @@
 	            api_key: nconf.get('FLICKR_API_KEY'),
 	            user_id: nconf.get('FLICKR_USER_ID'),
 	            privacy_filter: 2, // friends, private is ignored somehow
-	            extras: 'url_sq, url_t, url_s, url_m, url_o, tags'
+	            extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags'
 	        }, function (err, result) {
 	            // TODO more fine grained err handling
 	            // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
@@ -1119,7 +1117,7 @@
 
 	    if (pageTitle) {
 	        req.page = pages.find(function (page) {
-	            return page.title = pageTitle;
+	            return page.title === pageTitle;
 	        });
 	    }
 
@@ -1160,7 +1158,7 @@
 	    return new Promise(function (resolve, reject) {
 	        request.get(options, function (error, response, body) {
 	            if (error) {
-	                return reject(error);
+	                reject(error);
 	            } else {
 	                resolve(body);
 	            }

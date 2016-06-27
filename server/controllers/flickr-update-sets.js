@@ -29,7 +29,7 @@ function flickrGetSetPromise(flickr, set) {
             api_key: nconf.get('FLICKR_API_KEY'),
             user_id: nconf.get('FLICKR_USER_ID'),
             privacy_filter: 2, // friends, private is ignored somehow
-            extras: 'url_sq, url_t, url_s, url_m, url_o, tags',
+            extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags',
         }, (err, result) => {
             // TODO more fine grained err handling
             // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html

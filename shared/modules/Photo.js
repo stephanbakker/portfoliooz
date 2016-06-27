@@ -25,10 +25,10 @@ module.exports = React.createClass({
             <div onClick={this.props.onClick}
                 ref={container => this._container = container}
                     className="item__wrapper">
-                <img src={imgData.url_t} ref={thumb => this.thumb = thumb}/>
+                <img src={imgData.url_sq} ref={thumb => this.thumb = thumb}/>
                 <div className="toggleContainer" ref={toggleContainer => this._toggleContainer = toggleContainer}>
                     <span>
-                        <img src={imgData.url_o} ref={zoomed => this._zoomed = zoomed}/>
+                        <img src={imgData.url_l} ref={zoomed => this._zoomed = zoomed}/>
                     </span>
                     {description}
                 </div>
