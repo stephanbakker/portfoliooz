@@ -15,10 +15,10 @@ function datastoreFactory() {
     };
 
     function updatePages(newPages, type) {
-       pages[type] = newPages;
-       pages.saveDate[type] = Date.now();
+        pages[type] = newPages;
+        pages.saveDate[type] = Date.now();
 
-       return pages;
+        return pages;
     }
 
     function getPages() {

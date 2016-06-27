@@ -1,6 +1,4 @@
-'use strict';
-
-var nconf = require('nconf');
+const nconf = require('nconf');
 
 module.exports = {
     appName: 'portfoliooz',

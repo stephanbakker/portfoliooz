@@ -8,7 +8,7 @@ function promiseAllPages(datastore) {
         const pages = datastore.getPages();
 
         if (pages) {
-            return resolve(pages);
+            resolve(pages);
         } else {
             reject('no pages found');
         }
@@ -17,7 +17,7 @@ function promiseAllPages(datastore) {
 
 function checkExpiresPhotos(datastore) {
     const savedDate = datastore.getSaveDate('photo');
-    if (savedDate && 
+    if (savedDate &&
             (Date.now() - savedDate > config.flickr_expire_time)) {
         flickrUpdatePages();
     }

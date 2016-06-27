@@ -15,6 +15,7 @@
     "watch:client": "npm run build:client -- -w",
     "watch:server": "npm run build:server -- -w",
     "dev": "parallelshell 'npm run start:dev' 'npm run watch:client' 'npm run watch:css' 'npm run watch:server'",
+    "lint": "eslint server/**/*.js",
     "test:compile": "webpack --config webpack.servertest.config.js --progress --colors",
     "test": "npm run test:compile && mocha servertest.bundle.js"
   },
@@ -29,6 +30,10 @@
     "babel-preset-react": "^6.5.0",
     "browser-sync": "^2.10.0",
     "chai": "^3.5.0",
+    "eslint": "^2.13.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-config-google": "^0.6.0",
+    "eslint-plugin-react": "^5.2.2",
     "glob": "^7.0.5",
     "mocha": "^2.5.3",
     "node-sass": "^3.4.2",

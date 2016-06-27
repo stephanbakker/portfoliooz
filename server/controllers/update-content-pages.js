@@ -27,7 +27,7 @@ function requestPromise(options) {
         (resolve, reject) => {
             request.get(options, (error, response, body) => {
                 if (error) {
-                    return reject(error);
+                    reject(error);
                 } else {
                     resolve(body);
                 }
@@ -50,12 +50,11 @@ function getPages(data) {
     });
 
     return Promise.all(promises);
-
 }
 
 function toHtml(pages) {
     console.info('content fetched');
-    return pages.map(function (page) {
+    return pages.map(function(page) {
         return {
             title: page.title,
             html: markdown.toHTML(page.mdContent)

@@ -4,7 +4,7 @@ export default (pages, req, res, next) => {
     req.pages = pages;
 
     if (pageTitle) {
-        req.page = pages.find(page => page.title = pageTitle);
+        req.page = pages.find(page => page.title === pageTitle);
     }
 
     next();

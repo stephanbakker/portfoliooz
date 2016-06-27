@@ -4,7 +4,6 @@ const sinon = require('sinon');
 import augmentPageData from './augment-pagedata';
 
 describe('augment pagedata', () => {
-
     it('should call next once', () => {
         const pages = [
             {title: 'Title1'},
@@ -27,5 +26,4 @@ describe('augment pagedata', () => {
         expect(req.pages).to.equal(pages);
         expect(req.page).to.deep.equal(pages[1]);
     });
-
 });
