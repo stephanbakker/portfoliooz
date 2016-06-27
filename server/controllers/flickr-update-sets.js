@@ -1,6 +1,7 @@
 'use strict';
 const nconf = require('nconf');
 
+import {titleToRoute} from '../utils/util';
 import flickrAuthenticate from './flickr-authenticate';
 
 export default updateSets;
@@ -42,11 +43,13 @@ function flickrGetSetPromise(flickr, set) {
     });
 }
 
+
 function mapPhotoSets(sets) {
     return sets.map(photoset => {
         return {
             id: photoset.id,
-            title: photoset.title,
+            //title: photoset.title,
+            title: titleToRoute(photoset.title),
             tags: photoset.tags,
             photos: photoset.photo
         };

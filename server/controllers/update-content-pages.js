@@ -3,6 +3,7 @@
 const request = require('request');
 const markdown = require('markdown').markdown;
 const config = require('../config/config');
+import {titleToRoute} from '../utils/util';
 
 export default function getContentPages() {
     return requestPromise(buildRequestOptions(config.CONTENTS_URL))
@@ -56,7 +57,8 @@ function toHtml(pages) {
     console.info('content fetched');
     return pages.map(function(page) {
         return {
-            title: page.title,
+            //title: page.title,
+            title: titleToRoute(page.title),
             html: markdown.toHTML(page.mdContent)
         };
     });

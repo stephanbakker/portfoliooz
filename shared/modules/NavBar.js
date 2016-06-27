@@ -10,9 +10,10 @@ export default React.createClass({
                 <ul className="nav"> 
                     {
                         pages.map((page) => {
+                            const humanTitle = page.title.replace(/-/g, ' ');
                             return (
                                 <li className="nav__item" key={page.title}>
-                                    <NavLink to={page.title}>{page.title}</NavLink>
+                                    <NavLink to={page.title}>{humanTitle}</NavLink>
                                 </li>
                             );
                         })

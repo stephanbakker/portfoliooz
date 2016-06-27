@@ -397,13 +397,14 @@
 	                'ul',
 	                { className: 'nav' },
 	                pages.map(function (page) {
+	                    var humanTitle = page.title.replace(/-/g, ' ');
 	                    return _react2.default.createElement(
 	                        'li',
 	                        { className: 'nav__item', key: page.title },
 	                        _react2.default.createElement(
 	                            _NavLink2.default,
 	                            { to: page.title },
-	                            page.title
+	                            humanTitle
 	                        )
 	                    );
 	                })
@@ -1040,6 +1041,8 @@
 	    value: true
 	});
 
+	var _util = __webpack_require__(35);
+
 	var _flickrAuthenticate = __webpack_require__(25);
 
 	var _flickrAuthenticate2 = _interopRequireDefault(_flickrAuthenticate);
@@ -1093,7 +1096,8 @@
 	    return sets.map(function (photoset) {
 	        return {
 	            id: photoset.id,
-	            title: photoset.title,
+	            //title: photoset.title,
+	            title: (0, _util.titleToRoute)(photoset.title),
 	            tags: photoset.tags,
 	            photos: photoset.photo
 	        };
@@ -1134,10 +1138,12 @@
 	    value: true
 	});
 	exports.default = getContentPages;
+
+	var _util = __webpack_require__(35);
+
 	var request = __webpack_require__(31);
 	var markdown = __webpack_require__(32).markdown;
 	var config = __webpack_require__(27);
-
 	function getContentPages() {
 	    return requestPromise(buildRequestOptions(config.CONTENTS_URL)).then(getPages).then(toHtml);
 	}
@@ -1186,7 +1192,8 @@
 	    console.info('content fetched');
 	    return pages.map(function (page) {
 	        return {
-	            title: page.title,
+	            //title: page.title,
+	            title: (0, _util.titleToRoute)(page.title),
 	            html: markdown.toHTML(page.mdContent)
 	        };
 	    });
@@ -1267,6 +1274,22 @@
 	        res && res.sendStatus(500, err);
 	        console.log('Error updating pages (500)', err);
 	    });
+	}
+
+/***/ },
+/* 35 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.titleToRoute = titleToRoute;
+
+
+	function titleToRoute(title) {
+	    return title.trim().replace(/\s/g, '-');
 	}
 
 /***/ }
