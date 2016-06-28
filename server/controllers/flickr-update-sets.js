@@ -36,9 +36,10 @@ function flickrGetSetPromise(flickr, set) {
             // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
             if (err) {
                 reject('Error fetching photoSet', err);
+            } else {
+                console.log('set fetched', result.photoset.id);
+                resolve(result.photoset);
             }
-            console.log('set fetched', result.photoset.id);
-            resolve(result.photoset);
         });
     });
 }

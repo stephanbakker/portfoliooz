@@ -66,7 +66,7 @@
 	__webpack_require__(7)(app);
 
 	// after conf stuff
-	var startupContent = __webpack_require__(33);
+	var startupContent = __webpack_require__(34);
 
 	// pull in pages
 	startupContent().then(listen).catch(function (err) {
@@ -189,7 +189,7 @@
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
-	var _updateContentPages = __webpack_require__(30);
+	var _updateContentPages = __webpack_require__(31);
 
 	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
 
@@ -847,7 +847,7 @@
 
 	var _datastoreUtils = __webpack_require__(23);
 
-	var _augmentPagedata = __webpack_require__(29);
+	var _augmentPagedata = __webpack_require__(30);
 
 	var _augmentPagedata2 = _interopRequireDefault(_augmentPagedata);
 
@@ -953,9 +953,10 @@
 	            user_id: nconf.get('FLICKR_USER_ID')
 	        }, function (err, result) {
 	            if (err) {
-	                reject('Error fetching collection tree', err);
+	                reject('Error fetching collection tree' + err);
+	            } else {
+	                resolve(result);
 	            }
-	            resolve(result);
 	        });
 	    });
 	}
@@ -989,12 +990,13 @@
 
 	function flickrAuthenticate() {
 	    return new Promise(function (resolve, reject) {
+	        console.log(flickrOptions, '111');
 	        Flickr.authenticate(flickrOptions, function (err, flickr) {
 	            if (err) {
 	                reject('Error authenticating for Flickr', err);
+	            } else {
+	                resolve(flickr);
 	            }
-
-	            resolve(flickr);
 	        });
 	    });
 	}
@@ -1041,7 +1043,7 @@
 	    value: true
 	});
 
-	var _util = __webpack_require__(35);
+	var _util = __webpack_require__(29);
 
 	var _flickrAuthenticate = __webpack_require__(25);
 
@@ -1085,9 +1087,10 @@
 	            // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
 	            if (err) {
 	                reject('Error fetching photoSet', err);
+	            } else {
+	                console.log('set fetched', result.photoset.id);
+	                resolve(result.photoset);
 	            }
-	            console.log('set fetched', result.photoset.id);
-	            resolve(result.photoset);
 	        });
 	    });
 	}
@@ -1106,6 +1109,22 @@
 
 /***/ },
 /* 29 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.titleToRoute = titleToRoute;
+
+
+	function titleToRoute(title) {
+	    return title.trim().replace(/\s/g, '-');
+	}
+
+/***/ },
+/* 30 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1129,7 +1148,7 @@
 	};
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1139,10 +1158,10 @@
 	});
 	exports.default = getContentPages;
 
-	var _util = __webpack_require__(35);
+	var _util = __webpack_require__(29);
 
-	var request = __webpack_require__(31);
-	var markdown = __webpack_require__(32).markdown;
+	var request = __webpack_require__(32);
+	var markdown = __webpack_require__(33).markdown;
 	var config = __webpack_require__(27);
 	function getContentPages() {
 	    return requestPromise(buildRequestOptions(config.CONTENTS_URL)).then(getPages).then(toHtml);
@@ -1204,24 +1223,24 @@
 	}
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	module.exports = require("markdown");
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _pages = __webpack_require__(34);
+	var _pages = __webpack_require__(35);
 
 	var _pages2 = _interopRequireDefault(_pages);
 
@@ -1236,7 +1255,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1249,7 +1268,7 @@
 
 	var _datastore2 = _interopRequireDefault(_datastore);
 
-	var _updateContentPages = __webpack_require__(30);
+	var _updateContentPages = __webpack_require__(31);
 
 	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
 
@@ -1274,22 +1293,6 @@
 	        res && res.sendStatus(500, err);
 	        console.log('Error updating pages (500)', err);
 	    });
-	}
-
-/***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.titleToRoute = titleToRoute;
-
-
-	function titleToRoute(title) {
-	    return title.trim().replace(/\s/g, '-');
 	}
 
 /***/ }

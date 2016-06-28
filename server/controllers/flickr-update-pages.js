@@ -33,9 +33,10 @@ function pFlickrFetchCollectionTree(flickr) {
             user_id: nconf.get('FLICKR_USER_ID'),
         }, (err, result) => {
             if (err) {
-                reject('Error fetching collection tree', err);
+                reject('Error fetching collection tree' + err);
+            } else {
+                resolve(result);
             }
-            resolve(result);
         });
     });
 }
