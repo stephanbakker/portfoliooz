@@ -938,22 +938,20 @@
 	function flickrUpdate() {
 	    console.log('start updating pages from flickr');
 
-	    return (0, _flickrAuthenticate2.default)().then(pFlickrFetchCollectionTree).then(mapPages).then(_flickrUpdateSets2.default).then(function (photoSets) {
+	    return (0, _flickrAuthenticate2.default)().then(pFlickrGetSetList).then(mapPages).then(_flickrUpdateSets2.default).then(function (photoSets) {
 	        return _datastore2.default.updatePages(photoSets, 'photo');
-	    }).catch(function (err) {
-	        console.log('something wrong with flickrUpdate', err);
-	        throw new Error(err);
 	    });
 	}
 
-	function pFlickrFetchCollectionTree(flickr) {
+	function pFlickrGetSetList(flickr) {
 	    return new Promise(function (resolve, reject) {
 	        flickr.photosets.getList({
 	            api_key: nconf.get('FLICKR_API_KEY'),
-	            user_id: nconf.get('FLICKR_USER_ID')
+	            user_id: nconf.get('FLICKR_USER_ID'),
+	            nojsoncallback: 1
 	        }, function (err, result) {
 	            if (err) {
-	                reject('Error fetching collection tree' + err);
+	                reject('Error "flickr.photosets.getList": ' + err);
 	            } else {
 	                resolve(result);
 	            }
@@ -962,11 +960,11 @@
 	}
 
 	function mapPages(flickrData) {
-	    var set = flickrData.photosets.photoset;
+	    var sets = flickrData.photosets.photoset;
 
-	    return set.map(function (set) {
+	    return sets.map(function (set) {
 	        return {
-	            title: set.title,
+	            title: set.title._content,
 	            id: set.id,
 	            date: Date.now()
 	        };
@@ -990,7 +988,6 @@
 
 	function flickrAuthenticate() {
 	    return new Promise(function (resolve, reject) {
-	        console.log(flickrOptions, '111');
 	        Flickr.authenticate(flickrOptions, function (err, flickr) {
 	            if (err) {
 	                reject('Error authenticating for Flickr', err);
@@ -1069,8 +1066,6 @@
 	            return set.title;
 	        }).join(', '));
 	        return mapPhotoSets(sets);
-	    }).catch(function (err) {
-	        throw new Error(err);
 	    });
 	}
 
@@ -1081,12 +1076,13 @@
 	            api_key: nconf.get('FLICKR_API_KEY'),
 	            user_id: nconf.get('FLICKR_USER_ID'),
 	            privacy_filter: 2, // friends, private is ignored somehow
-	            extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags'
+	            extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags',
+	            nojsoncallback: 1
 	        }, function (err, result) {
 	            // TODO more fine grained err handling
 	            // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
 	            if (err) {
-	                reject('Error fetching photoSet', err);
+	                reject('Error fetching photoSet' + err);
 	            } else {
 	                console.log('set fetched', result.photoset.id);
 	                resolve(result.photoset);

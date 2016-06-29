@@ -18,9 +18,6 @@ function updateSets(sets) {
             console.log('found sets to update: ', sets.map(set => set.title).join(', '));
             return mapPhotoSets(sets);
         })
-        .catch(err => {
-            throw new Error(err);
-        });
 }
 
 function flickrGetSetPromise(flickr, set) {
@@ -31,11 +28,12 @@ function flickrGetSetPromise(flickr, set) {
             user_id: nconf.get('FLICKR_USER_ID'),
             privacy_filter: 2, // friends, private is ignored somehow
             extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags',
+            nojsoncallback: 1,
         }, (err, result) => {
             // TODO more fine grained err handling
             // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
             if (err) {
-                reject('Error fetching photoSet', err);
+                reject('Error fetching photoSet: ' +  err);
             } else {
                 console.log('set fetched', result.photoset.id);
                 resolve(result.photoset);

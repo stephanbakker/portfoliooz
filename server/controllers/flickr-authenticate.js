@@ -5,7 +5,6 @@ export default flickrAuthenticate;
 
 function flickrAuthenticate() {
     return new Promise((resolve, reject) => {
-        console.log(flickrOptions, '111');
         Flickr.authenticate(flickrOptions, function(err, flickr) {
             if (err) {
                 reject('Error authenticating for Flickr', err);

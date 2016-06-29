@@ -15,25 +15,21 @@ function flickrUpdate() {
     console.log('start updating pages from flickr');
 
     return flickrAuthenticate()
-        .then(pFlickrFetchCollectionTree)
+        .then(pFlickrGetSetList)
         .then(mapPages)
         .then(flickrGetSets)
         .then(photoSets => datastore.updatePages(photoSets, 'photo'))
-        .catch(err => {
-            console.log('something wrong with flickrUpdate', err);
-            throw new Error(err);
-        });
-
 }
 
-function pFlickrFetchCollectionTree(flickr) {
+function pFlickrGetSetList(flickr) {
     return new Promise((resolve, reject) => {
         flickr.photosets.getList({
             api_key: nconf.get('FLICKR_API_KEY'),
             user_id: nconf.get('FLICKR_USER_ID'),
+            nojsoncallback: 1,
         }, (err, result) => {
             if (err) {
-                reject('Error fetching collection tree' + err);
+                reject('Error "flickr.photosets.getList": ' + err);
             } else {
                 resolve(result);
             }
@@ -42,11 +38,11 @@ function pFlickrFetchCollectionTree(flickr) {
 }
 
 function mapPages(flickrData) {
-    const set = flickrData.photosets.photoset;
+    const sets = flickrData.photosets.photoset;
 
-    return set.map(set => {
+    return sets.map(set => {
         return {
-            title : set.title,
+            title : set.title._content,
             id: set.id,
             date: Date.now()
         };
