@@ -16,6 +16,7 @@
     "watch:server": "npm run build:server -- -w",
     "dev": "concurrently 'npm run start:dev' 'npm run watch:client' 'npm run watch:css' 'npm run watch:server'",
     "lint": "eslint server/**/*.js",
+    "lint:w": "watch 'npm run lint' server",
     "test:compile": "webpack --config webpack.servertest.config.js --progress --colors",
     "test": "npm run test:compile && mocha servertest.bundle.js"
   },

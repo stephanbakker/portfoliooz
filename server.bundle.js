@@ -900,7 +900,7 @@
 
 	function checkExpiresPhotos(datastore) {
 	    var savedDate = datastore.getSaveDate('photo');
-	    if (savedDate && Date.now() - savedDate > config.flickr_expire_time) {
+	    if (savedDate && Date.now() - savedDate > config.flickrExpireTime) {
 	        (0, _flickrUpdatePages2.default)();
 	    }
 	}
@@ -930,7 +930,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var nconf = __webpack_require__(2);
-	var config = __webpack_require__(27);
 
 	exports.default = flickrUpdate;
 
@@ -945,10 +944,12 @@
 
 	function pFlickrGetSetList(flickr) {
 	    return new Promise(function (resolve, reject) {
+	        /* eslint-disable camelcase */
 	        flickr.photosets.getList({
 	            api_key: nconf.get('FLICKR_API_KEY'),
 	            user_id: nconf.get('FLICKR_USER_ID'),
 	            nojsoncallback: 1
+	            /* eslint-enable camelcase */
 	        }, function (err, result) {
 	            if (err) {
 	                reject('Error "flickr.photosets.getList": ' + err);
@@ -1015,9 +1016,10 @@
 	module.exports = {
 	    appName: 'portfoliooz',
 	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
-	    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
+	    flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
 
 	    getFlickrOptions: function getFlickrOptions() {
+	        /* eslint-disable camelcase */
 	        return {
 	            permissions: 'write',
 	            force_auth: true,
@@ -1071,6 +1073,7 @@
 
 	function flickrGetSetPromise(flickr, set) {
 	    return new Promise(function (resolve, reject) {
+	        /* eslint-disable camelcase */
 	        flickr.photosets.getPhotos({
 	            photoset_id: set.id,
 	            api_key: nconf.get('FLICKR_API_KEY'),
@@ -1078,11 +1081,12 @@
 	            privacy_filter: 2, // friends, private is ignored somehow
 	            extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags',
 	            nojsoncallback: 1
+	            /* eslint-ensable camelcase */
 	        }, function (err, result) {
 	            // TODO more fine grained err handling
 	            // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
 	            if (err) {
-	                reject('Error fetching photoSet' + err);
+	                reject('Error fetching photoSet: ' + err);
 	            } else {
 	                console.log('set fetched', result.photoset.id);
 	                resolve(result.photoset);
@@ -1095,7 +1099,6 @@
 	    return sets.map(function (photoset) {
 	        return {
 	            id: photoset.id,
-	            //title: photoset.title,
 	            title: (0, _util.titleToRoute)(photoset.title),
 	            tags: photoset.tags,
 	            photos: photoset.photo
@@ -1207,7 +1210,6 @@
 	    console.info('content fetched');
 	    return pages.map(function (page) {
 	        return {
-	            //title: page.title,
 	            title: (0, _util.titleToRoute)(page.title),
 	            html: markdown.toHTML(page.mdContent)
 	        };
@@ -1286,7 +1288,9 @@
 	            console.log('Pages updated: %s', updated);
 	        }
 	    }).catch(function (err) {
-	        res && res.sendStatus(500, err);
+	        if (res) {
+	            res.sendStatus(500, err);
+	        }
 	        console.log('Error updating pages (500)', err);
 	    });
 	}

@@ -57,7 +57,6 @@ function toHtml(pages) {
     console.info('content fetched');
     return pages.map(function(page) {
         return {
-            //title: page.title,
             title: titleToRoute(page.title),
             html: markdown.toHTML(page.mdContent)
         };

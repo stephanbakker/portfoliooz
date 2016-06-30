@@ -13,9 +13,9 @@ https://github.com/madhums/node-express-mongoose-demo
     improve filtering 
     unfiltering => show all
     write tests
-improve build/watch/test
-write more tests
+    improve build/watch/test
 use eslint
+write more tests
 add close button, and ESC key for it
 remove flickr credentials from git, into environment stuff
 look at webpack, wtf is it doing

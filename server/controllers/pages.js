@@ -3,7 +3,7 @@
 import datastore from '../db/datastore';
 import getContentPages from './update-content-pages';
 
-export default updatePages; 
+export default updatePages;
 
 function updatePages(req, res, next) {
     return getContentPages()
@@ -17,7 +17,9 @@ function updatePages(req, res, next) {
             }
         })
         .catch(err => {
-            res && res.sendStatus(500, err);
+            if (res) {
+                res.sendStatus(500, err);
+            }
             console.log('Error updating pages (500)', err);
         });
 }

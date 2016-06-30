@@ -1,3 +1,4 @@
+/* eslint-env node, mocha */
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
@@ -22,7 +23,7 @@ describe('augment pagedata', () => {
 
         augmentPageData(pages, req, res, next);
 
-        expect(next.calledOnce).to.be.true;
+        expect(next.calledOnce).to.equal(true);
         expect(req.pages).to.equal(pages);
         expect(req.page).to.deep.equal(pages[1]);
     });

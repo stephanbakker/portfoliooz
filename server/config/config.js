@@ -3,9 +3,10 @@ const nconf = require('nconf');
 module.exports = {
     appName: 'portfoliooz',
     CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
-    flickr_expire_time: 1000 * 60 * 60 * 24, // 24 hours
+    flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
 
     getFlickrOptions() {
+        /* eslint-disable camelcase */
         return {
             permissions: 'write',
             force_auth: true,
@@ -13,7 +14,7 @@ module.exports = {
             secret: nconf.get('FLICKR_API_SECRET'),
             user_id: nconf.get('FLICKR_USER_ID'),
             access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
-            access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET'),
+            access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
         };
     }
 };
