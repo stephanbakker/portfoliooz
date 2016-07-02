@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import Photo from './Photo';
@@ -9,6 +9,11 @@ module.exports = React.createClass({
 
     componentDidMount() {
         document.title = document.title.replace(/^[^-]*/, this.props.currentPage);
+        window.addEventListener("keyup", this.handleKeyUp);
+    },
+
+    componentWillUnMount() {
+        window.removeEventListener("keyup", this.handleKeyUp);
     },
 
     getInitialState() {
@@ -20,17 +25,22 @@ module.exports = React.createClass({
     },
 
     render() {
-        let photos = this.state.currentTag ? 
+        let photos = this.state.currentTag ?
                                 this.props.photos
                                     .filter(photo => filterTaggedPhotos(photo, this.state.currentTag)) :
                                 this.props.photos;
 
-        let results = photos.map((photo, index) => {
+        let thumbs = photos.map((photo, index) => {
                 const key = 'p' + index;
 
                 return(
                         <li key={key} className='overview__item'>
-                            <Photo onClick={this.toggle(index)} data={photo} ref={'photo' + index}/>
+                            <Photo
+                                onClick={this.toggle(index)}
+                                next={this.next}
+                                previous={this.previous}
+                                data={photo}
+                                ref={'photo' + index}/>
                         </li>
                     )
                 }
@@ -40,7 +50,7 @@ module.exports = React.createClass({
             <div>
                 <Tags photos={this.props.photos} update={this.updateTag} current={this.state.currentTag}/>
                 <ul className="overview">
-                    {results}
+                    {thumbs}
                 </ul>
             </div>
         )
@@ -50,16 +60,63 @@ module.exports = React.createClass({
         return (evt) => {
             const photo = this.refs['photo' + index];
             if (this.state.activeIndex === index) {
-                photo.setState({isActive: false});
-                this.setState({
-                    activeIndex: -1
-                });
+                this.collapse();
             } else {
-                photo.setState({isActive: true});
-                this.setState({
-                    activeIndex: index
-                });
+                this.expand(index);
             }
+        }
+    },
+
+    collapse() {
+        const photo = this.refs['photo' + this.state.activeIndex]
+        if (photo) {
+            photo.setState({isActive: false});
+        }
+        this.setState({
+            activeIndex: -1
+        });
+    },
+
+    expand(index) {
+        const photo = this.refs['photo' + index];
+        if (photo) {
+            photo.setState({isActive: true});
+        }
+        this.setState({
+            activeIndex: index
+        });
+    },
+
+    next() {
+        const next = this.state.activeIndex + 1;
+        this.collapse();
+        this.expand(next);
+    },
+
+    previous() {
+        const previous = this.state.activeIndex - 1;
+        this.collapse();
+        this.expand(previous);
+    },
+
+    handleKeyUp(evt) {
+        console.log(evt);
+        if (this.state.activeIndex < 0) {
+            return;
+        }
+
+        switch (evt.code) {
+            case 'Escape':
+                this.collapse();
+                break;
+            case 'ArrowRight':
+                this.next();
+                break;
+            case 'ArrowLeft':
+                this.previous();
+                break;
+            default:
+                console.log(evt.which);
         }
     },
 

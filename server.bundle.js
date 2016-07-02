@@ -553,6 +553,10 @@
 	    displayName: 'exports',
 	    componentDidMount: function componentDidMount() {
 	        document.title = document.title.replace(/^[^-]*/, this.props.currentPage);
+	        window.addEventListener("keyup", this.handleKeyUp);
+	    },
+	    componentWillUnMount: function componentWillUnMount() {
+	        window.removeEventListener("keyup", this.handleKeyUp);
 	    },
 	    getInitialState: function getInitialState() {
 	        return {
@@ -568,13 +572,18 @@
 	            return filterTaggedPhotos(photo, _this.state.currentTag);
 	        }) : this.props.photos;
 
-	        var results = photos.map(function (photo, index) {
+	        var thumbs = photos.map(function (photo, index) {
 	            var key = 'p' + index;
 
 	            return _react2.default.createElement(
 	                'li',
 	                { key: key, className: 'overview__item' },
-	                _react2.default.createElement(_Photo2.default, { onClick: _this.toggle(index), data: photo, ref: 'photo' + index })
+	                _react2.default.createElement(_Photo2.default, {
+	                    onClick: _this.toggle(index),
+	                    next: _this.next,
+	                    previous: _this.previous,
+	                    data: photo,
+	                    ref: 'photo' + index })
 	            );
 	        });
 
@@ -585,7 +594,7 @@
 	            _react2.default.createElement(
 	                'ul',
 	                { className: 'overview' },
-	                results
+	                thumbs
 	            )
 	        );
 	    },
@@ -595,17 +604,59 @@
 	        return function (evt) {
 	            var photo = _this2.refs['photo' + index];
 	            if (_this2.state.activeIndex === index) {
-	                photo.setState({ isActive: false });
-	                _this2.setState({
-	                    activeIndex: -1
-	                });
+	                _this2.collapse();
 	            } else {
-	                photo.setState({ isActive: true });
-	                _this2.setState({
-	                    activeIndex: index
-	                });
+	                _this2.expand(index);
 	            }
 	        };
+	    },
+	    collapse: function collapse() {
+	        var photo = this.refs['photo' + this.state.activeIndex];
+	        if (photo) {
+	            photo.setState({ isActive: false });
+	        }
+	        this.setState({
+	            activeIndex: -1
+	        });
+	    },
+	    expand: function expand(index) {
+	        var photo = this.refs['photo' + index];
+	        if (photo) {
+	            photo.setState({ isActive: true });
+	        }
+	        this.setState({
+	            activeIndex: index
+	        });
+	    },
+	    next: function next() {
+	        var next = this.state.activeIndex + 1;
+	        this.collapse();
+	        this.expand(next);
+	    },
+	    previous: function previous() {
+	        var previous = this.state.activeIndex - 1;
+	        this.collapse();
+	        this.expand(previous);
+	    },
+	    handleKeyUp: function handleKeyUp(evt) {
+	        console.log(evt);
+	        if (this.state.activeIndex < 0) {
+	            return;
+	        }
+
+	        switch (evt.code) {
+	            case 'Escape':
+	                this.collapse();
+	                break;
+	            case 'ArrowRight':
+	                this.next();
+	                break;
+	            case 'ArrowLeft':
+	                this.previous();
+	                break;
+	            default:
+	                console.log(evt.which);
+	        }
 	    },
 	    updateTag: function updateTag(tag) {
 	        this.setState({
@@ -656,7 +707,9 @@
 
 	        return _react2.default.createElement(
 	            'div',
-	            { onClick: this.props.onClick,
+	            {
+	                onClick: this.props.onClick,
+	                onKeyUp: this.props.onKey,
 	                ref: function ref(container) {
 	                    return _this._container = container;
 	                },
@@ -670,13 +723,32 @@
 	                        return _this._toggleContainer = toggleContainer;
 	                    } },
 	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'item__close', 'aria-label': 'close' },
+	                    '+'
+	                ),
+	                _react2.default.createElement(
 	                    'span',
 	                    null,
 	                    _react2.default.createElement('img', { src: imgData.url_l, ref: function ref(zoomed) {
 	                            return _this._zoomed = zoomed;
 	                        } })
 	                ),
-	                description
+	                description,
+	                _react2.default.createElement(
+	                    'button',
+	                    {
+	                        className: 'item__arrow item__arrow--previous',
+	                        onClick: this.props.previous },
+	                    '<'
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    {
+	                        className: 'item__arrow item__arrow--next',
+	                        onClick: this.props.previous },
+	                    '>'
+	                )
 	            )
 	        );
 	    },

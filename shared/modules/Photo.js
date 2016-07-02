@@ -22,15 +22,24 @@ module.exports = React.createClass({
         let imgData = this.props.data;
 
         return (
-            <div onClick={this.props.onClick}
+            <div
+                onClick={this.props.onClick}
+                onKeyUp={this.props.onKey}
                 ref={container => this._container = container}
                     className="item__wrapper">
                 <img src={imgData.url_sq} ref={thumb => this.thumb = thumb}/>
                 <div className="toggleContainer" ref={toggleContainer => this._toggleContainer = toggleContainer}>
+                    <button className="item__close" aria-label="close">+</button>
                     <span>
                         <img src={imgData.url_l} ref={zoomed => this._zoomed = zoomed}/>
                     </span>
                     {description}
+                    <button
+                        className="item__arrow item__arrow--previous"
+                        onClick={this.props.previous}>&lt;</button>
+                    <button
+                        className="item__arrow item__arrow--next"
+                        onClick={this.props.previous}>&gt;</button>
                 </div>
             </div>
         );
@@ -95,7 +104,7 @@ module.exports = React.createClass({
 
     getImgStartTranslateValues(startRects, endRects) {
         return {
-            top: startRects.top - endRects.top, 
+            top: startRects.top - endRects.top,
             left: startRects.left - endRects.left
         };
     }
