@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import Photo from './Photo';
 import Tag from './Tag';
 import Tags from './Tags';
+import GalleryButtons from './GalleryButtons';
 
 module.exports = React.createClass({
 
@@ -31,34 +32,37 @@ module.exports = React.createClass({
                                 this.props.photos;
 
         let thumbs = photos.map((photo, index) => {
-                const key = 'p' + index;
+            const key = 'p' + index;
+            return(
+                    <li key={key} className='overview__item'>
+                        <Photo
+                            onClick={this.toggle(index)}
+                            data={photo}
+                            ref={'photo' + index}/>
+                    </li>
+                )
+            }
+        );
 
-                return(
-                        <li key={key} className='overview__item'>
-                            <Photo
-                                onClick={this.toggle(index)}
-                                next={this.next}
-                                previous={this.previous}
-                                data={photo}
-                                ref={'photo' + index}/>
-                        </li>
-                    )
-                }
-            );
-
+        const showButtons = this.state.activeIndex !== -1;
         return (
             <div>
                 <Tags photos={this.props.photos} update={this.updateTag} current={this.state.currentTag}/>
                 <ul className="overview">
                     {thumbs}
                 </ul>
+                <GalleryButtons
+                    show={showButtons}
+                    collapse={this.collapse}
+                    next={this.next}
+                    previous={this.previous} />
             </div>
         )
     },
 
     toggle(index) {
         return (evt) => {
-            const photo = this.refs['photo' + index];
+            evt.preventDefault();
             if (this.state.activeIndex === index) {
                 this.collapse();
             } else {
@@ -88,7 +92,10 @@ module.exports = React.createClass({
     },
 
     next() {
-        const next = this.state.activeIndex + 1;
+        let next = this.state.activeIndex + 1;
+        if (this.props.photos.length === next) {
+            next = -1;
+        }
         this.collapse();
         this.expand(next);
     },

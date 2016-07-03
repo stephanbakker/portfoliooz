@@ -66,7 +66,7 @@
 	__webpack_require__(8)(app);
 
 	// after conf stuff
-	var startupContent = __webpack_require__(35);
+	var startupContent = __webpack_require__(36);
 
 	// pull in pages
 	startupContent().then(listen).catch(function (err) {
@@ -193,11 +193,11 @@
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _pagesMiddleware = __webpack_require__(23);
+	var _pagesMiddleware = __webpack_require__(24);
 
 	var _pagesMiddleware2 = _interopRequireDefault(_pagesMiddleware);
 
-	var _updateContentPages = __webpack_require__(32);
+	var _updateContentPages = __webpack_require__(33);
 
 	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
 
@@ -547,6 +547,10 @@
 
 	var _Tags2 = _interopRequireDefault(_Tags);
 
+	var _GalleryButtons = __webpack_require__(23);
+
+	var _GalleryButtons2 = _interopRequireDefault(_GalleryButtons);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
@@ -574,19 +578,17 @@
 
 	        var thumbs = photos.map(function (photo, index) {
 	            var key = 'p' + index;
-
 	            return _react2.default.createElement(
 	                'li',
 	                { key: key, className: 'overview__item' },
 	                _react2.default.createElement(_Photo2.default, {
 	                    onClick: _this.toggle(index),
-	                    next: _this.next,
-	                    previous: _this.previous,
 	                    data: photo,
 	                    ref: 'photo' + index })
 	            );
 	        });
 
+	        var showButtons = this.state.activeIndex !== -1;
 	        return _react2.default.createElement(
 	            'div',
 	            null,
@@ -595,14 +597,19 @@
 	                'ul',
 	                { className: 'overview' },
 	                thumbs
-	            )
+	            ),
+	            _react2.default.createElement(_GalleryButtons2.default, {
+	                show: showButtons,
+	                collapse: this.collapse,
+	                next: this.next,
+	                previous: this.previous })
 	        );
 	    },
 	    toggle: function toggle(index) {
 	        var _this2 = this;
 
 	        return function (evt) {
-	            var photo = _this2.refs['photo' + index];
+	            evt.preventDefault();
 	            if (_this2.state.activeIndex === index) {
 	                _this2.collapse();
 	            } else {
@@ -630,6 +637,9 @@
 	    },
 	    next: function next() {
 	        var next = this.state.activeIndex + 1;
+	        if (this.props.photos.length === next) {
+	            next = -1;
+	        }
 	        this.collapse();
 	        this.expand(next);
 	    },
@@ -675,6 +685,8 @@
 
 	'use strict';
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _react = __webpack_require__(10);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -707,13 +719,11 @@
 
 	        return _react2.default.createElement(
 	            'div',
-	            {
-	                onClick: this.props.onClick,
-	                onKeyUp: this.props.onKey,
+	            _extends({}, this.props, {
 	                ref: function ref(container) {
 	                    return _this._container = container;
 	                },
-	                className: 'item__wrapper' },
+	                className: 'item__wrapper' }),
 	            _react2.default.createElement('img', { src: imgData.url_sq, ref: function ref(thumb) {
 	                    return _this.thumb = thumb;
 	                } }),
@@ -723,32 +733,13 @@
 	                        return _this._toggleContainer = toggleContainer;
 	                    } },
 	                _react2.default.createElement(
-	                    'button',
-	                    { className: 'item__close', 'aria-label': 'close' },
-	                    '+'
-	                ),
-	                _react2.default.createElement(
 	                    'span',
 	                    null,
 	                    _react2.default.createElement('img', { src: imgData.url_l, ref: function ref(zoomed) {
 	                            return _this._zoomed = zoomed;
 	                        } })
 	                ),
-	                description,
-	                _react2.default.createElement(
-	                    'button',
-	                    {
-	                        className: 'item__arrow item__arrow--previous',
-	                        onClick: this.props.previous },
-	                    '<'
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    {
-	                        className: 'item__arrow item__arrow--next',
-	                        onClick: this.props.previous },
-	                    '>'
-	                )
+	                description
 	            )
 	        );
 	    },
@@ -921,13 +912,59 @@
 	    value: true
 	});
 
+	var _react = __webpack_require__(10);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	    displayName: 'GalleryButtons',
+	    render: function render() {
+	        var styles = { display: this.props.show ? '' : 'none' };
+	        console.log('en nu?', this.props.show);
+	        return _react2.default.createElement(
+	            'div',
+	            { style: styles },
+	            _react2.default.createElement('button', {
+	                'aria-label': 'close',
+	                className: 'gallery-btn__close',
+	                onClick: this.props.collapse }),
+	            _react2.default.createElement(
+	                'button',
+	                {
+	                    className: 'gallery-btn__arrow gallery-btn__arrow--previous',
+	                    onClick: this.props.previous },
+	                'previous'
+	            ),
+	            _react2.default.createElement(
+	                'button',
+	                {
+	                    className: 'gallery-btn__arrow gallery-btn__arrow--next',
+	                    onClick: this.props.next },
+	                'next'
+	            )
+	        );
+	    }
+	});
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
 	var _datastore = __webpack_require__(1);
 
 	var _datastore2 = _interopRequireDefault(_datastore);
 
-	var _datastoreUtils = __webpack_require__(24);
+	var _datastoreUtils = __webpack_require__(25);
 
-	var _augmentPagedata = __webpack_require__(31);
+	var _augmentPagedata = __webpack_require__(32);
 
 	var _augmentPagedata2 = _interopRequireDefault(_augmentPagedata);
 
@@ -945,7 +982,7 @@
 	}
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -955,13 +992,13 @@
 	});
 	exports.checkExpiresPhotos = exports.promiseAllPages = undefined;
 
-	var _flickrUpdatePages = __webpack_require__(25);
+	var _flickrUpdatePages = __webpack_require__(26);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var config = __webpack_require__(28);
+	var config = __webpack_require__(29);
 	exports.promiseAllPages = promiseAllPages;
 	exports.checkExpiresPhotos = checkExpiresPhotos;
 
@@ -986,7 +1023,7 @@
 	}
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -999,11 +1036,11 @@
 
 	var _datastore2 = _interopRequireDefault(_datastore);
 
-	var _flickrAuthenticate = __webpack_require__(26);
+	var _flickrAuthenticate = __webpack_require__(27);
 
 	var _flickrAuthenticate2 = _interopRequireDefault(_flickrAuthenticate);
 
-	var _flickrUpdateSets = __webpack_require__(29);
+	var _flickrUpdateSets = __webpack_require__(30);
 
 	var _flickrUpdateSets2 = _interopRequireDefault(_flickrUpdateSets);
 
@@ -1053,7 +1090,7 @@
 	}
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1061,8 +1098,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var Flickr = __webpack_require__(27);
-	var flickrOptions = __webpack_require__(28).getFlickrOptions();
+	var Flickr = __webpack_require__(28);
+	var flickrOptions = __webpack_require__(29).getFlickrOptions();
 
 	exports.default = flickrAuthenticate;
 
@@ -1080,13 +1117,13 @@
 	}
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	module.exports = require("flickrapi");
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1113,7 +1150,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1122,9 +1159,9 @@
 	    value: true
 	});
 
-	var _util = __webpack_require__(30);
+	var _util = __webpack_require__(31);
 
-	var _flickrAuthenticate = __webpack_require__(26);
+	var _flickrAuthenticate = __webpack_require__(27);
 
 	var _flickrAuthenticate2 = _interopRequireDefault(_flickrAuthenticate);
 
@@ -1187,7 +1224,7 @@
 	}
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1203,7 +1240,7 @@
 	}
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1227,7 +1264,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1237,11 +1274,11 @@
 	});
 	exports.default = getContentPages;
 
-	var _util = __webpack_require__(30);
+	var _util = __webpack_require__(31);
 
-	var request = __webpack_require__(33);
-	var markdown = __webpack_require__(34).markdown;
-	var config = __webpack_require__(28);
+	var request = __webpack_require__(34);
+	var markdown = __webpack_require__(35).markdown;
+	var config = __webpack_require__(29);
 	function getContentPages() {
 	    return requestPromise(buildRequestOptions(config.CONTENTS_URL)).then(getPages).then(toHtml);
 	}
@@ -1301,28 +1338,28 @@
 	}
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	module.exports = require("markdown");
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _pages = __webpack_require__(36);
+	var _pages = __webpack_require__(37);
 
 	var _pages2 = _interopRequireDefault(_pages);
 
-	var _flickrUpdatePages = __webpack_require__(25);
+	var _flickrUpdatePages = __webpack_require__(26);
 
 	var _flickrUpdatePages2 = _interopRequireDefault(_flickrUpdatePages);
 
@@ -1333,7 +1370,7 @@
 	};
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1346,7 +1383,7 @@
 
 	var _datastore2 = _interopRequireDefault(_datastore);
 
-	var _updateContentPages = __webpack_require__(32);
+	var _updateContentPages = __webpack_require__(33);
 
 	var _updateContentPages2 = _interopRequireDefault(_updateContentPages);
 

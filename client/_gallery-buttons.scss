@@ -1,0 +1,58 @@
+.gallery-btn {
+    $button-icon-color: #696969;
+    &__close {
+        @include unstyle-button;
+        @include action-btn;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+
+        &::before {
+            content: '+';
+            position: absolute;
+            left: 10px;
+            top: 3px;
+            font-family: arial;
+            color: $button-icon-color;
+            font-size: 28px;
+            text-align: center;
+            transform: rotate(-45deg);
+        }
+    }
+
+    &__arrow {
+        @include unstyle-button;
+        @include action-btn;
+        position: absolute;
+        bottom: 10px;
+        overflow: hidden;
+        text-indent: -100px;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            left: 11px;
+            top: 13px;
+            width: 7px;
+            height: 7px;
+            border: solid $button-icon-color;
+            border-width: 0 2px 2px 0;
+        }
+
+        &--next {
+            right: 10px;
+            &::before {
+                transform: rotate(-45deg);
+            }
+        }
+
+        &--previous {
+            left: 10px;
+            &::before {
+                left: 14px;
+                transform: rotate(135deg);
+            }
+        }
+    }
+}
