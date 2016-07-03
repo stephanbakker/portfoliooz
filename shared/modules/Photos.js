@@ -107,7 +107,6 @@ module.exports = React.createClass({
     },
 
     handleKeyUp(evt) {
-        console.log(evt);
         if (this.state.activeIndex < 0) {
             return;
         }
@@ -123,7 +122,6 @@ module.exports = React.createClass({
                 this.previous();
                 break;
             default:
-                console.log(evt.which);
         }
     },
 

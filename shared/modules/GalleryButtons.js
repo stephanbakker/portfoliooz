@@ -2,7 +2,6 @@ import React from 'react';
 export default React.createClass({
     render() {
         const styles = {display: this.props.show ? '' : 'none'};
-        console.log('en nu?', this.props.show);
         return (
             <div style={styles}>
                 <button

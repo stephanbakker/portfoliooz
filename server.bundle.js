@@ -649,7 +649,6 @@
 	        this.expand(previous);
 	    },
 	    handleKeyUp: function handleKeyUp(evt) {
-	        console.log(evt);
 	        if (this.state.activeIndex < 0) {
 	            return;
 	        }
@@ -665,7 +664,6 @@
 	                this.previous();
 	                break;
 	            default:
-	                console.log(evt.which);
 	        }
 	    },
 	    updateTag: function updateTag(tag) {
@@ -922,7 +920,6 @@
 	    displayName: 'GalleryButtons',
 	    render: function render() {
 	        var styles = { display: this.props.show ? '' : 'none' };
-	        console.log('en nu?', this.props.show);
 	        return _react2.default.createElement(
 	            'div',
 	            { style: styles },
