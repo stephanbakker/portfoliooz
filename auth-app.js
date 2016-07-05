@@ -1,3 +1,6 @@
+// usage:
+// $ node auth-app, will try to authenticate
+// and will allow to enter this authorize key provided by Flickr
 const nconf = require('nconf');
 const Flickr = require('flickrapi');
 
