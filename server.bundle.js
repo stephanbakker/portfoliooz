@@ -277,7 +277,7 @@
 
 	function renderPage(appHtml, props) {
 	    var scriptProps = JSON.stringify(props);
-	    var pageTitle = (props.params.page || 'Home') + ' - Marit Dik';
+	    var pageTitle = (props.params.page.replace(/-/g, ' ') || 'Home') + ' - Marit Dik';
 	    return '\n        <!doctype html>\n        <html>\n            <meta charset="utf-8"/>\n            <title>' + pageTitle + '</title>\n            <meta name="viewport" content="width=device-width, initial-scale=1"/>\n            <link href=\'https://fonts.googleapis.com/css?family=Roboto+Slab\' rel=\'stylesheet\' type=\'text/css\'>\n            <link rel="stylesheet" href="/main.css"/>\n            <body>\n                <div id="app" class="app">' + appHtml + '</div>\n                <script>\n                    window.__initialProps__ = ' + scriptProps + ';\n                </script>\n                <script src="/bundle.js"></script>\n            </body>\n        </html>\n    ';
 	}
 
@@ -500,8 +500,8 @@
 
 	exports.default = _react2.default.createClass({
 	    displayName: 'Page',
-	    componentDidMount: function componentDidMount() {
-	        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+	    componentDidUpdate: function componentDidUpdate() {
+	        document.title = document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
 	    },
 	    render: function render() {
 	        var pageTitle = this.props.params.page;
@@ -512,7 +512,9 @@
 	            return page.title === pageTitle;
 	        });
 
-	        var photos = pageContent.photos && _react2.default.createElement(_Photos2.default, { photos: pageContent.photos, currentPage: this.props.params.page, currentPhoto: this.props.params.photo });
+	        var photos = pageContent.photos && _react2.default.createElement(_Photos2.default, { photos: pageContent.photos,
+	            currentPage: this.props.params.page,
+	            currentPhoto: this.props.params.photo });
 
 	        return _react2.default.createElement(
 	            'div',
@@ -556,7 +558,6 @@
 	module.exports = _react2.default.createClass({
 	    displayName: 'exports',
 	    componentDidMount: function componentDidMount() {
-	        document.title = document.title.replace(/^[^-]*/, this.props.currentPage);
 	        window.addEventListener("keyup", this.handleKeyUp);
 	    },
 	    componentWillUnMount: function componentWillUnMount() {
@@ -611,25 +612,31 @@
 	        return function (evt) {
 	            evt.preventDefault();
 	            if (_this2.state.activeIndex === index) {
-	                _this2.collapse();
+	                _this2.collapse({ transition: 'zoom' });
 	            } else {
-	                _this2.expand(index);
+	                _this2.expand(index, { transition: 'zoom' });
 	            }
 	        };
 	    },
-	    collapse: function collapse() {
+	    collapse: function collapse(config) {
 	        var photo = this.refs['photo' + this.state.activeIndex];
 	        if (photo) {
-	            photo.setState({ isActive: false });
+	            photo.setState({
+	                isActive: false,
+	                transition: config.transition
+	            });
 	        }
 	        this.setState({
 	            activeIndex: -1
 	        });
 	    },
-	    expand: function expand(index) {
+	    expand: function expand(index, config) {
 	        var photo = this.refs['photo' + index];
 	        if (photo) {
-	            photo.setState({ isActive: true });
+	            photo.setState({
+	                isActive: true,
+	                transition: config.transition
+	            });
 	        }
 	        this.setState({
 	            activeIndex: index
@@ -640,27 +647,30 @@
 	        if (this.props.photos.length === next) {
 	            next = -1;
 	        }
-	        this.collapse();
-	        this.expand(next);
+	        this.collapse({ transition: 'opacity' });
+	        this.expand(next, { transition: 'opacity' });
 	    },
 	    previous: function previous() {
 	        var previous = this.state.activeIndex - 1;
-	        this.collapse();
-	        this.expand(previous);
+	        this.collapse({ transition: 'opacity' });
+	        this.expand(previous, { transition: 'opacity' });
 	    },
 	    handleKeyUp: function handleKeyUp(evt) {
 	        if (this.state.activeIndex < 0) {
 	            return;
 	        }
 
-	        switch (evt.code) {
-	            case 'Escape':
-	                this.collapse();
+	        switch (evt.which) {
+	            case 27:
+	                //Escape
+	                this.collapse({ transition: 'zoom' });
 	                break;
-	            case 'ArrowRight':
+	            case 39:
+	                //ArrowRight
 	                this.next();
 	                break;
-	            case 'ArrowLeft':
+	            case 37:
+	                //ArrowLeft
 	                this.previous();
 	                break;
 	            default:
@@ -715,13 +725,14 @@
 	        ) : '';
 	        var imgData = this.props.data;
 
+	        var wrapperClass = 'item__wrapper ' + (this.state.transition || '');
 	        return _react2.default.createElement(
 	            'div',
 	            _extends({}, this.props, {
 	                ref: function ref(container) {
 	                    return _this._container = container;
 	                },
-	                className: 'item__wrapper' }),
+	                className: wrapperClass }),
 	            _react2.default.createElement('img', { src: imgData.url_sq, ref: function ref(thumb) {
 	                    return _this.thumb = thumb;
 	                } }),
@@ -759,22 +770,26 @@
 	        this._zoomed.style.maxHeight = expandedRects.height - 100 + 'px';
 	        this._zoomed.style.maxWidth = expandedRects.width - 100 + 'px';
 
-	        toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
+	        if (this.state.transition === 'zoom') {
+	            toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
 
-	        // Read again to force the style change to take hold.
-	        var triggerValue = toggleContainer.offsetTop;
+	            // Read again to force the style change to take hold.
+	            var triggerValue = toggleContainer.offsetTop;
 
-	        toggleContainer.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
+	            toggleContainer.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
+	        }
 	    },
 	    collapse: function collapse() {
 	        var toggleContainer = this._toggleContainer;
 	        var startRects = this.startRects;
 
-	        toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
+	        if (this.state.transition === 'zoom') {
+	            toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
 
-	        this._zoomed.classList.remove('zoom');
-
-	        toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
+	            toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
+	        } else {
+	            toggleContainer.classList.remove('is-expanded');
+	        }
 	    },
 	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
 	        var toggleContainer = this._toggleContainer;

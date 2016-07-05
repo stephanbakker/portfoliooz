@@ -9,7 +9,6 @@ import GalleryButtons from './GalleryButtons';
 module.exports = React.createClass({
 
     componentDidMount() {
-        document.title = document.title.replace(/^[^-]*/, this.props.currentPage);
         window.addEventListener("keyup", this.handleKeyUp);
     },
 
@@ -64,27 +63,33 @@ module.exports = React.createClass({
         return (evt) => {
             evt.preventDefault();
             if (this.state.activeIndex === index) {
-                this.collapse();
+                this.collapse({transition: 'zoom'});
             } else {
-                this.expand(index);
+                this.expand(index, {transition: 'zoom'});
             }
         }
     },
 
-    collapse() {
+    collapse(config) {
         const photo = this.refs['photo' + this.state.activeIndex]
         if (photo) {
-            photo.setState({isActive: false});
+            photo.setState({
+                isActive: false,
+                transition: config.transition
+            });
         }
         this.setState({
             activeIndex: -1
         });
     },
 
-    expand(index) {
+    expand(index, config) {
         const photo = this.refs['photo' + index];
         if (photo) {
-            photo.setState({isActive: true});
+            photo.setState({
+                isActive: true,
+                transition: config.transition
+            });
         }
         this.setState({
             activeIndex: index
@@ -96,14 +101,14 @@ module.exports = React.createClass({
         if (this.props.photos.length === next) {
             next = -1;
         }
-        this.collapse();
-        this.expand(next);
+        this.collapse({transition: 'opacity'});
+        this.expand(next, {transition: 'opacity'});
     },
 
     previous() {
         const previous = this.state.activeIndex - 1;
-        this.collapse();
-        this.expand(previous);
+        this.collapse({transition: 'opacity'});
+        this.expand(previous, {transition: 'opacity'});
     },
 
     handleKeyUp(evt) {
@@ -111,14 +116,14 @@ module.exports = React.createClass({
             return;
         }
 
-        switch (evt.code) {
-            case 'Escape':
-                this.collapse();
+        switch (evt.which) {
+            case 27: //Escape
+                this.collapse({transition: 'zoom'});
                 break;
-            case 'ArrowRight':
+            case 39: //ArrowRight
                 this.next();
                 break;
-            case 'ArrowLeft':
+            case 37: //ArrowLeft
                 this.previous();
                 break;
             default:
