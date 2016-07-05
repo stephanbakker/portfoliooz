@@ -59,15 +59,7 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
-  transition: top 1s, left 1s, right 1s, bottom 1s, height 1s; }
-  .item__wrapper.is-expanded {
-    transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; }
+  justify-content: space-around; }
   .overview__item .item__wrapper {
     background-color: #fff; }
   .item__wrapper .toggleContainer {
