@@ -2,8 +2,8 @@ import React from 'react';
 import Photos from './Photos';
 
 export default React.createClass({
-    componentDidMount() {
-        document.title = document.title.replace(/^[^-]*/, this.props.params.page);
+    componentDidUpdate() {
+        document.title = document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
     },
     render() {
         let pageTitle = this.props.params.page;
@@ -14,8 +14,10 @@ export default React.createClass({
             return page.title === pageTitle;
         });
 
-        let photos = pageContent.photos && 
-            <Photos photos={pageContent.photos} currentPage={this.props.params.page} currentPhoto={this.props.params.photo}/>;
+        let photos = pageContent.photos &&
+            <Photos photos={pageContent.photos}
+                currentPage={this.props.params.page}
+                currentPhoto={this.props.params.photo}/>;
 
         return(
                 <div>
