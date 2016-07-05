@@ -79,8 +79,6 @@ module.exports = React.createClass({
             startRects.bottom + 'px, ' +
             startRects.left + 'px)';
 
-        this._zoomed.classList.remove('zoom');
-
         toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
     },
 
