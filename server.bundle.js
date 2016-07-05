@@ -770,26 +770,20 @@
 	        this._zoomed.style.maxHeight = expandedRects.height - 100 + 'px';
 	        this._zoomed.style.maxWidth = expandedRects.width - 100 + 'px';
 
-	        if (this.state.transition === 'zoom') {
-	            toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
+	        toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
 
-	            // Read again to force the style change to take hold.
-	            var triggerValue = toggleContainer.offsetTop;
+	        // Read again to force the style change to take hold.
+	        var triggerValue = toggleContainer.offsetTop;
 
-	            toggleContainer.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
-	        }
+	        toggleContainer.style.clip = 'rect(' + expandedRects.top + 'px, ' + expandedRects.right + 'px, ' + expandedRects.bottom + 'px, ' + expandedRects.left + 'px)';
 	    },
 	    collapse: function collapse() {
 	        var toggleContainer = this._toggleContainer;
 	        var startRects = this.startRects;
 
-	        if (this.state.transition === 'zoom') {
-	            toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
+	        toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
 
-	            toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
-	        } else {
-	            toggleContainer.classList.remove('is-expanded');
-	        }
+	        toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
 	    },
 	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
 	        var toggleContainer = this._toggleContainer;

@@ -67,10 +67,10 @@ h3 {
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    background-color: #f7f7f7; }
+    background-color: #f7f7f7;
+    transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1); }
     .item__wrapper .toggleContainer.is-expanded {
       display: flex;
-      transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1);
       position: fixed;
       top: 0;
       left: 0;
@@ -80,6 +80,8 @@ h3 {
     .item__wrapper .toggleContainer img {
       max-height: 100%;
       max-width: 100%; }
+  .item__wrapper.opacity .toggleContainer {
+    transition-duration: 0.01s; }
 
 .gallery-btn__close {
   font-family: inherit;

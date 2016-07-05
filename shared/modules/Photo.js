@@ -54,12 +54,11 @@ module.exports = React.createClass({
         this._zoomed.style.maxHeight = expandedRects.height - 100 + 'px';
         this._zoomed.style.maxWidth = expandedRects.width - 100 + 'px';
 
-        if (this.state.transition === 'zoom') {
-            toggleContainer.style.clip = 'rect(' +
-                startRects.top + 'px, ' +
-                startRects.right + 'px, ' +
-                startRects.bottom + 'px, ' +
-                startRects.left + 'px)';
+        toggleContainer.style.clip = 'rect(' +
+            startRects.top + 'px, ' +
+            startRects.right + 'px, ' +
+            startRects.bottom + 'px, ' +
+            startRects.left + 'px)';
 
         // Read again to force the style change to take hold.
         let triggerValue = toggleContainer.offsetTop;
@@ -69,24 +68,19 @@ module.exports = React.createClass({
             expandedRects.right + 'px, ' +
             expandedRects.bottom + 'px, ' +
             expandedRects.left + 'px)';
-        }
     },
 
     collapse() {
         const toggleContainer = this._toggleContainer;
         const startRects = this.startRects;
 
-        if (this.state.transition === 'zoom') {
-            toggleContainer.style.clip = 'rect(' +
-                startRects.top + 'px, ' +
-                startRects.right + 'px, ' +
-                startRects.bottom + 'px, ' +
-                startRects.left + 'px)';
+        toggleContainer.style.clip = 'rect(' +
+            startRects.top + 'px, ' +
+            startRects.right + 'px, ' +
+            startRects.bottom + 'px, ' +
+            startRects.left + 'px)';
 
-            toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
-        } else {
-            toggleContainer.classList.remove('is-expanded');
-        }
+        toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
     },
 
     transitionCollapseEnd(evt) {
