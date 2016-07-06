@@ -501,7 +501,7 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'Page',
 	    componentDidUpdate: function componentDidUpdate() {
-	        document.title = document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
+	        document.title = document.title && document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
 	    },
 	    render: function render() {
 	        var pageTitle = this.props.params.page;
@@ -784,6 +784,10 @@
 	        toggleContainer.style.clip = 'rect(' + startRects.top + 'px, ' + startRects.right + 'px, ' + startRects.bottom + 'px, ' + startRects.left + 'px)';
 
 	        toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
+
+	        if (this.state.transition === 'opacity') {
+	            this.transitionCollapseEnd();
+	        }
 	    },
 	    transitionCollapseEnd: function transitionCollapseEnd(evt) {
 	        var toggleContainer = this._toggleContainer;

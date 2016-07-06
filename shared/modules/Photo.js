@@ -81,6 +81,10 @@ module.exports = React.createClass({
             startRects.left + 'px)';
 
         toggleContainer.addEventListener('transitionend', this.transitionCollapseEnd);
+
+        if (this.state.transition === 'opacity') {
+            this.transitionCollapseEnd();
+        }
     },
 
     transitionCollapseEnd(evt) {

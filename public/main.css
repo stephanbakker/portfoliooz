@@ -67,8 +67,7 @@ h3 {
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    background-color: #f7f7f7;
-    transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1); }
+    background-color: #f7f7f7; }
     .item__wrapper .toggleContainer.is-expanded {
       display: flex;
       position: fixed;
@@ -80,8 +79,8 @@ h3 {
     .item__wrapper .toggleContainer img {
       max-height: 100%;
       max-width: 100%; }
-  .item__wrapper.opacity .toggleContainer {
-    transition-duration: 0.01s; }
+  .item__wrapper.zoom .toggleContainer {
+    transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1); }
 
 .gallery-btn__close {
   font-family: inherit;

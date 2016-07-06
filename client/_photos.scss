@@ -29,8 +29,6 @@
 
         background-color: #f7f7f7;
 
-        transition: clip 0.3s cubic-bezier(0,0,0.21,1);
-
         &.is-expanded {
             display: flex;
             position: fixed;
@@ -47,8 +45,8 @@
         }
     }
 
-    &.opacity .toggleContainer {
-        transition-duration: 0.01s;
+    &.zoom .toggleContainer {
+        transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1);
     }
 
 }

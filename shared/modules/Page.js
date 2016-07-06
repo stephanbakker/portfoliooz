@@ -3,7 +3,8 @@ import Photos from './Photos';
 
 export default React.createClass({
     componentDidUpdate() {
-        document.title = document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
+        document.title = document.title &&
+            document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
     },
     render() {
         let pageTitle = this.props.params.page;
