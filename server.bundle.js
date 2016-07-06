@@ -932,6 +932,8 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'GalleryButtons',
 	    render: function render() {
+	        var _this = this;
+
 	        var styles = { display: this.props.show ? '' : 'none' };
 	        return _react2.default.createElement(
 	            'div',
@@ -939,7 +941,9 @@
 	            _react2.default.createElement('button', {
 	                'aria-label': 'close',
 	                className: 'gallery-btn__close',
-	                onClick: this.props.collapse }),
+	                onClick: function onClick(evt) {
+	                    return _this.props.collapse({ transition: 'zoom' });
+	                } }),
 	            _react2.default.createElement(
 	                'button',
 	                {

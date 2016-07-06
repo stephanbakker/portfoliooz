@@ -17,10 +17,10 @@ https://github.com/madhums/node-express-mongoose-demo
     use eslint
     add close button, and ESC key for it
     favicon
+refactor title stuff, one service for this
 write more tests
 remove flickr credentials from git, into environment stuff
 look at webpack, wtf is it doing
-titel head update
 
 
 ## client

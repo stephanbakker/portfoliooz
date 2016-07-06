@@ -7,7 +7,7 @@ export default React.createClass({
                 <button
                     aria-label="close"
                     className="gallery-btn__close"
-                    onClick={this.props.collapse}></button>
+                    onClick={evt => this.props.collapse({transition: 'zoom'})}></button>
                 <button
                     className="gallery-btn__arrow gallery-btn__arrow--previous"
                     onClick={this.props.previous}>previous</button>
