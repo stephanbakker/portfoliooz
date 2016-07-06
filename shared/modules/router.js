@@ -49,7 +49,7 @@ function isPageOrHome(page, content) {
 
 function renderPage(appHtml, props) {
     const scriptProps = JSON.stringify(props);
-    const pageTitle = (props.params.page.replace(/-/g, ' ') || 'Home') + ' - Marit Dik';
+    const pageTitle = (props.params.page && props.params.page.replace(/-/g, ' ') || 'Home') + ' - Marit Dik';
     return `
         <!doctype html>
         <html>
