@@ -17,6 +17,7 @@ https://github.com/madhums/node-express-mongoose-demo
     use eslint
     add close button, and ESC key for it
     favicon
+try opacity for transitions
 refactor title stuff, one service for this
 write more tests
 remove flickr credentials from git, into environment stuff
