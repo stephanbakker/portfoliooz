@@ -20,11 +20,11 @@ export default React.createClass({
                 currentPage={this.props.params.page}
                 currentPhoto={this.props.params.photo}/>;
 
-        return(
+        return (
                 <div>
                 <div dangerouslySetInnerHTML={{__html: pageContent.html}} />
                 {photos}
                 </div>
-              )
+              );
     }
-})
+});
