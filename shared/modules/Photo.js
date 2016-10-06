@@ -1,22 +1,23 @@
 'use strict';
 import React from 'react';
 
-module.exports = React.createClass({
-
-    getInitialState() {
-        return {
+class Photo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
             isActive: false
-        }
-    },
-
+        };
+        this.transitionCollapseEnd = this.transitionCollapseEnd.bind(this);
+        this.expand = this.expand.bind(this);
+        this.collapse = this.collapse.bind(this);
+    }
     componentDidUpdate(prevProps, prevState) {
         if (this.state.isActive) {
             this.expand();
         } else if (prevState.isActive) {
             this.collapse();
         }
-    },
-
+    }
     render() {
         let description = this.state.isActive ? <p>{this.props.data.title}</p> : '';
         let imgData = this.props.data;
@@ -36,8 +37,7 @@ module.exports = React.createClass({
                 </div>
             </div>
         );
-    },
-
+    }
     // custom
     expand() {
         const item = this._container;
@@ -68,8 +68,7 @@ module.exports = React.createClass({
             expandedRects.right + 'px, ' +
             expandedRects.bottom + 'px, ' +
             expandedRects.left + 'px)';
-    },
-
+    }
     collapse() {
         const toggleContainer = this._toggleContainer;
         const startRects = this.startRects;
@@ -85,8 +84,7 @@ module.exports = React.createClass({
         if (this.state.transition === 'opacity') {
             this.transitionCollapseEnd();
         }
-    },
-
+    }
     transitionCollapseEnd(evt) {
         const toggleContainer = this._toggleContainer;
 
@@ -95,13 +93,13 @@ module.exports = React.createClass({
         toggleContainer.classList.remove('is-expanded');
 
         toggleContainer.removeEventListener('transitionend', this.transitionCollapseEnd);
-    },
-
+    }
     getImgStartTranslateValues(startRects, endRects) {
         return {
             top: startRects.top - endRects.top,
             left: startRects.left - endRects.left
         };
     }
+}
 
-});
+export default Photo;

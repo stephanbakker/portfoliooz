@@ -1,7 +1,10 @@
 import React from 'react';
 import NavBar from './NavBar';
 
-export default React.createClass({
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
             <div>
@@ -11,5 +14,6 @@ export default React.createClass({
             </div>
         );
     }
-});
+}
 
+export default App;

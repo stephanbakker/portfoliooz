@@ -3,17 +3,23 @@
 import React from 'react';
 import Tag from './Tag';
 
-module.exports = React.createClass({
-
-    statics: { 
-        getTags,
-        getTagsFromPhoto
-    },
-
+class Tags extends React.Component {
+    constructor(props) {
+        super(props);
+        this.setFilter = this.setFilter.bind(this);
+    }
+    static getTags(photos) {
+        return getUniqueTags(photos);
+    }
+    static getTagsFromPhoto(tags) {
+        return tags
+            .split(' ')
+            .filter(tag => tag !== '');
+    }
     render() {
-        let tags = getTags(this.props.photos).map((tag, index) => {
-                        let isCurrent = tag === this.props.current;
-                        return (
+        let tags = Tags.getTags(this.props.photos).map((tag, index) => {
+            let isCurrent = tag === this.props.current;
+            return (
                             <li className="tags__item" key={'tag' + index}>
                                 <Tag
                                     onClick={this.setFilter(tag)}
@@ -21,37 +27,26 @@ module.exports = React.createClass({
                                     active={isCurrent}/>
                             </li>
                         );
-                    });
-
+        });
         return (
            <ul className="tags">
                 {tags}
             </ul>
-        )
-    },
-
-    setFilter(tag) {
-        return (evt => this.props.update(tag));
+        );
     }
-
-});
-
-function getTags(photos) {
-    return getUniqueTags(photos);
+    setFilter(tag) {
+        return (() => this.props.update(tag));
+    }
 }
+
+export default Tags;
 
 function getUniqueTags(photos) {
     return photos.reduce(reduceTags, []).filter(uniq);
 }
 
 function reduceTags(acumulator, photo) {
-    return acumulator.concat(getTagsFromPhoto(photo.tags));
-}
-
-function getTagsFromPhoto(tags) {
-    return tags
-            .split(' ')
-            .filter(tag => tag !== '');
+    return acumulator.concat(Tags.getTagsFromPhoto(photo.tags));
 }
 
 function uniq(item, index, array) {

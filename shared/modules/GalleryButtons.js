@@ -1,5 +1,9 @@
 import React from 'react';
-export default React.createClass({
+
+class GalleryButtons extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         const styles = {display: this.props.show ? '' : 'none'};
         return (
@@ -17,4 +21,6 @@ export default React.createClass({
             </div>
         );
     }
-});
+}
+
+export default GalleryButtons;

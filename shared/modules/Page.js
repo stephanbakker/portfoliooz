@@ -1,11 +1,14 @@
 import React from 'react';
 import Photos from './Photos';
 
-export default React.createClass({
+class Page extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     componentDidUpdate() {
         document.title = document.title &&
             document.title.replace(/^[^-]*/, this.props.params.page.replace(/-/g, ' '));
-    },
+    }
     render() {
         let pageTitle = this.props.params.page;
 
@@ -21,10 +24,12 @@ export default React.createClass({
                 currentPhoto={this.props.params.photo}/>;
 
         return (
-                <div>
+            <div>
                 <div dangerouslySetInnerHTML={{__html: pageContent.html}} />
                 {photos}
-                </div>
-              );
+            </div>
+        );
     }
-});
+}
+
+export default Page;
