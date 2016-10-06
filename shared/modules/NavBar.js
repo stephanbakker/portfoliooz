@@ -1,7 +1,10 @@
 import React from 'react';
 import NavLink from './NavLink';
 
-export default React.createClass({
+class NavBar extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         let pages = this.props.pages || (window && window.__initialProps__.params.pages);
 
@@ -22,4 +25,6 @@ export default React.createClass({
             </nav>
         );
     }
-});
+}
+
+export default NavBar;
