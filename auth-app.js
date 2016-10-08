@@ -4,10 +4,13 @@
 const nconf = require('nconf');
 const Flickr = require('flickrapi');
 
+// Make sure to export stuff on environment, from secret .env
+// run $ . secret/.env
+// check $ printenv | grep FLICKR
+
 // this is run from root, so needs './server'
 nconf
-    .env()
-    .file({file: './server/config/env.json'});
+    .env();
 
 const flickrOptions = require('./server/config/config').getFlickrOptions();
 

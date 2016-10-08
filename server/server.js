@@ -6,8 +6,7 @@ import datastore from './db/datastore';
 
 // this is run from root, so needs './server'
 nconf
-    .env()
-    .file({file: './server/config/env.json'});
+    .env();
 
 // app parts
 const app = express();
