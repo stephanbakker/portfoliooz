@@ -17,11 +17,15 @@ https://github.com/madhums/node-express-mongoose-demo
     use eslint
     add close button, and ESC key for it
     favicon
+add uglify to the mix, for production
+move to github/codeship and digitalocean
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests
 remove flickr credentials from git, into environment stuff
 look at webpack, wtf is it doing
+upgrade to webpack2, treeshaking, chunks?
+
 
 
 ## client
