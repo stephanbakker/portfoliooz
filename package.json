@@ -8,9 +8,11 @@
     "start:dev": "nodemon server.bundle.js",
     "dev:client": "webpack -w",
     "build": "npm run build:client && npm run build:server",
+    "build:prod": "NODE_ENV=production npm run build:client && npm run build:server && npm run build:css:prod",
     "build:server": "webpack --config webpack.server.config.js --progress --colors",
     "build:client": "webpack",
-    "build:css": "node-sass --include-path static client/main.scss public/main.css",
+    "build:css": "node-sass --include-path client client/main.scss public/main.css",
+    "build:css:prod": "node-sass --include-path client --output-style compressed client/main.scss public/main.css",
     "watch:css": "npm run build:css -- -w",
     "watch:client": "npm run build:client -- -w",
     "watch:server": "npm run build:server -- -w",
@@ -18,7 +20,8 @@
     "lint": "eslint server/**/*.js",
     "lint:w": "watch 'npm run lint' server",
     "test:compile": "webpack --config webpack.servertest.config.js --progress --colors",
-    "test": "npm run test:compile && mocha servertest.bundle.js"
+    "test": "npm run test:compile && mocha servertest.bundle.js",
+    "deploy": "scp -r public server.bundle.js package.json stephan@146.185.148.125:maritdik/www/prod"
   },
   "author": "stephanbakker",
   "license": "ISC",
