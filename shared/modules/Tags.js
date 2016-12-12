@@ -38,10 +38,7 @@ class Tags extends React.Component {
     );
   }
   setFilter(tag) {
-    console.log('jooo')
-    console.log('joooo clicked');
     const isActive = this.props.current === tag;
-    console.log(tag, this.props.current, 'and???')
     this.props.update(isActive ? '' : tag);
   }
 }
