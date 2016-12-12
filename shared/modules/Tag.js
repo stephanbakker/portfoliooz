@@ -1,17 +1,17 @@
-import React from 'react'; 
+import React from 'react';
 
 class Tag extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        const clName =
-            `${this.props.active ? 'active' : ''} tags__item__filter`;
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const clName =
+      `${this.props.active ? 'active' : ''} tags__item__filter`;
 
-        return (<button {...this.props} className={clName}>
-                    {this.props.tag}
-                </button>);
-    }
+    return (<button className={clName}>
+              {this.props.tag}
+            </button>);
+  }
 }
 
 export default Tag;
