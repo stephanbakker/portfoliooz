@@ -19,8 +19,6 @@ class Tags extends React.Component {
   render() {
     let tags = Tags.getTags(this.props.photos).map((tag, index) => {
       let isCurrent = tag === this.props.current;
-      console.log('inTags iscurrent: ', isCurrent, tag);
-      console.log('inTags props: ', this.props.current);
       return (
         <li className="tags__item"
           key={'tag' + index}
