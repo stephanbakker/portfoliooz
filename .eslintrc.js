@@ -1,7 +1,7 @@
 module.exports = {
     "extends": "Google",
     "rules": {
-        "indent": ["error", 4],
+        "indent": ["error", 2],
         "require-jsdoc": 0
     },
     "plugins": [
