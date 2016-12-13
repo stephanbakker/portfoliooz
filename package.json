@@ -52,7 +52,7 @@
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
     "flickrapi": "^0.3.36",
-    "markdown": "^0.5.0",
+    "marked": "^0.3.6",
     "mongodb": "^2.0.52",
     "mongoose": "^4.3.6",
     "nconf": "^0.8.2",
@@ -63,3 +63,5 @@
     "serve-favicon": "^2.3.0"
   }
 }
+
+
