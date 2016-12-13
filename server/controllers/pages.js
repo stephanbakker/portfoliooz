@@ -11,14 +11,19 @@ function updatePages(req, res, next) {
     .then(data => {
       const updated = data.content.map(page => page.title).join(',');
       if (res) {
-        res.end('Pages updated on request: %s', updated);
+        try {
+          res.status(200).send('Pages updated on request: ' + updated);
+        } catch (e) {
+          console.log(e);
+          throw new Error(e);
+        }
       } else {
         console.log('Pages updated: %s', updated);
       }
     })
     .catch(err => {
       if (res) {
-        res.sendStatus(500, err);
+        res.status(500).send('error fetching pages', err);
       }
       console.log('Error updating pages (500)', err);
     });
