@@ -1,5 +1,6 @@
 body {
     font: 16px/1.7 'Roboto Slab', serif;
+    color: $copy_color;
     background: #fff;
 }
 
@@ -24,4 +25,15 @@ h3 {
 
 .hidden {
     display: none !important;
+}
+
+th {
+  text-align: left;
+}
+
+a {
+  color: $link_color;
+   &:hover {
+     color: $link_active_color;
+   }
 }
