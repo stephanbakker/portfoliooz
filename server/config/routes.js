@@ -1,9 +1,9 @@
 import router from '../../shared/modules/router';
 import pages from '../middlewares/pages-middleware';
-import updateContent from '../controllers/update-content-pages';
+import updatePages from '../controllers/pages.js';
 
 module.exports = app => {
-    app.get('*', pages, router);
+  app.get('*', pages, router);
 
-    app.post('/update-pages', updateContent);
+  app.post('/update-pages', updatePages);
 };
