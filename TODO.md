@@ -3,11 +3,12 @@ inspiration:
 https://github.com/madhums/node-express-mongoose-demo
 
 # MARIT:
-tekst pagina's achterin
+  tekst pagina's achterin
+  tagging fixen
+  update github pages werkt niet...
+  github pagina's vullen
 description toevoegen
-tagging fixen
 updaten flickr pagina's werkt niet
-update github pages werkt niet...
 
 # TODO:
 
@@ -27,6 +28,7 @@ update github pages werkt niet...
     move to github/codeship 
     add uglify to the mix, for production
     css min
+tagging should always start with first tag active (2016 now)
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests
