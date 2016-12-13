@@ -5,33 +5,33 @@ const datastore = datastoreFactory();
 export {datastore as default};
 
 function datastoreFactory() {
-    const pages = {
-        content: [],
-        photo: [],
-        saveDate: {
-            content: null,
-            photo: null
-        }
-    };
-
-    function updatePages(newPages, type) {
-        pages[type] = newPages;
-        pages.saveDate[type] = Date.now();
-
-        return pages;
+  const pages = {
+    content: [],
+    photo: [],
+    saveDate: {
+      content: null,
+      photo: null
     }
+  };
 
-    function getPages() {
-        return pages.content.concat(pages.photo);
-    }
+  function updatePages(newPages, type) {
+    pages[type] = newPages;
+    pages.saveDate[type] = Date.now();
 
-    function getSaveDate(type) {
-        return pages.saveDate[type];
-    }
+    return pages;
+  }
 
-    return {
-        updatePages,
-        getPages,
-        getSaveDate
-    };
+  function getPages() {
+    return pages.photo.concat(pages.content);
+  }
+
+  function getSaveDate(type) {
+    return pages.saveDate[type];
+  }
+
+  return {
+    updatePages,
+    getPages,
+    getSaveDate
+  };
 }
