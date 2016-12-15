@@ -24,8 +24,8 @@ class Page extends React.Component {
         currentPhoto={this.props.params.photo} />;
 
     return (
-      <div>
-        <div dangerouslySetInnerHTML={{ __html: pageContent.html }} />
+      <div className="content">
+        <div className="content__text" dangerouslySetInnerHTML={{ __html: pageContent.html }} />
         {photos}
       </div>
     );
