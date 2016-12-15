@@ -43,7 +43,9 @@ function requestPromise(options) {
         } else if (statusCode === 403) {
           console.warn('403: ', body);
           // console.log('github headers: ', response.headers);
-          console.warn('rate limit reset at:', new Date(response.headers['x-ratelimit-reset'] * 1000));
+          console.warn(
+            'rate limit reset at:',
+            new Date(response.headers['x-ratelimit-reset'] * 1000));
 
           // X-RateLimit-Limit: 5000
           // X-RateLimit-Remaining: 4966

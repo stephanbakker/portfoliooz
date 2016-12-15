@@ -37,6 +37,7 @@ try opacity for transitions
 refactor title stuff, one service for this
 write more tests
 upgrade to webpack2, treeshaking, chunks? Once released
+how to fetch per page json data??
 find out about pointing url to digital ocean, keeping webmail on domain
 
 

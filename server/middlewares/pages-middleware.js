@@ -5,9 +5,9 @@ import augmentPageData from './augment-pagedata';
 export default pages;
 
 function pages(req, res, next) {
-    promiseAllPages(datastore)
-        .then(pages => augmentPageData(pages, req, res, next))
-        .then(() => checkExpiresPhotos(datastore))
-        .catch(next);
+  promiseAllPages(datastore)
+    .then(pages => augmentPageData(pages, req, res, next))
+    .then(() => checkExpiresPhotos(datastore))
+    .catch(next);
 }
 

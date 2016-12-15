@@ -35,7 +35,6 @@ function flickrGetSetPromise(flickr, set) {
       nojsoncallback: 1
       /* eslint-ensable camelcase */
     }, (err, result) => {
-      // TODO more fine grained err handling
       // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
       if (err) {
         reject('Error fetching photoSet: ' + err);

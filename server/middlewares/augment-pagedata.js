@@ -1,11 +1,11 @@
 export default (pages, req, res, next) => {
-    const pageTitle = req.params.page;
+  const pageTitle = req.params.page;
 
-    req.pages = pages;
+  req.pages = pages;
 
-    if (pageTitle) {
-        req.page = pages.find(page => page.title === pageTitle);
-    }
+  if (pageTitle) {
+    req.page = pages.find(page => page.title === pageTitle);
+  }
 
-    next();
+  next();
 };

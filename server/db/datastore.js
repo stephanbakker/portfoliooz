@@ -4,7 +4,6 @@ const datastore = datastoreFactory();
 
 export {datastore as default};
 
-
 function datastoreFactory() {
   const pages = {
     content: [],
