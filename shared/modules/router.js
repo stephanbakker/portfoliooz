@@ -11,6 +11,11 @@ export default (req, res, next) => {
   match({routes: routes, location: req.url}, (err, redirect, props) => {
     // add pages from middleware
     props.params.pages = req.pages;
+
+    // handle home page, called: 'news'
+    // TODO ugly like this... how to solve this hardcoded stuff everywhere...
+    props.params.page = props.params.page || 'news';
+
     if (props.params.page) {
       props.params.pageContent = req.pages.find(page => page.title === props.params.page);
     }

@@ -31,24 +31,6 @@ function datastoreFactory() {
     }, []);
 
     return orderedPages;
-
-    // move news to the first index
-
-
-    // _order.forEach(function pushTypeToPages(type) {
-    //   const matchPage = type.match(/(\w+):(\w+)/);
-    //   if (matchPage) {
-    //     let pageType = pages[matchPage[1]].find(p =>
-    //       p.title === matchPage[2]
-    //     );
-    //     orderedPages.push(pageType);
-    //   } else {
-    //     orderedPages = [...orderedPages, ...pages[type]];
-    //   }
-    // });
-
-    // console.log(orderedPages.map(p => p.title), '======================')
-    // return orderedPages;
   }
 
   function getSaveDate(type) {

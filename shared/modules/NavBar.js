@@ -12,16 +12,20 @@ class NavBar extends React.Component {
     return (
       <nav>
         <ul className="nav">
+          <li className="nav__item" key="news">
+              <NavLink to="/">news</NavLink>
+          </li>
           {
-            pages.map(page => {
+            pages.filter(p => p.title !== 'news')
+              .map(page => {
                 const humanTitle = page.title.replace(/-/g, ' ');
                 return (
                     <li className="nav__item" key={page.title}>
                         <NavLink to={page.title}>{humanTitle}</NavLink>
                     </li>
                 );
-            })
-          }
+              })
+            }
         </ul>
       </nav>
     );
