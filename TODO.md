@@ -7,8 +7,11 @@ https://github.com/madhums/node-express-mongoose-demo
   tagging fixen
   update github pages werkt niet...
   github pagina's vullen
+  updaten flickr pagina's werkt niet
+home pagina, titel; "news"
 description toevoegen
-updaten flickr pagina's werkt niet
+tags create all filter button
+pdf's uitzoeken links vanuit github
 
 # TODO:
 
@@ -29,6 +32,7 @@ updaten flickr pagina's werkt niet
     add uglify to the mix, for production
     css min
 tagging should always start with first tag active (2016 now)
+soms blijft pagina photo's leeg (??? reproduceren???)
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests
