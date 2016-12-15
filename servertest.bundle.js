@@ -131,7 +131,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _datastore = __webpack_require__(4);
@@ -154,41 +154,41 @@
 
 
 	function flickrUpdate() {
-	    console.log('start updating pages from flickr');
+	  console.log('start updating pages from flickr');
 
-	    return (0, _flickrAuthenticate2.default)().then(pFlickrGetSetList).then(mapPages).then(_flickrUpdateSets2.default).then(function (photoSets) {
-	        return _datastore2.default.updatePages(photoSets, 'photo');
-	    });
+	  return (0, _flickrAuthenticate2.default)().then(pFlickrGetSetList).then(mapPages).then(_flickrUpdateSets2.default).then(function (photoSets) {
+	    return _datastore2.default.updatePages(photoSets, 'photo');
+	  });
 	}
 
 	function pFlickrGetSetList(flickr) {
-	    return new Promise(function (resolve, reject) {
-	        /* eslint-disable camelcase */
-	        flickr.photosets.getList({
-	            api_key: nconf.get('FLICKR_API_KEY'),
-	            user_id: nconf.get('FLICKR_USER_ID'),
-	            nojsoncallback: 1
-	            /* eslint-enable camelcase */
-	        }, function (err, result) {
-	            if (err) {
-	                reject('Error "flickr.photosets.getList": ' + err);
-	            } else {
-	                resolve(result);
-	            }
-	        });
+	  return new Promise(function (resolve, reject) {
+	    /* eslint-disable camelcase */
+	    flickr.photosets.getList({
+	      api_key: nconf.get('FLICKR_API_KEY'),
+	      user_id: nconf.get('FLICKR_USER_ID'),
+	      nojsoncallback: 1
+	      /* eslint-enable camelcase */
+	    }, function (err, result) {
+	      if (err) {
+	        reject('Error "flickr.photosets.getList": ' + err);
+	      } else {
+	        resolve(result);
+	      }
 	    });
+	  });
 	}
 
 	function mapPages(flickrData) {
-	    var sets = flickrData.photosets.photoset;
+	  var sets = flickrData.photosets.photoset;
 
-	    return sets.map(function (set) {
-	        return {
-	            title: set.title._content,
-	            id: set.id,
-	            date: Date.now()
-	        };
-	    });
+	  return sets.map(function (set) {
+	    return {
+	      title: set.title._content,
+	      id: set.id,
+	      date: Date.now()
+	    };
+	  });
 	}
 
 /***/ },
@@ -200,6 +200,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	var datastore = datastoreFactory();
 
 	exports.default = datastore;
@@ -222,8 +225,15 @@
 	    return pages;
 	  }
 
-	  function getPages() {
-	    return pages.photo.concat(pages.content);
+	  function getPages(order) {
+	    var orderedPages = [].concat(_toConsumableArray(pages.photo), _toConsumableArray(pages.content));
+
+	    orderedPages = [].concat(_toConsumableArray(pages.photo), _toConsumableArray(pages.content)).reduce(function (arr, item, i) {
+	      arr[item.title === 'news' ? 'unshift' : 'push'](item);
+	      return arr;
+	    }, []);
+
+	    return orderedPages;
 	  }
 
 	  function getSaveDate(type) {
@@ -244,7 +254,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	var Flickr = __webpack_require__(6);
 	var flickrOptions = __webpack_require__(7).getFlickrOptions();
@@ -253,15 +263,15 @@
 
 
 	function flickrAuthenticate() {
-	    return new Promise(function (resolve, reject) {
-	        Flickr.authenticate(flickrOptions, function (err, flickr) {
-	            if (err) {
-	                reject('Error authenticating for Flickr', err);
-	            } else {
-	                resolve(flickr);
-	            }
-	        });
+	  return new Promise(function (resolve, reject) {
+	    Flickr.authenticate(flickrOptions, function (err, flickr) {
+	      if (err) {
+	        reject('Error authenticating for Flickr', err);
+	      } else {
+	        resolve(flickr);
+	      }
 	    });
+	  });
 	}
 
 /***/ },
@@ -279,22 +289,22 @@
 	var nconf = __webpack_require__(8);
 
 	module.exports = {
-	    appName: 'portfoliooz',
-	    CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
-	    flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
+	  appName: 'portfoliooz',
+	  CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
+	  flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
 
-	    getFlickrOptions: function getFlickrOptions() {
-	        /* eslint-disable camelcase */
-	        return {
-	            permissions: 'write',
-	            force_auth: true,
-	            api_key: nconf.get('FLICKR_API_KEY'),
-	            secret: nconf.get('FLICKR_API_SECRET'),
-	            user_id: nconf.get('FLICKR_USER_ID'),
-	            access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
-	            access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
-	        };
-	    }
+	  getFlickrOptions: function getFlickrOptions() {
+	    /* eslint-disable camelcase */
+	    return {
+	      permissions: 'write',
+	      force_auth: true,
+	      api_key: nconf.get('FLICKR_API_KEY'),
+	      secret: nconf.get('FLICKR_API_SECRET'),
+	      user_id: nconf.get('FLICKR_USER_ID'),
+	      access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
+	      access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
+	    };
+	  }
 	};
 
 /***/ },
@@ -310,7 +320,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _util = __webpack_require__(10);
@@ -327,54 +337,53 @@
 
 
 	function updateSets(sets) {
-	    console.log('start updating sets to DB');
+	  console.log('start updating sets to DB');
 
-	    return (0, _flickrAuthenticate2.default)().then(function (flickr) {
-	        console.log('flickr authenticated => get sets:');
-	        return Promise.all(sets.map(function (set) {
-	            return flickrGetSetPromise(flickr, set);
-	        }));
-	    }).then(function (sets) {
-	        console.log('found sets to update: ', sets.map(function (set) {
-	            return set.title;
-	        }).join(', '));
-	        return mapPhotoSets(sets);
-	    });
+	  return (0, _flickrAuthenticate2.default)().then(function (flickr) {
+	    console.log('flickr authenticated => get sets:');
+	    return Promise.all(sets.map(function (set) {
+	      return flickrGetSetPromise(flickr, set);
+	    }));
+	  }).then(function (sets) {
+	    console.log('found sets to update: ', sets.map(function (set) {
+	      return set.title;
+	    }).join(', '));
+	    return mapPhotoSets(sets);
+	  });
 	}
 
 	function flickrGetSetPromise(flickr, set) {
-	    return new Promise(function (resolve, reject) {
-	        /* eslint-disable camelcase */
-	        flickr.photosets.getPhotos({
-	            photoset_id: set.id,
-	            api_key: nconf.get('FLICKR_API_KEY'),
-	            user_id: nconf.get('FLICKR_USER_ID'),
-	            privacy_filter: 2, // friends, private is ignored somehow
-	            extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags',
-	            nojsoncallback: 1
-	            /* eslint-ensable camelcase */
-	        }, function (err, result) {
-	            // TODO more fine grained err handling
-	            // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
-	            if (err) {
-	                reject('Error fetching photoSet: ' + err);
-	            } else {
-	                console.log('set fetched', result.photoset.id);
-	                resolve(result.photoset);
-	            }
-	        });
+	  return new Promise(function (resolve, reject) {
+	    /* eslint-disable camelcase */
+	    flickr.photosets.getPhotos({
+	      photoset_id: set.id,
+	      api_key: nconf.get('FLICKR_API_KEY'),
+	      user_id: nconf.get('FLICKR_USER_ID'),
+	      privacy_filter: 2, // friends, private is ignored somehow
+	      extras: 'url_sq, url_t, url_s, url_m, url_o, url_l, tags, description',
+	      nojsoncallback: 1
+	      /* eslint-ensable camelcase */
+	    }, function (err, result) {
+	      // https://www.flickr.com/services/api/flickr.photosets.getPhotos.html
+	      if (err) {
+	        reject('Error fetching photoSet: ' + err);
+	      } else {
+	        console.log('set fetched', result.photoset.id);
+	        resolve(result.photoset);
+	      }
 	    });
+	  });
 	}
 
 	function mapPhotoSets(sets) {
-	    return sets.map(function (photoset) {
-	        return {
-	            id: photoset.id,
-	            title: (0, _util.titleToRoute)(photoset.title),
-	            tags: photoset.tags,
-	            photos: photoset.photo
-	        };
-	    });
+	  return sets.map(function (photoset) {
+	    return {
+	      id: photoset.id,
+	      title: (0, _util.titleToRoute)(photoset.title),
+	      tags: photoset.tags,
+	      photos: photoset.photo
+	    };
+	  });
 	}
 
 /***/ },
@@ -384,13 +393,13 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	exports.titleToRoute = titleToRoute;
 
 
 	function titleToRoute(title) {
-	    return title.trim().replace(/\s/g, '-');
+	  return title.trim().replace(/\s/g, '-');
 	}
 
 /***/ },
@@ -416,24 +425,24 @@
 	var sinon = __webpack_require__(14);
 
 	describe('augment pagedata', function () {
-	    it('should call next once', function () {
-	        var pages = [{ title: 'Title1' }, { title: 'Title2' }, { title: 'Title3' }];
+	  it('should call next once', function () {
+	    var pages = [{ title: 'Title1' }, { title: 'Title2' }, { title: 'Title3' }];
 
-	        var req = {
-	            params: {
-	                page: 'Title2'
-	            }
-	        };
+	    var req = {
+	      params: {
+	        page: 'Title2'
+	      }
+	    };
 
-	        var res = {};
-	        var next = sinon.spy();
+	    var res = {};
+	    var next = sinon.spy();
 
-	        (0, _augmentPagedata2.default)(pages, req, res, next);
+	    (0, _augmentPagedata2.default)(pages, req, res, next);
 
-	        expect(next.calledOnce).to.equal(true);
-	        expect(req.pages).to.equal(pages);
-	        expect(req.page).to.deep.equal(pages[1]);
-	    });
+	    expect(next.calledOnce).to.equal(true);
+	    expect(req.pages).to.equal(pages);
+	    expect(req.page).to.deep.equal(pages[1]);
+	  });
 	});
 
 /***/ },
@@ -443,21 +452,21 @@
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	exports.default = function (pages, req, res, next) {
-	    var pageTitle = req.params.page;
+	  var pageTitle = req.params.page;
 
-	    req.pages = pages;
+	  req.pages = pages;
 
-	    if (pageTitle) {
-	        req.page = pages.find(function (page) {
-	            return page.title === pageTitle;
-	        });
-	    }
+	  if (pageTitle) {
+	    req.page = pages.find(function (page) {
+	      return page.title === pageTitle;
+	    });
+	  }
 
-	    next();
+	  next();
 	};
 
 /***/ },

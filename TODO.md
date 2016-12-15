@@ -10,7 +10,7 @@ https://github.com/madhums/node-express-mongoose-demo
   updaten flickr pagina's werkt niet
   description toevoegen
   tags create all filter button
-home pagina, titel; "news"
+  home pagina, titel; "news"
 pdf's uitzoeken links vanuit github
 
 # TODO:
@@ -43,10 +43,10 @@ find out about pointing url to digital ocean, keeping webmail on domain
 
 
 ## client
-    make sure images are never too big for the screen
+  make sure images are never too big for the screen
+  add mobile device-width stuff etc
 responsive
 decide on retina, image data is available
-add mobile device-width stuff etc
 look at google images, zooming in and out quite smoothly on mobile
 new paul lewis (pwa devsummit)
 
