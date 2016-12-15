@@ -16,9 +16,12 @@ class Photos extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.collapse = this.collapse.bind(this);
     this.updateTag = this.updateTag.bind(this);
-    // this.expand = this.expand.bind(this);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({currentTag: Tags.getTags(nextProps.photos).shift()});
   }
 
   componentDidMount() {

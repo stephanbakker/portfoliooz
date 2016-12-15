@@ -8,6 +8,9 @@ class Tags extends React.Component {
     super(props);
     this.setFilter = this.setFilter.bind(this);
   }
+  componentWillUnMount() {
+    this.setProps({current: ''});
+  }
   static getTags(photos) {
     return getUniqueTags(photos);
   }
