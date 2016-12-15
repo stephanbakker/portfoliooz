@@ -31,21 +31,40 @@ function buildRequestOptions(url) {
 // promise-ify request
 function requestPromise(options) {
   console.info('starting content update');
-  return new Promise(
-    (resolve, reject) => {
-      request.get(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
+  return new Promise((resolve, reject) => {
+    request.get(options, (error, response, body) => {
+      if (error) {
+        reject(error);
+      } else {
+        let statusCode = response.statusCode;
+        if (statusCode === 200) {
+          console.warn('response success from github: ', statusCode);
           resolve(body);
+        } else if (statusCode === 403) {
+          console.warn('403: ', body);
+          // console.log('github headers: ', response.headers);
+          console.warn('rate limit reset at:', new Date(response.headers['x-ratelimit-reset'] * 1000));
+
+          // X-RateLimit-Limit: 5000
+          // X-RateLimit-Remaining: 4966
+          // X-RateLimit-Reset
+        } else {
+          console.log('response code from github', statusCode);
+          reject(body);
         }
-      });
+      }
     });
+  });
 }
 
 function getPages(data) {
   // parse response body
   let jsonData = JSON.parse(data);
+
+  // validate jsonData
+  if (jsonData.message) {
+    return Promise.reject(jsonData);
+  }
 
   let promises = jsonData.map(page => {
     return requestPromise(buildRequestOptions(page.download_url))

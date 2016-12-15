@@ -8,31 +8,31 @@ https://github.com/madhums/node-express-mongoose-demo
   update github pages werkt niet...
   github pagina's vullen
   updaten flickr pagina's werkt niet
+  description toevoegen
+  tags create all filter button
 home pagina, titel; "news"
-description toevoegen
-tags create all filter button
 pdf's uitzoeken links vanuit github
 
 # TODO:
 
-    more sensible folder structure/cleanup
-    Marit afspraak
-    introduce filterings
-    split flickr authenticate into service, now different in page and pages
-    make current filter active
-    improve filtering 
-    remove flickr credentials from git, into environment stuff
-    unfiltering => show all
-    write tests
-    improve build/watch/test
-    use eslint
-    add close button, and ESC key for it
-    favicon
-    move to github/codeship 
-    add uglify to the mix, for production
-    css min
-tagging should always start with first tag active (2016 now)
-soms blijft pagina photo's leeg (??? reproduceren???)
+  more sensible folder structure/cleanup
+  Marit afspraak
+  introduce filterings
+  split flickr authenticate into service, now different in page and pages
+  make current filter active
+  improve filtering 
+  remove flickr credentials from git, into environment stuff
+  unfiltering => show all
+  write tests
+  improve build/watch/test
+  use eslint
+  add close button, and ESC key for it
+  favicon
+  move to github/codeship 
+  add uglify to the mix, for production
+  css min
+  tagging should always start with first tag active (2016 now)
+  soms blijft pagina photo's leeg (??? reproduceren???)
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests

@@ -20,7 +20,8 @@
     "lint:w": "watch 'npm run lint' server",
     "test:compile": "webpack --config webpack.servertest.config.js --progress --colors",
     "test": "npm run test:compile && mocha servertest.bundle.js",
-    "deploy": "scp -r public server.bundle.js package.json stephan@146.185.148.125:maritdik/www/prod"
+    "scp": "scp -r public server.bundle.js package.json stephan@146.185.148.125:maritdik/www/prod",
+    "deploy": "npm run build:prod && npm run scp"
   },
   "author": "stephanbakker",
   "license": "ISC",
