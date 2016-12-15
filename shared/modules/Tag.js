@@ -9,7 +9,7 @@ class Tag extends React.Component {
       `${this.props.active ? 'active' : ''} tags__item__filter`;
 
     return (<button className={clName}>
-              {this.props.tag}
+              {this.props.tag || 'all'}
             </button>);
   }
 }

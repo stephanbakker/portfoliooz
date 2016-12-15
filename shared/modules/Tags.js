@@ -32,6 +32,14 @@ class Tags extends React.Component {
         </li>
       );
     });
+    if (tags.length > 0) {
+      let all = <li className="tags__item" key={'tag-all'} onClick={() => this.setFilter('')}>
+                  <Tag tag="" active={this.props.current === ''}/>
+                </li>;
+
+      tags.push(all);
+    }
+
     return (
       <ul className="tags">
         {tags}
@@ -39,8 +47,8 @@ class Tags extends React.Component {
     );
   }
   setFilter(tag) {
-    const isActive = this.props.current === tag;
-    this.props.update(isActive ? '' : tag);
+    // const isActive = this.props.current === tag;
+    this.props.update(tag);
   }
 }
 

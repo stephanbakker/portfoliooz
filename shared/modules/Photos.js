@@ -73,9 +73,9 @@ class Photos extends React.Component {
     return function togglePhoto(evt) {
       evt.preventDefault();
       if (this.state.activeIndex === index) {
-        this.collapse({ transition: 'zoom' });
+        this.collapse({transition: 'zoom'});
       } else {
-        this.expand(index, { transition: 'zoom' });
+        this.expand(index, {transition: 'zoom'});
       }
     }.bind(this);
   }
@@ -111,14 +111,14 @@ class Photos extends React.Component {
     if (this.props.photos.length === next) {
       next = -1;
     }
-    this.collapse({ transition: 'opacity' });
-    this.expand(next, { transition: 'opacity' });
+    this.collapse({transition: 'opacity'});
+    this.expand(next, {transition: 'opacity'});
   }
 
   previous() {
     const previous = this.state.activeIndex - 1;
-    this.collapse({ transition: 'opacity' });
-    this.expand(previous, { transition: 'opacity' });
+    this.collapse({transition: 'opacity'});
+    this.expand(previous, {transition: 'opacity'});
   }
 
   handleKeyUp(evt) {
@@ -142,7 +142,7 @@ class Photos extends React.Component {
 
   updateTag(tag) {
     this.setState({
-      currentTag: this.state.currentTag !== tag ? tag : null
+      currentTag: tag
     });
   }
 
