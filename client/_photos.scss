@@ -6,7 +6,6 @@
     list-style: none;
 
     &__item {
-
         margin: $gutter_small;
         background-color: #fff;
     }
@@ -50,4 +49,14 @@
         transition: clip 0.3s cubic-bezier(0, 0, 0.21, 1);
     }
 
+}
+
+.photo {
+  &_descr {
+    text-align: center;
+    font-size: 0.8rem;
+    &_sub {
+      font-size: 0.6rem;
+    }
+  }
 }

@@ -19,7 +19,11 @@ class Photo extends React.Component {
     }
   }
   render() {
-    let description = this.state.isActive ? <p>{this.props.data.title}</p> : '';
+    let description = this.state.isActive ?
+      <div className="photo_descr">
+        {this.props.data.title}<div className="photo_descr_sub">{this.props.data.description._content}</div>
+      </div> : '';
+
     let imgData = this.props.data;
 
     const wrapperClass = `item__wrapper ${this.state.transition || ''}`;
