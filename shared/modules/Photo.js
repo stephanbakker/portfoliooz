@@ -28,7 +28,7 @@ class Photo extends React.Component {
         {...this.props}
         ref={container => this._container = container}
         className={wrapperClass}>
-        <img src={imgData.url_sq} ref={thumb => this.thumb = thumb} />
+        <img src={imgData.url_t} ref={thumb => this.thumb = thumb} />
         <div className="toggleContainer" ref={toggleContainer => this._toggleContainer = toggleContainer}>
           <span>
             <img src={imgData.url_l} ref={zoomed => this._zoomed = zoomed} />

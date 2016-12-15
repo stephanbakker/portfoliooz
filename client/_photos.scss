@@ -6,8 +6,7 @@
     list-style: none;
 
     &__item {
-        width: 75px; // depends on thumb size flickr
-        height: 75px;
+
         margin: $gutter_small;
         background-color: #fff;
     }
