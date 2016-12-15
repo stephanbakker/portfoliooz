@@ -21,7 +21,9 @@ class Photo extends React.Component {
   render() {
     let description = this.state.isActive ?
       <div className="photo_descr">
-        {this.props.data.title}<div className="photo_descr_sub">{this.props.data.description._content}</div>
+        {this.props.data.title}
+        <div className="photo__descr__sub"
+          dangerouslySetInnerHTML={{ __html: this.props.data.description._content }} />
       </div> : '';
 
     let imgData = this.props.data;
