@@ -38,7 +38,7 @@ function requestPromise(options) {
       } else {
         let statusCode = response.statusCode;
         if (statusCode === 200) {
-          console.warn('response success from github: ', statusCode);
+          console.log('response from github: ', statusCode);
           resolve(body);
         } else if (statusCode === 403) {
           console.warn('403: ', body);
