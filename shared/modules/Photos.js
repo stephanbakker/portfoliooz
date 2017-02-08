@@ -7,10 +7,14 @@ import GalleryButtons from './GalleryButtons';
 class Photos extends React.Component {
   constructor(props) {
     super(props);
+    const currentTag = Tags.getTags(this.props.photos).shift();
+    const currentPhotos = this.getPhotosWithTag(this.props.photos, currentTag);
+
     this.state = {
       activeIndex: -1,
       tagIndex: 0,
-      currentTag: Tags.getTags(this.props.photos).shift()
+      currentTag,
+      currentPhotos
     };
 
     this.toggle = this.toggle.bind(this);
@@ -33,12 +37,7 @@ class Photos extends React.Component {
   }
 
   render() {
-    let photos = this.state.currentTag ?
-      this.props.photos.filter(photo =>
-        this.filterTaggedPhotos(photo, this.state.currentTag)) :
-      this.props.photos;
-
-    let thumbs = photos.map((photo, index) => {
+    let thumbs = this.state.currentPhotos.map((photo, index) => {
       const key = 'p' + index;
       return (
         <li key={key} className="overview__item">
@@ -108,8 +107,9 @@ class Photos extends React.Component {
 
   next() {
     let next = this.state.activeIndex + 1;
-    if (this.props.photos.length === next) {
-      next = -1;
+    if (this.state.currentPhotos.length === next) {
+      this.collapse({transition: 'zoom'});
+      return;
     }
     this.collapse({transition: 'opacity'});
     this.expand(next, {transition: 'opacity'});
@@ -117,6 +117,10 @@ class Photos extends React.Component {
 
   previous() {
     const previous = this.state.activeIndex - 1;
+    if (previous < 0) {
+      this.collapse({transition: 'zoom'});
+      return;
+    }
     this.collapse({transition: 'opacity'});
     this.expand(previous, {transition: 'opacity'});
   }
@@ -142,8 +146,23 @@ class Photos extends React.Component {
 
   updateTag(tag) {
     this.setState({
-      currentTag: tag
+      currentTag: tag,
+      currentPhotos: this.getPhotosWithTag(this.props.photos, tag)
     });
+  }
+
+  getPhotosWithTag(photos, tag) {
+    let currentPhotos = tag ?
+      photos.filter(photo => this.filterTaggedPhotos(photo, tag)) :
+      photos;
+
+    return currentPhotos;
+  }
+
+  updateCurrentPhotos(tag) {
+    let currentPhotos = this.getPhotosWithTag(this.props.photos, tag);
+
+    this.setState({currentPhotos});
   }
 
   filterTaggedPhotos(photo, tag) {
