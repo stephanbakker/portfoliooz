@@ -5,16 +5,18 @@
 
     &__item {
         display: inline-block;
-        margin-right: 10px;
+        margin-right: 4px;
+        margin-bottom: 4px;
 
         &__filter {
 
             font-family: inherit;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
+            min-width: 52px;
             border: 0;
             display:inline-block;
             cursor:pointer;
-            padding:6px 24px;
+            padding:6px 12px;
             background-color: $button-filter-bg;
 
             &.active {

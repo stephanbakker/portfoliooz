@@ -3,7 +3,7 @@
     &__close {
         @include unstyle-button;
         @include action-btn;
-        position: absolute;
+        position: fixed;
         left: 10px;
         top: 10px;
 
@@ -23,7 +23,7 @@
     &__arrow {
         @include unstyle-button;
         @include action-btn;
-        position: absolute;
+        position: fixed;
         bottom: 10px;
         overflow: hidden;
         text-indent: -100px;
