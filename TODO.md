@@ -11,6 +11,7 @@ https://github.com/madhums/node-express-mongoose-demo
   description toevoegen
   tags create all filter button
   home pagina, titel; "news"
+  different colors for buttons/tags/active link
 pdf's uitzoeken links vanuit github
 
 # TODO:
@@ -33,6 +34,8 @@ pdf's uitzoeken links vanuit github
   css min
   tagging should always start with first tag active (2016 now)
   soms blijft pagina photo's leeg (??? reproduceren???)
+  fix gallery buttons moving out of the screen
+  fix not closing gallery buttons after last image and pressing next
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests
