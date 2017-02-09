@@ -27,8 +27,18 @@ h3 {
     display: none !important;
 }
 
+// tables
+table {
+  border-spacing: 0
+}
+
 th {
   text-align: left;
+}
+
+// trick extra padding on bold text (carefull!)
+td strong {
+  padding-top: 10px;
 }
 
 a {

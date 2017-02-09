@@ -19,9 +19,9 @@
             padding:6px 12px;
             background-color: $button-filter-bg;
 
-            &.active {
+            &.active, &:hover {
                 color: #fff;
-                background: $link-active-color;
+                background: $button-filter-bg-active;
             }
 
         }
