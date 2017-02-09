@@ -19,9 +19,7 @@
     "lint": "eslint server/**/*.js",
     "lint:w": "watch 'npm run lint' server",
     "test:compile": "webpack --config webpack.servertest.config.js --progress --colors",
-    "test": "npm run test:compile && mocha servertest.bundle.js",
-    "scp": "scp -r public server.bundle.js package.json stephan@146.185.148.125:maritdik/www/prod",
-    "deploy": "npm run build:prod && npm run scp"
+    "test": "npm run test:compile && mocha servertest.bundle.js"
   },
   "author": "stephanbakker",
   "license": "ISC",
