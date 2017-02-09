@@ -36,6 +36,7 @@ pdf's uitzoeken links vanuit github
   soms blijft pagina photo's leeg (??? reproduceren???)
   fix gallery buttons moving out of the screen
   fix not closing gallery buttons after last image and pressing next
+autodeploy/restart from codeship
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests
