@@ -6,7 +6,6 @@ import getContentPages from './update-content-pages';
 export default updatePages;
 
 function updatePages(req, res, next) {
-  console.log('req body----\n\n', req.body);
   return getContentPages()
     .then(pages => datastore.updatePages(pages, 'content'))
     .then(data => {
