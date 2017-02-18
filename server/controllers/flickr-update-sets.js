@@ -3,6 +3,7 @@ const nconf = require('nconf');
 
 import {titleToRoute} from '../utils/util';
 import flickrAuthenticate from './flickr-authenticate';
+import {mapTags} from '../utils';
 
 export default updateSets;
 
@@ -51,8 +52,7 @@ function mapPhotoSets(sets) {
     return {
       id: photoset.id,
       title: titleToRoute(photoset.title),
-      tags: photoset.tags,
-      photos: photoset.photo
+      photos: mapTags(photoset.photo)
     };
   });
 }

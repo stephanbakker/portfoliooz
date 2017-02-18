@@ -45,8 +45,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(12);
-	module.exports = __webpack_require__(15);
+	__webpack_require__(13);
+	__webpack_require__(16);
+	module.exports = __webpack_require__(17);
 
 
 /***/ },
@@ -58,7 +59,7 @@
 	var _datastoreUtils = __webpack_require__(2);
 
 	/* eslint-env node, mocha */
-	var expect = __webpack_require__(11).expect;
+	var expect = __webpack_require__(12).expect;
 
 	describe('datastore utils', function () {
 	  describe('promiseAllPages', function () {
@@ -226,7 +227,8 @@
 	  }
 
 	  function getPages(order) {
-	    var orderedPages = [].concat(_toConsumableArray(pages.photo), _toConsumableArray(pages.content));
+	    var reversedContent = pages.content.reverse();
+	    var orderedPages = [].concat(_toConsumableArray(pages.photo), _toConsumableArray(reversedContent));
 
 	    orderedPages = [].concat(_toConsumableArray(pages.photo), _toConsumableArray(pages.content)).reduce(function (arr, item, i) {
 	      arr[item.title === 'news' ? 'unshift' : 'push'](item);
@@ -290,7 +292,8 @@
 
 	module.exports = {
 	  appName: 'portfoliooz',
-	  CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
+	  CONTENTS_URL: 'https://api.github.com/repos/maritdik/content/contents',
+	  CONTENTS_UPDATE_WAIT: 360 * 1000, // github new page updates after 300s
 	  flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
 
 	  getFlickrOptions: function getFlickrOptions() {
@@ -328,6 +331,10 @@
 	var _flickrAuthenticate = __webpack_require__(5);
 
 	var _flickrAuthenticate2 = _interopRequireDefault(_flickrAuthenticate);
+
+	var _mapTags = __webpack_require__(11);
+
+	var _mapTags2 = _interopRequireDefault(_mapTags);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -377,11 +384,12 @@
 
 	function mapPhotoSets(sets) {
 	  return sets.map(function (photoset) {
+	    console.log('tags', photoset.photo);
 	    return {
 	      id: photoset.id,
 	      title: (0, _util.titleToRoute)(photoset.title),
-	      tags: photoset.tags,
-	      photos: photoset.photo
+	      // tags: photoset.tags,
+	      photos: (0, _mapTags2.default)(photoset.photo)
 	    };
 	  });
 	}
@@ -406,23 +414,48 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = require("chai");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.mapTags = mapTags;
+
+
+	function mapTags(photos) {
+	  return photos.map(function (photo) {
+	    if (photo.tags !== '') {
+	      photo.tags = parseTags(photo.tags);
+	    }
+	    return photo;
+	  });
+	}
+
+	function parseTags(tagString) {
+	  return tagString.replace(/tm/g, '-');
+	}
 
 /***/ },
 /* 12 */
+/***/ function(module, exports) {
+
+	module.exports = require("chai");
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _augmentPagedata = __webpack_require__(13);
+	var _augmentPagedata = __webpack_require__(14);
 
 	var _augmentPagedata2 = _interopRequireDefault(_augmentPagedata);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/* eslint-env node, mocha */
-	var expect = __webpack_require__(11).expect;
-	var sinon = __webpack_require__(14);
+	var expect = __webpack_require__(12).expect;
+	var sinon = __webpack_require__(15);
 
 	describe('augment pagedata', function () {
 	  it('should call next once', function () {
@@ -446,7 +479,7 @@
 	});
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -470,13 +503,35 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	module.exports = require("sinon");
 
 /***/ },
-/* 15 */
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _mapTags = __webpack_require__(11);
+
+	/* eslint-env node, mocha */
+	var expect = __webpack_require__(12).expect;
+
+	describe('mapTags', function () {
+	  it('should replace "tm" to "-" in all tags', function () {
+
+	    var inputPhotos = [{ tags: '2016 2018tm2020' }, { tags: '200-200' }, { tags: '2000tm2010 2017' }];
+
+	    expect((0, _mapTags.mapTags)(inputPhotos)[0].tags).to.equal('2016 2018-2020');
+	    expect((0, _mapTags.mapTags)(inputPhotos)[1].tags).to.equal('200-200');
+	    expect((0, _mapTags.mapTags)(inputPhotos)[2].tags).to.equal('2000-2010 2017');
+	  });
+	});
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 	/* eslint-env node, mocha */
