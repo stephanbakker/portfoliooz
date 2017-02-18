@@ -2,7 +2,7 @@ const nconf = require('nconf');
 
 module.exports = {
   appName: 'portfoliooz',
-  CONTENTS_URL: 'https://api.github.com/repos/stephanbakker/md-content/contents',
+  CONTENTS_URL: 'https://api.github.com/repos/maritdik/content/contents',
   flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
 
   getFlickrOptions() {
