@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import Photo from './Photo';
 import Tags from './Tags';
@@ -25,7 +24,11 @@ class Photos extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({currentTag: Tags.getTags(nextProps.photos).shift()});
+    const currentTag = Tags.getTags(nextProps.photos).shift();
+    this.setState({
+      currentTag: currentTag,
+      currentPhotos: this.getPhotosWithTag(nextProps.photos, currentTag)
+    });
   }
 
   componentDidMount() {
@@ -72,9 +75,9 @@ class Photos extends React.Component {
     return function togglePhoto(evt) {
       evt.preventDefault();
       if (this.state.activeIndex === index) {
-        this.collapse({transition: 'zoom'});
+        this.collapse({ transition: 'zoom' });
       } else {
-        this.expand(index, {transition: 'zoom'});
+        this.expand(index, { transition: 'zoom' });
       }
     }.bind(this);
   }
@@ -108,21 +111,21 @@ class Photos extends React.Component {
   next() {
     let next = this.state.activeIndex + 1;
     if (this.state.currentPhotos.length === next) {
-      this.collapse({transition: 'zoom'});
+      this.collapse({ transition: 'zoom' });
       return;
     }
-    this.collapse({transition: 'opacity'});
-    this.expand(next, {transition: 'opacity'});
+    this.collapse({ transition: 'opacity' });
+    this.expand(next, { transition: 'opacity' });
   }
 
   previous() {
     const previous = this.state.activeIndex - 1;
     if (previous < 0) {
-      this.collapse({transition: 'zoom'});
+      this.collapse({ transition: 'zoom' });
       return;
     }
-    this.collapse({transition: 'opacity'});
-    this.expand(previous, {transition: 'opacity'});
+    this.collapse({ transition: 'opacity' });
+    this.expand(previous, { transition: 'opacity' });
   }
 
   handleKeyUp(evt) {
@@ -132,7 +135,7 @@ class Photos extends React.Component {
 
     switch (evt.which) {
       case 27: // Escape
-        this.collapse({transition: 'zoom'});
+        this.collapse({ transition: 'zoom' });
         break;
       case 39: // ArrowRight
         this.next();
@@ -162,7 +165,7 @@ class Photos extends React.Component {
   updateCurrentPhotos(tag) {
     let currentPhotos = this.getPhotosWithTag(this.props.photos, tag);
 
-    this.setState({currentPhotos});
+    this.setState({ currentPhotos });
   }
 
   filterTaggedPhotos(photo, tag) {
