@@ -1,5 +1,3 @@
-'use strict';
-
 const request = require('request');
 const marked = require('marked');
 const config = require('../config/config');

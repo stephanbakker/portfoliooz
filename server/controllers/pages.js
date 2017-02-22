@@ -6,12 +6,6 @@ export default updatePages;
 let timer;
 
 function updatePages(req, res, next) {
-  // on startup script
-  if (!(req && res)) {
-    return updateContentPages();
-  }
-
-  // on request
   if (req.githubUpdate) {
     if (timer) clearTimeout(timer);
     timer = setTimeout(updateContentPages, config.CONTENTS_UPDATE_WAIT);
