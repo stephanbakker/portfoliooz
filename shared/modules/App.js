@@ -8,7 +8,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>Marit Dik</h1>
+        <h1 className="marit">Marit Dik</h1>
         {<NavBar pages={this.props.params.pages} />}
         {this.props.children}
       </div>
