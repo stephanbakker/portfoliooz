@@ -1,31 +1,17 @@
-'use strict';
-
-import datastore from '../db/datastore';
-import getContentPages from './update-content-pages';
+const config = require('../config/config');
+import {updateContentPages} from './update-pages.factory';
 
 export default updatePages;
 
+let timer;
+
 function updatePages(req, res, next) {
-  return getContentPages()
-    .then(pages => datastore.updatePages(pages, 'content'))
-    .then(data => {
-      const updated = data.content.map(page => page.title).join(',');
-      if (res) {
-        try {
-          res.status(200).send('Pages updated on request: ' + updated);
-        } catch (e) {
-          console.log(e);
-          throw new Error(e);
-        }
-      } else {
-        console.log('Pages updated: %s', updated);
-      }
-    })
-    .catch(err => {
-      if (res) {
-        res.status(500).send('error fetching pages', err);
-      }
-      console.log('Error updating pages (500)', err);
-    });
+  if (req.githubUpdate) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(updateContentPages, config.CONTENTS_UPDATE_WAIT);
+  }
+  // allways respond with 200, will leave you in the dark
+  // about triggering update or not ;-)
+  res.sendStatus(200);
 }
 

@@ -1,5 +1,5 @@
 'use strict';
-import updatePages from './pages';
+import {updateContentPages} from './update-pages.factory';
 import flickrUpdate from './flickr-update-pages';
 
-module.exports = () => Promise.all([updatePages(), flickrUpdate()]);
+module.exports = () => Promise.all([updateContentPages(), flickrUpdate()]);

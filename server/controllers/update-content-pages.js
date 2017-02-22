@@ -1,5 +1,3 @@
-'use strict';
-
 const request = require('request');
 const marked = require('marked');
 const config = require('../config/config');
@@ -42,11 +40,11 @@ function requestPromise(options) {
           resolve(body);
         } else if (statusCode === 403) {
           console.warn('403: ', body);
-          // console.log('github headers: ', response.headers);
           console.warn(
             'rate limit reset at:',
             new Date(response.headers['x-ratelimit-reset'] * 1000));
 
+          reject('rate limit exceeded:' + statusCode);
           // X-RateLimit-Limit: 5000
           // X-RateLimit-Remaining: 4966
           // X-RateLimit-Reset
