@@ -12,6 +12,18 @@ https://github.com/madhums/node-express-mongoose-demo
   tags create all filter button
   home pagina, titel; "news"
   different colors for buttons/tags/active link
+  github account, voor content
+  tags: map 2016tm2017 => 2016-2017
+  fix switchen paginas laat photos staan
+github, if commit is there wait 360s before getting new page! (reset after new update)
+tags sort aflopend
+flickr album 'niet op site', niet meenemen
+tag button kleur ook voor navigatie
+content paginas koppen ruimte bekijken
+text: linkjes onder titel
+text: eerste koppen te groot
+_t variant lijkt niet altijd te bestaan, check
+github, check for github secret
 pdf's uitzoeken links vanuit github
 
 # TODO:
@@ -36,7 +48,7 @@ pdf's uitzoeken links vanuit github
   soms blijft pagina photo's leeg (??? reproduceren???)
   fix gallery buttons moving out of the screen
   fix not closing gallery buttons after last image and pressing next
-autodeploy/restart from codeship
+  autodeploy/restart from codeship
 try opacity for transitions
 refactor title stuff, one service for this
 write more tests
