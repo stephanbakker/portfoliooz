@@ -55,7 +55,11 @@ class Tags extends React.Component {
 export default Tags;
 
 function getUniqueTags(photos) {
-  return photos.reduce(reduceTags, []).filter(uniq);
+  return photos
+          .reduce(reduceTags, [])
+          .filter(uniq)
+          .sort()
+          .reverse();
 }
 
 function reduceTags(acumulator, photo) {
