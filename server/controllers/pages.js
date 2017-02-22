@@ -12,6 +12,6 @@ function updatePages(req, res, next) {
   }
   // allways respond with 200, will leave you in the dark
   // about triggering update or not ;-)
-  res.sendStatus(200);
+  res.sendStatus(204);
 }
 
