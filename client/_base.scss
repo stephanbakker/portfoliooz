@@ -20,11 +20,11 @@ h1 {
 }
 
 h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 h3 {
-    font-size: 1rem;
+    font-size: 0.8rem;
 }
 
 .hidden {
@@ -50,4 +50,12 @@ a {
    &:hover {
      color: $link_active_color;
    }
+}
+
+hr {
+  margin: 28px 0;
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
