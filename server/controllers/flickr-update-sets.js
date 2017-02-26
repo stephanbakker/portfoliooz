@@ -1,9 +1,9 @@
 'use strict';
 const nconf = require('nconf');
 
-import {titleToRoute} from '../utils/util';
+import { titleToRoute } from '../utils/util';
 import flickrAuthenticate from './flickr-authenticate';
-import {mapTags} from '../utils';
+import { mapTags } from '../utils';
 
 export default updateSets;
 
@@ -48,11 +48,9 @@ function flickrGetSetPromise(flickr, set) {
 }
 
 function mapPhotoSets(sets) {
-  return sets.map(photoset => {
-    return {
-      id: photoset.id,
-      title: titleToRoute(photoset.title),
-      photos: mapTags(photoset.photo)
-    };
-  });
+  return sets.map(photoset => ({
+    id: photoset.id,
+    title: titleToRoute(photoset.title),
+    photos: mapTags(photoset.photo)
+  })).filter(set => set.title !== 'niet op site');
 }

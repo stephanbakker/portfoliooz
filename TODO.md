@@ -3,27 +3,31 @@ inspiration:
 https://github.com/madhums/node-express-mongoose-demo
 
 # MARIT:
-  tekst pagina's achterin
-  tagging fixen
-  update github pages werkt niet...
-  github pagina's vullen
-  updaten flickr pagina's werkt niet
-  description toevoegen
-  tags create all filter button
-  home pagina, titel; "news"
-  different colors for buttons/tags/active link
-  github account, voor content
-  tags: map 2016tm2017 => 2016-2017
-  fix switchen paginas laat photos staan
-github, if commit is there wait 360s before getting new page! (reset after new update)
-tags sort aflopend
-flickr album 'niet op site', niet meenemen
-tag button kleur ook voor navigatie
-content paginas koppen ruimte bekijken
-text: linkjes onder titel
-text: eerste koppen te groot
-_t variant lijkt niet altijd te bestaan, check
-github, check for github secret
+[x] tekst pagina's achterin
+[x] tagging fixen
+[x] update github pages werkt niet...
+[x] github pagina's vullen
+[x] updaten flickr pagina's werkt niet
+[x] description toevoegen
+[x] tags create all filter button
+[x] home pagina, titel; "news"
+[x] different colors for buttons/tags/active link
+[x] github account, voor content
+[x] tags: map 2016tm2017 => 2016-2017
+[x] fix switchen paginas laat photos staan
+[x] github, if commit is there wait 360s before getting new page! (reset after new update)
+[x] tags sort aflopend
+[x] tag button kleur ook voor navigatie
+[x] github, check for github secret
+
+[x] FEATURE   flickr album 'niet op site', niet meenemen
+[x] IMPROVE   text: eerste koppen te groot
+[x] IMPROVE   content paginas koppen ruimte bekijken
+[ ] BUG:      content nav items switch order on refresh
+[ ] BUG       _t variant lijkt niet altijd te bestaan, check (niet meer?)
+
+[ ] IMPROVE   text: linkjes onder titel (marit)
+
 pdf's uitzoeken links vanuit github
 
 # TODO:
