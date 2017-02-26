@@ -4,6 +4,10 @@
     max-width: 40rem;
     margin-top: 28px;
 
+    &:empty {
+      display: none;
+    }
+
     h1 {
       font-size: 1.5em
     }
