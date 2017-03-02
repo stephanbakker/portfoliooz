@@ -12,11 +12,11 @@ class NavBar extends React.Component {
     return (
       <nav>
         <ul className="nav">
-          <li className="nav__item" key="news">
-              <NavLink to="/">news</NavLink>
+          <li className="nav__item" key="home">
+              <NavLink to="/">home</NavLink>
           </li>
           {
-            pages.filter(p => p.title !== 'news')
+            pages.filter(p => p.title !== 'home')
               .map(page => {
                 const humanTitle = page.title.replace(/-/g, ' ');
                 return (

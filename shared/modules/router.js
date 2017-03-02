@@ -12,9 +12,9 @@ export default (req, res, next) => {
     // add pages from middleware
     props.params.pages = req.pages;
 
-    // handle home page, called: 'news'
+    // handle home page, called: 'home'
     // TODO ugly like this... how to solve this hardcoded stuff everywhere...
-    props.params.page = props.params.page || 'news';
+    props.params.page = props.params.page || 'home';
 
     if (props.params.page) {
       props.params.pageContent = req.pages.find(page => page.title === props.params.page);

@@ -26,7 +26,7 @@ function datastoreFactory() {
     let orderedPages = [...pages.photo, ...reversedContent];
 
     orderedPages = [...pages.photo, ...pages.content].reduce((arr, item, i) => {
-      arr[item.title === 'news' ? 'unshift' : 'push'](item);
+      arr[item.title === 'home' ? 'unshift' : 'push'](item);
       return arr;
     }, []);
 
