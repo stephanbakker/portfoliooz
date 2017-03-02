@@ -52,5 +52,8 @@ function mapPhotoSets(sets) {
     id: photoset.id,
     title: titleToRoute(photoset.title),
     photos: mapTags(photoset.photo)
-  })).filter(set => set.title !== 'niet op site');
+  })).filter(set => {
+    console.log(set.title !== 'niet-op-site', 'title');
+    return set.title !== 'niet-op-site';
+  });
 }
