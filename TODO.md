@@ -23,9 +23,9 @@ https://github.com/madhums/node-express-mongoose-demo
 [x] FEATURE   flickr album 'niet op site', niet meenemen
 [x] IMPROVE   text: eerste koppen te groot
 [x] IMPROVE   content paginas koppen ruimte bekijken
-[ ] FEATURE   home page iso news
+[x] FEATURE   home page iso news
 [ ] FEATURE   news pagina tekst naast image
-[ ] BUG:      content nav items switch order on refresh
+[x] BUG:      content nav items switch order on refresh
 [ ] BUG       _t variant lijkt niet altijd te bestaan, check (niet meer?)
 
 [ ] IMPROVE   text: linkjes onder titel (marit)
