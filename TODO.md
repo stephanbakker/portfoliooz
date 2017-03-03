@@ -27,7 +27,8 @@ https://github.com/madhums/node-express-mongoose-demo
 [x] IMPROVE   text: linkjes onder titel (marit)
 [x] FEATURE   news pagina tekst naast image
 [x] BUG:      content nav items switch order on refresh
-[ ] IMPROVE   use compression
+[x] IMPROVE   use compression
+[x] IMPROVE   use helmet
 [ ] IMPROVE   use caching for bundle files
 [ ] BUG       _t variant lijkt niet altijd te bestaan, check (niet meer?)
 
