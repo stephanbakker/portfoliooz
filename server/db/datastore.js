@@ -15,14 +15,16 @@ function datastoreFactory() {
   };
 
   function updatePages(newPages, type) {
-    pages[type] = newPages;
+    pages[type] = (type === 'content') ?
+        newPages.sort() : newPages;
+
     pages.saveDate[type] = Date.now();
 
     return pages;
   }
 
   function getPages(order) {
-    let reversedContent = pages.content.reverse();
+    let reversedContent = pages.content;
     let orderedPages = [...pages.photo, ...reversedContent];
 
     orderedPages = [...pages.photo, ...pages.content].reduce((arr, item, i) => {
