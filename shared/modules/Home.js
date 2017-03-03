@@ -17,7 +17,7 @@ class Home extends React.Component {
     });
 
     return (
-        <div className="content__text"
+        <div className="content__text--home"
             dangerouslySetInnerHTML={{__html: pageContent.html}} />
     );
   }

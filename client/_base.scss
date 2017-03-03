@@ -53,6 +53,8 @@ a {
 }
 
 hr {
+  display: table; // clearfixing
+  width: 100%;
   margin: 28px 0;
   border: 0;
   height: 0;
