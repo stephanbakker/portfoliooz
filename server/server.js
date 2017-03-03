@@ -2,8 +2,6 @@
 const nconf = require('nconf');
 const express = require('express');
 
-import datastore from './db/datastore';
-
 // this is run from root, so needs './server'
 nconf
     .env();
