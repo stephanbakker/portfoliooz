@@ -4,7 +4,7 @@ const express = require('express');
 
 // this is run from root, so needs './server'
 nconf
-    .env();
+  .env();
 
 // app parts
 const app = express();
@@ -18,13 +18,13 @@ const startupContent = require('./controllers/startup-content');
 
 // pull in pages
 startupContent()
-    .then(listen)
-    .catch(err => {
-        throw new Error('Error starting up server', err);
-    });
+  .then(listen)
+  .catch(err => {
+    throw new Error('Error starting up server', err);
+  });
 
 function listen() {
-    app.listen(port, () => {
-        console.log('express server started on port: ', port);
-    });
+  app.listen(port, () => {
+    console.log('express server started on port: ', port);
+  });
 }
