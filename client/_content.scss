@@ -23,5 +23,11 @@
       text-align: top;
       margin-right: 24px;
     }
+
+    &--home {
+      img {
+        max-width: 100%;
+      }
+    }
   }
 }
