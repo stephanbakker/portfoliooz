@@ -24,7 +24,7 @@ startupContent()
   });
 
 function listen() {
-  app.listen(port, () => {
+  app.listen(port, 'localhost', () => {
     console.log('express server started on port: ', port);
   });
 }
