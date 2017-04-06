@@ -1,10 +1,12 @@
 const request = require('request');
 const marked = require('marked');
+const CustomRenderer = require('./custom-marked-renderer');
 const config = require('../config/config');
 import {titleToRoute} from '../utils/util';
 
 // markdown settings
 marked.setOptions({
+  renderer: new CustomRenderer(),
   gfm: true,
   tables: true,
   sanitize: true
