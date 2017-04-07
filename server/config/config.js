@@ -4,7 +4,7 @@ module.exports = {
   appName: 'portfoliooz',
   CONTENTS_URL: 'https://api.github.com/repos/maritdik/content/contents',
   CONTENTS_UPDATE_WAIT: 360 * 1000, // github new page updates after 300s
-  flickrExpireTime: 1000 * 60 * 60 * 24, // 24 hours
+  flickrExpireTime: 1000 * 60 * 60, // 60 minutes
 
   getFlickrOptions() {
     /* eslint-disable camelcase */
