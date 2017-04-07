@@ -17,8 +17,9 @@ function updateSets(sets) {
         sets.map(set => flickrGetSetPromise(flickr, set)));
     })
     .then(sets => {
-      console.log('found sets to update: ',
-        sets.map(set => set.title).join(', ')
+      console.log('found sets to update: %s (%s)',
+        sets.map(set => set.title).join(', '),
+        new Date().toUTCString()
       );
       return mapPhotoSets(sets);
     });
