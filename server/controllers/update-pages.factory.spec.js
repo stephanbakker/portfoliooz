@@ -33,9 +33,10 @@ describe('updateContentPages', () => {
 
     updateContent()
       .then(() => {
-        expect(logResult).to.equal('Pages updated from github: one, two');
+        expect(logResult).to.contain('Pages updated from github: one, two');
         done();
-      });
+      })
+      .catch(done);
   });
 
   it('should log handle reject of update pages', done => {
@@ -46,7 +47,8 @@ describe('updateContentPages', () => {
       .then(() => {
         expect(logResult).to.equal('Error fetching pages from github, meeh');
         done();
-      });
+      })
+      .catch(done);
   });
 });
 
