@@ -29,7 +29,7 @@ https://github.com/madhums/node-express-mongoose-demo
 [x] BUG:      content nav items switch order on refresh
 [x] IMPROVE   use compression
 [x] IMPROVE   use helmet
-[ ] IMPROVE   use caching for bundle files
+[x] IMPROVE   use caching for bundle files
 [ ] BUG       _t variant lijkt niet altijd te bestaan, check (niet meer?)
 
 
