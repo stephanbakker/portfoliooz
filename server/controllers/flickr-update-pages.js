@@ -9,11 +9,13 @@ export default flickrUpdate;
 
 function flickrUpdate() {
   console.log('start updating pages from flickr');
+  return flickrAuthenticate().then(getPhotos);
+}
 
-  return flickrAuthenticate()
-    .then(pFlickrGetSetList)
+function getPhotos(flickr) {
+  return pFlickrGetSetList(flickr)
     .then(mapPages)
-    .then(flickrGetSets)
+    .then(sets => flickrGetSets(flickr, sets))
     .then(photoSets => datastore.updatePages(photoSets, 'photo'));
 }
 

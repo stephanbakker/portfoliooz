@@ -1,23 +1,18 @@
 'use strict';
 const nconf = require('nconf');
 
-import { titleToRoute } from '../utils/util';
-import flickrAuthenticate from './flickr-authenticate';
-import { mapTags } from '../utils';
+import {titleToRoute} from '../utils/util';
+import {mapTags} from '../utils';
 
 export default updateSets;
 
-function updateSets(sets) {
+function updateSets(flickr, sets) {
   console.log('start updating sets to DB');
 
-  return flickrAuthenticate()
-    .then(flickr => {
-      console.log('flickr authenticated => get sets:');
-      return Promise.all(
-        sets.map(set => flickrGetSetPromise(flickr, set)));
-    })
+  return Promise.all(sets.map(set => flickrGetSetPromise(flickr, set)))
     .then(sets => {
-      console.log('found sets to update: %s (%s)',
+      console.log(
+        'found sets to update: %s (%s)',
         sets.map(set => set.title).join(', '),
         new Date().toUTCString()
       );

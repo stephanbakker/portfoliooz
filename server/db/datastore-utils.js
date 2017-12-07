@@ -17,6 +17,7 @@ function promiseAllPages(datastore) {
 
 function checkExpiresPhotos(datastore) {
   const savedDate = datastore.getSaveDate('photo');
+  flickrUpdatePages();
   if (savedDate &&
     (Date.now() - savedDate > config.flickrExpireTime)) {
     flickrUpdatePages();

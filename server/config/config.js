@@ -15,7 +15,11 @@ module.exports = {
       secret: nconf.get('FLICKR_API_SECRET'),
       user_id: nconf.get('FLICKR_USER_ID'),
       access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
-      access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
+      access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET'),
+      noAPI: true,
+      silent: true,
+      nobrowser: true,
+      progress: false
     };
   }
 };

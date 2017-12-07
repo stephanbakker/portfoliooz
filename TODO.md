@@ -31,6 +31,7 @@ https://github.com/madhums/node-express-mongoose-demo
 [x] IMPROVE   use helmet
 [x] IMPROVE   use caching for bundle files
 [ ] BUG       _t variant lijkt niet altijd te bestaan, check (niet meer?)
+[ ] FIX memory leak, lijkt uit flickrapi te komen
 
 
 pdf's uitzoeken links vanuit github

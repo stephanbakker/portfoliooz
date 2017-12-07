@@ -49,9 +49,9 @@
   "dependencies": {
     "body-parser": "^1.16.1",
     "compression": "^1.6.2",
-    "express": "^4.13.3",
+    "express": "^4.16.2",
     "express-handlebars": "^2.0.1",
-    "flickrapi": "^0.3.36",
+    "flickrapi": "^0.6.0",
     "helmet": "^3.4.1",
     "marked": "^0.3.6",
     "mongodb": "^2.0.52",
