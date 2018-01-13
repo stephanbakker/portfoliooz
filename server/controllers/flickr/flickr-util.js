@@ -1,7 +1,12 @@
 const crypto = require('crypto');
+const config = require('../../config/config');
 
 module.exports = {
-  generateUrl, titleToRoute, mapTags
+  generateUrl,
+  titleToRoute,
+  mapTags,
+  generateFlickrGetListUrl,
+  generateFlickrGetPhotosUrl
 };
 
 function createNonce() {
@@ -78,4 +83,32 @@ function mapTags(photos) {
 
 function parseTags(tagString) {
   return tagString.replace(/tm/g, '-');
+}
+
+function generateFlickrGetListUrl() {
+  const flickrOptions = config.getFlickrOptions();
+
+  const options = Object.assign({}, flickrOptions, {
+    method: 'flickr.photosets.getList'
+  });
+
+  return generateUrl(options);
+}
+
+function generateFlickrGetPhotosUrl(set) {
+  const flickrOptions = config.getFlickrOptions();
+
+  const options = Object.assign({}, flickrOptions, {
+    method: 'flickr.photosets.getPhotos'
+  });
+
+  const extraParams = [
+    `photoset_id=${set.id}`,
+    'privacy_filter=2', // friends, private is ignored somehow
+    'extras=url_sq,url_t,url_s,url_m,url_o,url_l,tags,description'
+  ].join('&');
+
+  const url = generateUrl(options);
+
+  return `${url}&${extraParams}`;
 }

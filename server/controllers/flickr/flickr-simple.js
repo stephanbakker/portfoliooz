@@ -1,7 +1,12 @@
 const fetch = require('node-fetch');
 const config = require('../../config/config');
 
-const {generateUrl, mapTags, titleToRoute} = require('./flickr-util');
+const {
+  mapTags,
+  titleToRoute,
+  generateFlickrGetListUrl,
+  generateFlickrGetPhotosUrl
+} = require('./flickr-util');
 
 module.exports = {
   getSetList,
@@ -14,20 +19,12 @@ module.exports = {
 };
 
 function getSetList() {
-  const flickrOptions = config.getFlickrOptions();
-
-  const options = Object.assign({}, flickrOptions, {
-    method: 'flickr.photosets.getList'
-  });
-
-  const url = generateUrl(options);
-
+  const url = generateFlickrGetListUrl();
   return fetch(url).then(res => res.json());
 }
 
 function mapSetList(flickrSetList) {
   const sets = flickrSetList.photosets.photoset;
-
   return sets.map(set => {
     return {
       title: set.title._content,
@@ -53,22 +50,7 @@ function logSetsToUpdate(sets) {
 }
 
 function getSet(set) {
-  const flickrOptions = config.getFlickrOptions();
-
-  const options = Object.assign({}, flickrOptions, {
-    method: 'flickr.photosets.getPhotos'
-  });
-
-  const extraParams = [
-    `photoset_id=${set.id}`,
-    'privacy_filter=2', // friends, private is ignored somehow
-    'extras=url_sq,url_t,url_s,url_m,url_o,url_l,tags,description'
-  ].join('&');
-
-  const url = generateUrl(options);
-
-  const expandedUrl = `${url}&${extraParams}`;
-
+  const expandedUrl = generateFlickrGetPhotosUrl(set);
   return fetch(expandedUrl).then(res => res.json());
 }
 
