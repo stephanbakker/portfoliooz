@@ -49,8 +49,8 @@ function logSetsToUpdate(sets) {
 }
 
 function getSet(set) {
-  const expandedUrl = generateFlickrGetPhotosUrl(set);
-  return fetch(expandedUrl).then(res => res.json());
+  const url = generateFlickrGetPhotosUrl(set);
+  return fetch(url).then(res => res.json());
 }
 
 function mapToPhotoSet(sets) {
@@ -58,10 +58,10 @@ function mapToPhotoSet(sets) {
 }
 
 function mapPhotoSets(sets) {
-  return sets.map(photoset => ({
-    id: photoset.id,
-    title: titleToRoute(photoset.title),
-    photos: mapTags(photoset.photo)
+  return sets.map(set => ({
+    id: set.id,
+    title: titleToRoute(set.title),
+    photos: mapTags(set.photo)
   }));
 }
 
