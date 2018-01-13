@@ -1,5 +1,3 @@
-const nconf = require('nconf');
-
 module.exports = {
   appName: 'portfoliooz',
   CONTENTS_URL: 'https://api.github.com/repos/maritdik/content/contents',
@@ -7,15 +5,19 @@ module.exports = {
   flickrExpireTime: 1000 * 60 * 60, // 60 minutes
 
   getFlickrOptions() {
-    /* eslint-disable camelcase */
     return {
+      baseUrl: 'https://api.flickr.com/services/rest',
       permissions: 'write',
-      force_auth: true,
-      api_key: nconf.get('FLICKR_API_KEY'),
-      secret: nconf.get('FLICKR_API_SECRET'),
-      user_id: nconf.get('FLICKR_USER_ID'),
-      access_token: nconf.get('FLICKR_ACCESS_TOKEN'),
-      access_token_secret: nconf.get('FLICKR_ACCESS_TOKEN_SECRET')
+      forceAuth: true, // TODO ? still needed
+      apiKey: getEnv('FLICKR_API_KEY'),
+      apiSecret: getEnv('FLICKR_API_SECRET'),
+      userId: getEnv('FLICKR_USER_ID'),
+      accessToken: getEnv('FLICKR_ACCESS_TOKEN'),
+      accessTokenSecret: getEnv('FLICKR_ACCESS_TOKEN_SECRET')
     };
   }
 };
+
+function getEnv(key) {
+  return process.env[key];
+}

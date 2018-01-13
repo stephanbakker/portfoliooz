@@ -1,58 +1,89 @@
-const crypto = require('crypto');
+const fetch = require('node-fetch');
+const config = require('../../config/config');
+
+const {generateUrl, mapTags, titleToRoute} = require('./flickr-util');
 
 module.exports = {
-  createNonce, createNonce2, authenticate
+  getSetList,
+  mapSetList,
+  getSets,
+  mapToPhotoSet,
+  logSetsToUpdate,
+  mapPhotoSets,
+  filterOutSetsToIgnore
 };
 
-function createNonce() {
-  const timestamp = String(Date.now());
-  const md5 = crypto.createHash('md5').update(timestamp).digest("hex");
-  const nonce = md5.substring(0, 32);
-  return nonce;
+function getSetList() {
+  const flickrOptions = config.getFlickrOptions();
+
+  const options = Object.assign({}, flickrOptions, {
+    method: 'flickr.photosets.getList'
+  });
+
+  const url = generateUrl(options);
+
+  return fetch(url).then(res => res.json());
 }
 
-function createNonce2() {
-  return crypto.pseudoRandomBytes(32).toString('base64');
-}
+function mapSetList(flickrSetList) {
+  const sets = flickrSetList.photosets.photoset;
 
-const secret = {
-  "FLICKR_API_KEY": "442507664bb0b7b21e70a8e2a48eeabf",
-  "FLICKR_API_SECRET": "8712919a761e847a",
-  "FLICKR_USER_ID": "142067970@N07",
-  "FLICKR_ACCESS_TOKEN": "72157674940293375-fb0fc2117e10bea6",
-  "FLICKR_ACCESS_TOKEN_SECRET": "d8032481951b77ea"
-}
-
-function authenticate(options) {
-  const url = createUrl({
-    nonce: createNonce(),
-    timeStamp: String(Date.now()),
-    consumerKey: secret.FLICKR_API_KEY,
-    accessToken: secret.FLICKR_ACCESS_TOKEN,
-    oauthSignature: sign(data, secret.FLICKR_API_KEY, secret.FLICKR_API_SECRET)
+  return sets.map(set => {
+    return {
+      title: set.title._content,
+      id: set.id,
+      date: Date.now()
+    };
   });
 }
 
-function createUrl(options) {
-  return ['https://api.flickr.com/services/rest',
-          `?nojsoncallback=1 &oauth_nonce=${options.nonce}`,
-          '&format=json',
-          `&oauth_consumer_key=${options.consumerKey}`,
-          `&oauth_timestamp=${options.timestamp}`,
-          '&oauth_signature_method=HMAC-SHA1',
-          '&oauth_version=1.0',
-          `&oauth_token=${options.accessToken}`,
-          `&oauth_signature=${options.oauthSignature}`,
-          '&method=flickr.test.login'].join('');
+function getSets(setList) {
+  return Promise.all(
+    setList.map(set => getSet(set))
+  );
 }
 
-/**
- * HMAC-SHA1 data signing
- */
-function sign(data, key, secret) {
-  const hmacKey = key + "&" + (secret ? secret : '');
-  const hmac = crypto.createHmac("SHA1", hmacKey);
-  hmac.update(data);
-  const digest = hmac.digest("base64");
-  return encodeURIComponent(digest);
+function logSetsToUpdate(sets) {
+  console.log(
+    'found sets to update: %s (%s)',
+    sets.map(set => set.title).join(', '),
+    new Date().toUTCString()
+  );
+  return sets;
+}
+
+function getSet(set) {
+  const flickrOptions = config.getFlickrOptions();
+
+  const options = Object.assign({}, flickrOptions, {
+    method: 'flickr.photosets.getPhotos'
+  });
+
+  const extraParams = [
+    `photoset_id=${set.id}`,
+    'privacy_filter=2', // friends, private is ignored somehow
+    'extras=url_sq,url_t,url_s,url_m,url_o,url_l,tags,description'
+  ].join('&');
+
+  const url = generateUrl(options);
+
+  const expandedUrl = `${url}&${extraParams}`;
+
+  return fetch(expandedUrl).then(res => res.json());
+}
+
+function mapToPhotoSet(sets) {
+  return sets.map(set => set.photoset);
+}
+
+function mapPhotoSets(sets) {
+  return sets.map(photoset => ({
+    id: photoset.id,
+    title: titleToRoute(photoset.title),
+    photos: mapTags(photoset.photo)
+  }));
+}
+
+function filterOutSetsToIgnore(sets) {
+  return sets.filter(set => set.title !== 'niet-op-site');
 }

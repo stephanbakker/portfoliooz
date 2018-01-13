@@ -12,7 +12,6 @@ const port = process.env.PORT || 3000;
 require('./config/express')(app);
 require('./config/routes')(app);
 
-
 // after conf stuff
 const startupContent = require('./controllers/startup-content');
 

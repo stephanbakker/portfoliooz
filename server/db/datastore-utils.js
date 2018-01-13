@@ -1,5 +1,5 @@
 const config = require('../config/config');
-import flickrUpdatePages from '../controllers/flickr-update-pages';
+import flickrUpdateImages from '../controllers/flickr/flickr-update-images';
 
 export {promiseAllPages, checkExpiresPhotos};
 
@@ -19,6 +19,6 @@ function checkExpiresPhotos(datastore) {
   const savedDate = datastore.getSaveDate('photo');
   if (savedDate &&
     (Date.now() - savedDate > config.flickrExpireTime)) {
-    flickrUpdatePages();
+    flickrUpdateImages();
   }
 }

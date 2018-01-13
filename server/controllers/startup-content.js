@@ -1,7 +1,7 @@
 'use strict';
 import {updateContentPages} from './update-pages.factory';
-import flickrUpdate from './flickr-update-pages';
+import flickrUpdateImages from './flickr/flickr-update-images';
 
 module.exports = function startupContent() {
-  return Promise.all([updateContentPages(), flickrUpdate()]);
+  return Promise.all([updateContentPages(), flickrUpdateImages()]);
 };
