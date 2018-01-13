@@ -2,9 +2,15 @@ const crypto = require('crypto');
 const config = require('../../config/config');
 
 module.exports = {
+  createNonce,
+  signData,
+  signUrl,
+  getFormBaseString,
+  getParams,
   generateUrl,
   titleToRoute,
   mapTags,
+  parseTags,
   generateFlickrGetListUrl,
   generateFlickrGetPhotosUrl
 };
