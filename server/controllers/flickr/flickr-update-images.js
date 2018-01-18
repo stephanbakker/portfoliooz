@@ -23,6 +23,6 @@ module.exports = function flickrFetchImages() {
     })
     .then(photoSets => datastore.updatePages(photoSets, 'photo'))
     .catch(err => {
-      console.error('Error fetching Flickr Photos', err);
+      console.error('Error fetching Flickr Photos', err, new Date().toUTCString());
     });
 };
