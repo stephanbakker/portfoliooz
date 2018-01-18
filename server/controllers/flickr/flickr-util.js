@@ -61,7 +61,7 @@ function getParams(options) {
     'oauth_signature_method=HMAC-SHA1',
     `oauth_timestamp=${options.timestamp}`,
     `oauth_token=${options.accessToken}`,
-    `user_id=142067970%40N07`
+    `user_id=${options.userId}`
     // '&oauth_version=1.0',
   ].join('&');
 }

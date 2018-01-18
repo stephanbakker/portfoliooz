@@ -50,7 +50,7 @@ describe('flickr util', () => {
       const expectedParams = [
         'api_key', 'format=json', 'method', 'nojsoncallback=1', 'oauth_consumer_key=',
         'oauth_signature_method=HMAC-SHA1', 'oauth_nonce', 'oauth_signature',
-        'oauth_token', 'user_id=142067970%40N07'
+        'oauth_token', 'user_id='
       ];
       const options = {
         apiKey: 'lalala',
